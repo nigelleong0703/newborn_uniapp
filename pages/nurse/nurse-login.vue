@@ -20,10 +20,11 @@
           </u-button>
         </view>
       </view>
-      <view class="login-bottom">
-        <navigator url="/pages/contact-admin/contact-admin" open-type="navigate">联系管理员</navigator>
-      </view>
     </view>
+    <view class="login-bottom">
+      <navigator url="/pages/contact-admin/contact-admin" open-type="navigate">联系管理员</navigator>
+    </view>
+  </view>
   </view>
   </view>
 </template>
@@ -54,11 +55,6 @@
           complete: () => {}
         })
       },
-      navadmin() {
-        uni.navigateTo({
-          url: "pages/contact-admin/contact-admin",
-        })
-      }
     }
   }
 </script>

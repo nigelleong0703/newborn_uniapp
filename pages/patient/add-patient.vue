@@ -53,6 +53,13 @@
           userInfo: {
             name: '',
             sex: '',
+            temperature: '',
+            symptoms: '',
+            allergic: '',
+            guardian_name: '',
+            guardian_relation: '',
+            guardian_id: '',
+            guardian_phone: '',
           }
         },
         rules: {

@@ -28,7 +28,25 @@
         "navigationBarTitleText": "联系管理员",
         "enablePullDownRefresh": false
       }
-    }
+    },
+	{
+	  "path": "pages/nurse/nurse-patient_list",
+	  "style": {
+	    "navigationBarTitleText": ""
+	  }
+	},
+	{
+	  "path": "pages/nurse/nurse-patient_info",
+	  "style": {
+	    "navigationBarTitleText": ""
+	  }
+	},
+	{
+	  "path": "pages/nurse/nurse-info",
+	  "style": {
+	    "navigationBarTitleText": ""
+	  }
+	}
   ],
   "globalStyle": {
     "navigationBarTextStyle": "black",

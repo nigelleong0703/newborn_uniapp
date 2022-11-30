@@ -50,7 +50,14 @@
       }
 
     }, {
-      "path": "pages/patient/add-patient-infusion",
+      "path": "pages/patient/add-patient-transfusion",
+      "style": {
+        "navigationBarTitleText": "输液增加",
+        "enablePullDownRefresh": false
+      }
+
+    }, {
+      "path": "pages/try",
       "style": {
         "navigationBarTitleText": "输液增加",
         "enablePullDownRefresh": false

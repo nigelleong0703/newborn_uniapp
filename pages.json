@@ -23,30 +23,54 @@
       }
     },
     {
+      "path": "pages/nurse/nurse-home",
+      "style": {
+        "navigationBarTitleText": ""
+      }
+    },
+    {
       "path": "pages/contact-admin/contact-admin",
       "style": {
         "navigationBarTitleText": "联系管理员",
         "enablePullDownRefresh": false
       }
+    }, {
+      "path": "pages/patient/add-patient",
+      "style": {
+        "navigationBarTitleText": "患者添加",
+        "enablePullDownRefresh": false
+      }
+
+    }, {
+      "path": "pages/patient/add-patient-ward",
+      "style": {
+        "navigationBarTitleText": "巡视添加",
+        "enablePullDownRefresh": false
+      }
+
+    }, {
+      "path": "pages/patient/add-patient-transfusion",
+      "style": {
+        "navigationBarTitleText": "输液增加",
+        "enablePullDownRefresh": false
+      }
+
+    }, {
+      "path": "pages/nurse/nurse-patient_list",
+      "style": {
+        "navigationBarTitleText": ""
+      }
+    }, {
+      "path": "pages/nurse/nurse-patient_info",
+      "style": {
+        "navigationBarTitleText": ""
+      }
+    }, {
+      "path": "pages/nurse/nurse-info",
+      "style": {
+        "navigationBarTitleText": ""
+      }
     },
-	{
-	  "path": "pages/nurse/nurse-patient_list",
-	  "style": {
-	    "navigationBarTitleText": ""
-	  }
-	},
-	{
-	  "path": "pages/nurse/nurse-patient_info",
-	  "style": {
-	    "navigationBarTitleText": ""
-	  }
-	},
-	{
-	  "path": "pages/nurse/nurse-info",
-	  "style": {
-	    "navigationBarTitleText": ""
-	  }
-	}
   ],
   "globalStyle": {
     "navigationBarTextStyle": "black",

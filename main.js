@@ -2,6 +2,8 @@ import App from './App'
 
 // #ifndef VUE3
 import Vue from 'vue'
+import request from './common/js/request.js'
+Vue.prototype.$request = request
 Vue.config.productionTip = false
 App.mpType = 'app'
 const app = new Vue({
@@ -24,3 +26,9 @@ export function createApp() {
 
 import uView from '@/uni_modules/uview-ui'
 Vue.use(uView)
+
+// import {
+//   request
+// } from './common/js/request.js'
+
+// Vue.prototype.$request = request

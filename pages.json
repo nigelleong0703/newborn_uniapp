@@ -56,20 +56,15 @@
         "enablePullDownRefresh": false
       }
 
-    }, {
-      "path": "pages/try",
-      "style": {
-        "navigationBarTitleText": "输液增加",
-        "enablePullDownRefresh": false
-      }
+    },
 
-    }
-  ],
-  "globalStyle": {
-    "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "uni-app",
-    "navigationBarBackgroundColor": "#F8F8F8",
-    "backgroundColor": "#F8F8F8"
-  },
-  "uniIdRouter": {}
+  }
+],
+"globalStyle": {
+  "navigationBarTextStyle": "black",
+  "navigationBarTitleText": "uni-app",
+  "navigationBarBackgroundColor": "#F8F8F8",
+  "backgroundColor": "#F8F8F8"
+},
+"uniIdRouter": {}
 }

@@ -4,6 +4,24 @@
             <view class="text-area">
                 <text class="title">{{ title }}</text>
             </view>
+            <view class="patient-info">
+                <u-cell-group>
+                    <u-cell title="用户名" value="wxy"></u-cell>
+                    <u-cell title="姓名" value="王小杨"></u-cell>
+                    <u-cell title="性别" value="男"></u-cell>
+                    <u-cell title="床号" value="A1-1"></u-cell>
+                    <u-cell title="住院信息" value="住院中"></u-cell>
+                    <u-cell title="体温" value="36.7"></u-cell>
+                    <u-cell title="过敏信息" value="无"></u-cell>
+                    <u-cell title="病症" value="发烧"></u-cell>
+					<u-cell title="监护人姓名" value="刘大雅"></u-cell>
+					<u-cell title="关系" value="母子"></u-cell>
+					<u-cell title="身份证号码" value="78454839574"></u-cell>
+					<u-cell title="联系电话" value="8617158390568"></u-cell>
+					<u-cell title="医生姓名" value="刘小王"></u-cell>
+					<u-cell title="部门" value="婴儿脑部科"></u-cell>
+                </u-cell-group>
+            </view>
             <view class="navigate-bar">
                 <u-tabbar :value="value1" @change="name => value1 = name" :fixed="true" :border="false"
                     :placeholder="true" :safeAreaInsetBottom="true">
@@ -38,7 +56,7 @@ export default {
 
 <style>
 .content {
-    height: 100vh;
+    height: 80vh;
     display: flex;
     flex-direction: column;
     align-content: center;

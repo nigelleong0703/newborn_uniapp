@@ -3,10 +3,11 @@ function dateTimeStr(timestamp) {
   return timeFormat(timestamp, 'yyyy-mm-dd hh:MM');
 };
 
-function loadSystemTime(model) {
-  var date = Math.round(new Date() / 1000)
-  model.time = date
-  model.time_display = dateTimeStr(date)
+function loadSystemTime() {
+  var date = Number(new Date())
+  var time = date
+  var time_display = dateTimeStr(date)
+  return [time, time_display]
 };
 
 function time_select1(model, model1, value) {

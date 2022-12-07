@@ -60,8 +60,9 @@
       </view>
     </view>
     <view class=bottom-button>
-      <u-button type="primary" text="提交" customStyle="margin-top: 30px" @click="submit"></u-button>
-      <u-button type="error" text="重置" customStyle="margin-top: 20px; margin-bottom: 30px" @click="reset"></u-button>
+      <u-button type="primary" shape="circle" text="提交" customStyle="margin-top: 30px" @click="submit"></u-button>
+      <u-button type="error" shape="circle" text="重置" customStyle="margin-top: 20px; margin-bottom: 30px"
+        @click="reset"></u-button>
     </view>
   </view>
 </template>

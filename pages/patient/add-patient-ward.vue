@@ -3,97 +3,90 @@
     <view class="form">
       <view class="form-content">
         <u--form labelPosition="left" :model="patrol1" ref="form1">
-          <u-form-item prop="patientInfo.bed" ref="item1">
-            <u--input v-model="patrol1.patientInfo.bed" placeholder="床号"></u--input>
+          <u-form-item label="患者" label-width="120" prop="patientId" ref="item1">
+            <u--input v-model="patrol1.patientId" disabled disabledColor="#ffffff" placeholder="患者ID"></u--input>
           </u-form-item>
-          <u-form-item prop="ward.time" ref="item2" @click="time_picker = true; hideKeyboard()" borderBottom>
-            <u--input v-model="patrol1.ward.time_display" placeholder="时间" disabled disabledColor="#ffffff">
+          <u-form-item label="护士/医生" label-width="120" prop="nurseId" ref="item2">
+            <u--input v-model="patrol1.nurseId" disabled disabledColor="#ffffff" aplaceholder="同班医生/护士"></u--input>
+          </u-form-item>
+          <u-form-item label="巡房时间" label-width="120" prop="time" ref="item3"
+            @click="time_picker = true; hideKeyboard()" borderBottom>
+            <u--input v-model="patrol1.time" placeholder="时间" disabled disabledColor="#ffffff">
             </u--input>
           </u-form-item>
-          <u-form-item prop="ward.nurse_doctor_info" ref="item3">
-            <u--input v-model="patrol1.ward.nurse_doctor_info" placeholder="同班医生/护士"></u--input>
+          <u-form-item label="输液ID" label-width="120" prop="transfusionId" ref="item4">
+            <u--input v-model="patrol1.transfusionId" placeholder="输液ID"></u--input>
           </u-form-item>
-          <u-form-item prop="ward.info" ref="item4">
-            <u--textarea v-model="patrol1.ward.info" placeholder="隐患">
+          <u-form-item label="患者状态/隐患" label-width="120" prop="info" ref="item5">
+            <u--textarea v-model="patrol1.info" placeholder="隐患">
             </u--textarea>
           </u-form-item>
         </u--form>
-        <u-datetime-picker :show="time_picker" mode="datetime" v-model="patrol1.ward.time" closeOnClickOverlay
-          @close="time_picker = false" @cancel="time_picker = false" @confirm='time_select' @change='change'
-          :formatter="formatter">
+        <u-datetime-picker ref="datetimePicker" :show="time_picker" v-model="post.time" mode="datetime"
+          closeOnClickOverlay @close="time_picker = false" @cancel="time_picker = false" @confirm='time_select'
+          @change='change' :formatter="formatter">
         </u-datetime-picker>
       </view>
     </view>
     <view class=bottom-button>
-      <u-button type="primary" text="提交" customStyle="margin-top: 30px" @click="submit"></u-button>
-      <u-button type="error" text="重置" customStyle="margin-top: 20px; margin-bottom: 30px" @click="reset"></u-button>
+      <u-button type="primary" shape="circle" text="提交" customStyle="margin-top: 30px" @click="submit"></u-button>
+      <u-button type="error" shape="circle" text="重置" customStyle="margin-top: 20px; margin-bottom: 30px"
+        @click="reset"></u-button>
     </view>
   </view>
 </template>
 
 <script>
   import common from "common/js/common.js"
+  import {
+    dateTimeStr
+  } from "../../common/js/common";
   export default {
     data() {
       return {
         time_picker: false,
         patrol1: {
-          patientInfo: {
-            name: '',
-            bed: '',
-          },
-          ward: {
-            time: '',
-            nurse_doctor_info: '',
-            nurseInfo: {
-              name: '',
-              ID: '',
-            },
-            doctorInfo: {
-              name: '',
-              ID: '',
-            },
-            info: '',
-          }
+          patientId: '',
+          nurseId: '',
+          transfusionId: '',
+          info: '',
+          time: '',
         },
-        form: {
+        post: {
           nurseId: '',
           patientId: '',
           transfusionId: '',
           info: '',
+          time: '',
         },
         rules: {
-          'patientInfo.bed': [{
+          'patientId': {
             type: 'string',
             required: true,
-            message: '请填写床号',
+            message: '请填写患者ID',
             trigger: ['blur', 'change']
-          }, {
-            validator: (rule, value, callback) => {
-              return uni.$u.test.chinese(value);
-            },
-
-            //////这里需要修改
-            message: "床号格式不正确",
-            trigger: ["change", "blur"],
-          }],
-          'ward.time': [{
+          },
+          'nurseId': {
             type: 'string',
             required: true,
-            message: '请填写巡房时间',
+            message: '请填写护士ID',
             trigger: ['blur', 'change']
-          }, {
-            validator: (rule, value, callback) => {
-              return uni.$u.test.date(value);
-            },
-            message: "床号格式不正确",
-            trigger: ["change", "blur"],
-          }],
+          },
+          'time': {
+            type: 'string',
+            required: true,
+            message: '请填写时间',
+            trigger: ['blur', 'change']
+          }
         },
       }
     },
     onLoad(options) {
-      common.loadSystemTime(this.patrol1.ward)
+      var time = common.loadSystemTime()
+      this.post.time = time[0]
+      this.patrol1.time = time[1]
+      this.patrol1.nurseId = String(uni.getStorageSync('current_user').id)
+      this.patrol1.patientId = options.id
     },
     onReady() {
       this.$refs.datetimePicker.setFormatter(this.formatter)
@@ -119,32 +112,27 @@
         return value
       },
 
-      afterRead(event) {
-        this.fileList1.push({
-          url: event.file,
-          status: 'uploading',
-          message: '上传中'
-        })
-      },
       navigateBack() {
         uni.navigateBack()
       },
       submit() {
         this.$refs.form1.validate().then(res => {
-          uni.$u.toast('校验通过')
           this.convertToForm()
-          uni.request({
-            url: "http://43.138.3.76:8000/api/check/add",
-            method: "POST",
-            data: this.form,
-            success: (res) => {
-              const data = res.data
-              if (data.code !== '200') {
-                uni.$u.toast('提交失败')
-              } else {
-                uni.$u.toast('提交成功')
-                uni.navigateBack()
-              }
+          this.$request.post('/api/check/add', this.post).then(res => {
+            console.log(res)
+            if (res.statusCode !== 200) {
+              this.$.toast('提交失败');
+            } else {
+              uni.showToast({
+                title: "添加成功！",
+                duration: 1000,
+                success: () => {
+                  setTimeout(() => {
+                    uni.$emit('refurbish', {})
+                    uni.navigateBack();
+                  }, 1000)
+                }
+              })
             }
           })
         }).catch(errors => {
@@ -152,7 +140,7 @@
         })
       },
       reset() {
-        const validateList = ['patientInfo.bed', 'ward.time', 'ward.nurse_doctor_info', 'ward.info']
+        const validateList = ['patientId', 'nurseId', 'time']
         this.$refs.form1.resetFields()
         this.$refs.form1.clearValidate()
         setTimeout(() => {
@@ -166,13 +154,16 @@
         uni.hideKeyboard()
       },
       time_select(e) {
-        common.time_select1(this, this.patrol1.ward, e.value)
+        this.patrol1.time = dateTimeStr(Math.round(e.value / 1000))
+        this.post.time = e.value
+        this.time_picker = false
       },
       convertToForm() {
-        this.form.nurseId = this.patrol1.ward.nurse_doctor_info
-        this.form.patientId = this.patientInfo.bed
-        this.form.transfusionId = ''
-        this.form.info = this.patrol1.info
+        this.post.nurseId = this.patrol1.nurseId
+        this.post.patientId = this.patrol1.patientId
+        this.post.transfusionId = ''
+        this.post.info = this.patrol1.info
+        this.post.time = Math.round(this.post.time / 1000)
       },
     },
   }

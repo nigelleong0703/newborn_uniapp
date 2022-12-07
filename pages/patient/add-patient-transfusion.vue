@@ -75,8 +75,8 @@
 </template>
 
 <script>
-  import common from "common/js/common.js"
-  export default {
+import common from "common/js/common.js"
+export default {
     data() {
       return {
         time_picker: false,
@@ -155,25 +155,24 @@
       this.$refs.form1.setRules(this.rules)
     },
     methods: {
-      formatter(type, value) {
-        if (type == 'year') {
-          return `${value}年`
-        }
-        if (type == 'month') {
-          return `${value}月`
-        }
-        if (type == 'day') {
-          return `${value}日`
-        }
-        if (type == 'hour') {
-          return `${value}时`
-        }
-        if (type == 'minute') {
-          return `${value}分`
-        }
-        return value
-      },
-
+        formatter(type, value) {
+            if (type == 'year') {
+                return `${value}年`
+            }
+            if (type == 'month') {
+                return `${value}月`
+            }
+            if (type == 'day') {
+                return `${value}日`
+            }
+            if (type == 'hour') {
+                return `${value}时`
+            }
+            if (type == 'minute') {
+                return `${value}分`
+            }
+            return value
+        },
       navigateBack() {
         uni.navigateBack()
       },
@@ -337,19 +336,20 @@
         this.count--;
       }
     },
-  }
+}
 </script>
 
 <style lang="scss">
-  .content {
+.content {
     min-height: 100%;
-  }
+}
 
-  .form-content {
+.form-content {
     margin-top: 20px;
     margin-left: 10%;
     margin-right: 10%;
-  }
+}
+
 
   .drug-button {
     width: 50%;

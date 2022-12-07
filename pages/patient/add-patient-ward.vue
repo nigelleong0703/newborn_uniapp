@@ -89,8 +89,8 @@
       this.patrol1.patientId = options.id
     },
     onReady() {
-      this.$refs.datetimePicker.setFormatter(this.formatter)
-      this.$refs.form1.setRules(this.rules)
+        this.$refs.datetimePicker.setFormatter(this.formatter)
+        this.$refs.form1.setRules(this.rules)
     },
     methods: {
       formatter(type, value) {
@@ -166,24 +166,24 @@
         this.post.time = Math.round(this.post.time / 1000)
       },
     },
-  }
+}
 </script>
 
 <style lang="scss">
-  .content {
+.content {
     min-height: 100%;
-  }
+}
 
-  .form-content {
+.form-content {
     margin-top: 20px;
     margin-left: 10%;
     margin-right: 10%;
-  }
+}
 
-  .bottom-button {
+.bottom-button {
     width: 80%;
     margin-left: 10%;
     margin-right: 10%;
     padding-bottom: 10px
-  }
+}
 </style>

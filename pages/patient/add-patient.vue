@@ -316,21 +316,21 @@
         this.time_picker = false
       }
     },
-  }
+}
 </script>
 
 <style lang="scss">
-  .content {
+.content {
     min-height: 100%;
-  }
+}
 
-  .form-content {
+.form-content {
     margin-top: 20px;
     margin-left: 5%;
     margin-right: 5%;
   }
 
-  .bottom-button {
+.bottom-button {
     width: 80%;
     margin-top: 20px;
     margin-left: 10%;

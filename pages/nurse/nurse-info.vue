@@ -5,7 +5,7 @@
                 <text class="title">{{ title }}</text>
             </view>
             <view class="navigate-bar">
-                <u-tabbar :value="value1" @change="name => value1 = name" :fixed="true" :border="false"
+                <u-tabbar :value="value2" @change="name => value2 = name" :fixed="true" :border="false"
                     :placeholder="true" :safeAreaInsetBottom="true">
                     <u-tabbar-item text="首页" icon="home" @click="patient_list"></u-tabbar-item>
                     <u-tabbar-item text="我的" icon="account" @click="nurse_info"></u-tabbar-item>
@@ -20,6 +20,7 @@ export default {
     data() {
         return {
             title: "护士资料",
+            value2: 1
         }
     },
 
@@ -27,6 +28,10 @@ export default {
     },
 
     methods: {
+		change(e) {
+		    this.value2 = e
+		    console.log('change2', e)
+		},
         patient_list() {
             uni.navigateTo({
                 url: '/pages/nurse/nurse-patient_list'
@@ -36,7 +41,7 @@ export default {
             uni.navigateTo({
                 url: '/pages/nurse/nurse-info'
             })
-        },
+        }
     }
 }
 </script>

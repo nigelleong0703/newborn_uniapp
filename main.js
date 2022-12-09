@@ -4,9 +4,16 @@ import App from './App'
 import Vue from 'vue'
 import request from './common/js/request.js'
 import $ from './common/js/toast.js'
+import uView from '@/uni_modules/uview-ui'
+import tabBar_admin from 'components/tabBar/tabBar_admin.vue'
+
+
 Vue.prototype.$ = $
 Vue.prototype.$request = request
 Vue.config.productionTip = false
+Vue.use(uView)
+Vue.component('tabBar-admin', tabBar_admin)
+
 App.mpType = 'app'
 const app = new Vue({
   ...App
@@ -25,6 +32,3 @@ export function createApp() {
   }
 }
 // #endif
-
-import uView from '@/uni_modules/uview-ui'
-Vue.use(uView)

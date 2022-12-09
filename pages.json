@@ -1,108 +1,216 @@
 {
-    "easycom": {
-        "^u-(.*)": "@/uni_modules/uview-ui/components/u-$1/u-$1.vue"
+  "easycom": {
+    "^u-(.*)": "@/uni_modules/uview-ui/components/u-$1/u-$1.vue"
+  },
+  "pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": ""
+      }
     },
-    "pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-        {
-            "path": "pages/index/index",
-            "style": {
-                "navigationBarTitleText": ""
-            }
-        },
-        {
-            "path": "pages/nurse/nurse-login",
-            "style": {
-                "navigationBarTitleText": ""
-            }
-        },
-        {
-            "path": "pages/admin/admin-login",
-            "style": {
-                "navigationBarTitleText": ""
-            }
-        },
-        {
-            "path": "pages/contact-admin/contact-admin",
-            "style": {
-                "navigationBarTitleText": "联系管理员",
-                "enablePullDownRefresh": false
-            }
-        },
-        {
-            "path": "pages/patient/add-patient",
-            "style": {
-                "navigationBarTitleText": "患者添加",
-                "enablePullDownRefresh": false
-            }
-        },
-        {
-            "path": "pages/patient/add-patient-ward",
-            "style": {
-                "navigationBarTitleText": "巡视添加",
-                "enablePullDownRefresh": false
-            }
-        },
-        {
-            "path": "pages/patient/add-patient-transfusion",
-            "style": {
-                "navigationBarTitleText": "输液增加",
-                "enablePullDownRefresh": false
-            }
-        },
-        {
-            "path": "pages/nurse/nurse-patient_list",
-            "style": {
-                "navigationBarTitleText": ""
-            }
-        },
-        {
-            "path": "pages/nurse/nurse-info",
-            "style": {
-                "navigationBarTitleText": ""
-            }
-        },
-        {
-            "path": "pages/nurse/nurse-patient_info",
-            "style": {
-                "navigationBarTitleText": ""
-            }
-        },
-        {
-            "path": "pages/nurse/nurse-patient_transfusion",
-            "style": {
-                "navigationBarTitleText": ""
-            }
-        },
-        {
-            "path": "pages/nurse/nurse-patient_check",
-            "style": {
-                "navigationBarTitleText": ""
-            }
-        },
-        {
-            "path": "pages/nurse/nurse-patient_transfusion-info",
-            "style": {
-                "navigationBarTitleText": ""
-            }
-        },
-        {
-            "path": "pages/nurse/nurse-patient_check-info",
-            "style": {
-                "navigationBarTitleText": ""
-            }
-        },
-        {
-            "path": "pages/nurse/test",
-            "style": {
-                "navigationBarTitleText": ""
-            }
+    {
+      "path": "pages/nurse/nurse-login",
+      "style": {
+        "navigationBarTitleText": ""
+      }
+    },
+    {
+      "path": "pages/admin/admin-login",
+      "style": {
+        "navigationBarTitleText": ""
+      }
+    },
+    {
+      "path": "pages/contact-admin/contact-admin",
+      "style": {
+        "navigationBarTitleText": "联系管理员",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/patient/add-patient",
+      "style": {
+        "navigationBarTitleText": "患者添加",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/patient/add-patient-ward",
+      "style": {
+        "navigationBarTitleText": "巡视添加",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/patient/add-patient-transfusion",
+      "style": {
+        "navigationBarTitleText": "输液增加",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/nurse/nurse-patient_list",
+      "style": {
+        "navigationBarTitleText": ""
+      }
+    },
+    {
+      "path": "pages/nurse/nurse-info",
+      "style": {
+        "navigationBarTitleText": ""
+      }
+    },
+    {
+      "path": "pages/nurse/nurse-patient_info",
+      "style": {
+        "navigationBarTitleText": ""
+      }
+    },
+    {
+      "path": "pages/nurse/nurse-patient_transfusion",
+      "style": {
+        "navigationBarTitleText": ""
+      }
+    },
+    {
+      "path": "pages/nurse/nurse-patient_check",
+      "style": {
+        "navigationBarTitleText": ""
+      }
+    },
+    {
+      "path": "pages/nurse/nurse-patient_transfusion-info",
+      "style": {
+        "navigationBarTitleText": ""
+      }
+    },
+    {
+      "path": "pages/nurse/nurse-patient_check-info",
+      "style": {
+        "navigationBarTitleText": ""
+      }
+    },
+    {
+      "path": "pages/admin/admin-info",
+      "style": {
+        "navigationBarTitleText": "管理员"
+      }
+    },
+
+    {
+      "path": "pages/nurse/test",
+      "style": {
+        "navigationBarTitleText": ""
+      }
+    },
+    {
+      "path": "pages/admin/admin-nurse",
+      "style": {
+        "navigationBarTitleText": "管理员",
+        "navigationBarBackgroundColor": "#ffaa00"
+        // "navigationStyle": "custom",
+        // "app-plus": {
+        //   "animationType": "fade-in",
+        //   "background": "transparent",
+        //   "backgroundColor": "#ffaa00",
+        //   "popGesture": "none",
+        //   "titleNView": {
+        //     "titleSize": "18px",
+        //     "autoBackButton": false
+        //   }
+        // }
+      }
+
+    },
+    {
+      "path": "pages/admin/admin-doctor",
+      "style": {
+        "navigationBarTitleText": "管理员",
+        "navigationBarBackgroundColor": "#ffaa00"
+        // "navigationStyle": "custom",
+        // "app-plus": {
+        //   "animationType": "fade-in",
+        //   "background": "transparent",
+        //   "backgroundColor": "#ffaa00",
+        //   "popGesture": "none",
+        //   "titleNView": {
+        //     "titleSize": "18px",
+        //     "autoBackButton": false
+        //   }
+        // }
+      }
+    },
+    {
+      "path": "pages/admin/admin-patient",
+      "style": {
+        "navigationBarTitleText": "管理员",
+        "navigationBarBackgroundColor": "#ffaa00"
+        // "navigationStyle": "custom",
+        // "app-plus": {
+        //   "animationType": "fade-in",
+        //   "background": "transparent",
+        //   "backgroundColor": "#ffaa00",
+        //   "popGesture": "none",
+        //   "titleNView": {
+        //     "titleSize": "18px",
+        //     "autoBackButton": false
+        //   }
+        // }
+      }
+    }, {
+      "path": "pages/admin/admin-info",
+      "style": {
+        "navigationBarTitleText": "管理员",
+        "navigationBarBackgroundColor": "#ffaa00",
+        "navigationStyle": "custom",
+        "app-plus": {
+          "animationType": "fade-in",
+          "background": "transparent",
+          "backgroundColor": "#ffaa00",
+          "popGesture": "none",
+          "titleNView": {
+            "titleSize": "18px",
+            "autoBackButton": false
+          }
         }
-    ],
-    "globalStyle": {
-        "navigationBarTextStyle": "black",
-        "navigationBarTitleText": "uni-app",
-        "navigationBarBackgroundColor": "#F8F8F8",
-        "backgroundColor": "#F8F8F8"
-    },
-    "uniIdRouter": {}
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#ffffff",
+    "backgroundColor": "#ffffff"
+  },
+  "uniIdRouter": {}
+  // "tabBar": {
+  //   "color": "#7A7E83",
+  //   "selectedColor": "#ffaa00",
+  //   "borderStyle": "white",
+  //   "backgroundColor": "#white",
+  //   "custom": true,
+  //   "list": [{
+  //       "pagePath": "pages/admin/admin-nurse",
+  //       "text": "护士",
+  //       "customIcon": false
+  //     },
+  //     {
+  //       "pagePath": "pages/admin/admin-doctor",
+  //       "text": "医生",
+  //       "customIcon": false
+  //     },
+  //     {
+  //       "pagePath": "pages/admin/admin-patient",
+  //       "text": "患者",
+  //       "customIcon": false
+  //     },
+  //     {
+  //       "pagePath": "pages/admin/admin-info",
+  //       "text": "我的",
+  //       "customIcon": false
+  //     }
+  //   ],
+  //   "current": 0
+  // }
 }

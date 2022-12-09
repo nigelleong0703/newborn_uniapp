@@ -230,11 +230,7 @@
       }
     },
     onLoad() {
-      this.$request.get('/api/list/department').then(res => {
-        console.log(res)
-        uni.setStorageSync('department_list', res.data)
-      })
-      this.getDepartment_list()
+      this.department_list = common.getDepartment_list()
     },
     onReady() {
       this.$refs.datetimePicker.setFormatter(this.formatter)
@@ -302,9 +298,6 @@
         this.post.relation = e.id
         this.form1.relation = e.name
       },
-      getDepartment_list() {
-        this.department_list = uni.getStorageSync('department_list')
-      },
       department_select(e) {
         this.form1.department = e.name
         this.post.department = e.id
@@ -316,21 +309,21 @@
         this.time_picker = false
       }
     },
-}
+  }
 </script>
 
 <style lang="scss">
-.content {
+  .content {
     min-height: 100%;
-}
+  }
 
-.form-content {
+  .form-content {
     margin-top: 20px;
     margin-left: 5%;
     margin-right: 5%;
   }
 
-.bottom-button {
+  .bottom-button {
     width: 80%;
     margin-top: 20px;
     margin-left: 10%;

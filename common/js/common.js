@@ -21,9 +21,14 @@ function submit_form(target_url, form) {
   console.log(form)
 };
 
+function getDepartment_list() {
+  return uni.getStorageSync('department_list')
+};
+
 module.exports = {
   dateTimeStr,
   loadSystemTime,
   time_select1,
-  submit_form
+  submit_form,
+  getDepartment_list
 }

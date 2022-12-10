@@ -1,18 +1,15 @@
 <template>
     <view class="content">
         <view class="body">
-            <view class="text-area">
-                <text class="title">{{ title }}</text>
-            </view>
             <view class="patient-transfusion-info">
                 <u-cell-group>
                     <u-cell title="时间" value=""></u-cell>
-					<u-cell title="地点" value=""></u-cell>
-					<u-cell title="输液速度" value=""></u-cell>
-					<u-cell title="医护人员" value=""></u-cell>
-					<u-cell title="静脉选择" value=""></u-cell>
-					<u-cell title="输液工具" value=""></u-cell>
-					<u-cell title="药物成分表" value=""></u-cell>
+                    <u-cell title="地点" value=""></u-cell>
+                    <u-cell title="输液速度" value=""></u-cell>
+                    <u-cell title="医护人员" value=""></u-cell>
+                    <u-cell title="静脉选择" value=""></u-cell>
+                    <u-cell title="输液工具" value=""></u-cell>
+                    <u-cell title="药物成分表" value=""></u-cell>
                 </u-cell-group>
             </view>
             <view class="navigate-bar">

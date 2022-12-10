@@ -1,9 +1,6 @@
 <template>
     <view class="content">
         <view class="body">
-            <view class="text-area">
-                <text class="title">{{ title }}</text>
-            </view>
             <view class="patient-info">
                 <u-cell-group>
                     <u-cell title="用户名" value="wxy"></u-cell>

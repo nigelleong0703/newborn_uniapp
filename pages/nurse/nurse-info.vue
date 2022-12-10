@@ -28,10 +28,10 @@ export default {
     },
 
     methods: {
-		change(e) {
-		    this.value2 = e
-		    console.log('change2', e)
-		},
+        change(e) {
+            this.value2 = e
+            console.log('change2', e)
+        },
         patient_list() {
             uni.navigateTo({
                 url: '/pages/nurse/nurse-patient_list'

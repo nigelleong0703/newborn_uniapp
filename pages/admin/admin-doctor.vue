@@ -1,16 +1,44 @@
 <template>
-  <view>
+  <view class="body">
     <scroll-view id="nav-bar" class="nav-bar" scroll-x scroll-with-animation :scroll-left="scrollLeft">
       <view v-for="(item,index) in tabBars" :key="item.id" class="nav-item"
         :class="{current: index === tabCurrentIndex}" :id="'tab'+index" @click="changeTab(index)">{{item.name}}</view>
     </scroll-view>
-    <view class="tab-bar-line"></view>
-    <tabBar-admin :currentPage="1"></tabBar-admin>
+    <!-- 内容部分 -->
+    <view class="content">
+      <swiper id="swiper" class="swiper-box" :duration="200" :current="tabCurrentIndex" @change="changeTab">
+        <swiper-item v-for="tabItem in tabBars" :key="tabItem.id">
+          <!--        <scroll-view scroll-y="true" :style="{height: '80vh'}" @scrolltolower="selectKehuFun(tabItem)" refresher-enabled
+          :refresher-threshold="200" :refresher-triggered="triggered" @refresherrefresh="onRefresh(tabItem)"
+          @refresherrestore="onRestore(tabItem)"> -->
+          <scroll-view class="scrollClass" scroll-y="true">
+            <view v-if="tabItem.list.length > 0">
+              <!--            <view v-for="(item, index) in list" :key="index" @click="khCardClickFun(item)"> -->
+              <view v-for="(item, index) in tabItem.list" :key="index">
+                <!--              <khCard :item=" item" :isSelect="isSelect" :index="index" @cxGetDataFun="cxGetDataFun">
+              </khCard> -->
+                <view>{{item.name}}</view>
+              </view>
+              <!--            <getMore :isMore="isMore" nullMsg="已加载全部~"></getMore>
+            <view class="h200"></view> -->
+            </view>
+          </scroll-view>
+        </swiper-item>
+      </swiper>
+      <view :style="{flex: 0}">
+        <tabBar-admin class="bottom-bar" :currentPage="1"></tabBar-admin>
+      </view>
+    </view>
+    <view class="bottom-r">
+      <addBtn url="./addKeHu?isAdd=1"></addBtn>
+    </view>
   </view>
 </template>
 
 <script>
   import common from "common/js/common.js"
+  import khCard from 'components/card/kehu.vue'
+
   let windowWidth = 0,
     scrollTimer = false,
     tabBar;
@@ -22,6 +50,8 @@
         enableScroll: true,
         department_list: [],
         tabBars: [],
+        triggered: false,
+        _freshing: false,
       }
     },
     onReady() {
@@ -35,6 +65,14 @@
     async onLoad() {
       windowWidth = uni.getSystemInfoSync().windowWidth;
       this.loadTabbars();
+      uni.$on('addNewDoctor', (res) => {
+        this.selectKehuFun(this.tabBars[res.department])
+      })
+      // uni.$on('cxGetDataFun', this.cxGetDataFun)
+    },
+
+    onUnload() {
+      uni.$off('addNewDoctor');
     },
 
     methods: {
@@ -42,13 +80,71 @@
         this.department_list = common.getDepartment_list();
         console.log(common.getDepartment_list());
         let tabList = this.department_list;
-        // tabList.forEach(item => {
-        //   item.newsList = [];
-        //   item.loadMoreStatus = 0; //加载更多 0加载前，1加载中，2没有更多了
-        //   item.refreshing = 0;
-        // })
+        var index = 0;
+        tabList.forEach(item => {
+          item.list = [];
+          item.moreShow = false;
+          item.triggered = false;
+          item.isMore = true;
+          item._freshing = false;
+          item.index = index
+          index++;
+        })
         this.tabBars = tabList;
+        this.tabBars.forEach(item => {
+          this.selectKehuFun(item)
+        })
       },
+
+      selectKehuFun: function(tabItem) {
+        console.log(tabItem)
+        if (!tabItem.isMore) {
+          return
+        }
+        uni.showLoading({
+          title: '加载中...',
+          mask: true
+        })
+        let departmentNo = tabItem.index + 1
+        let params = {
+          department: departmentNo
+        }
+        this.$request.get('/api/doctor', params).then(res => {
+          if (res.statusCode !== 200) {
+            this.$.toast('获取失败，错误代码' + res.statusCode);
+          } else {
+            let data = res.data;
+            tabItem.list = data.nurse
+          }
+        })
+        uni.hideLoading();
+      },
+
+      // onRefresh: function(tabItem) {
+      //   if (this._freshing) return
+      //   this._freshing = true;
+      //   if (!this.triggered) {
+      //     this.triggered = true;
+      //   }
+      //   console.log(tabItem)
+      //   this.cxGetDataFun(tabItem);
+      //   setTimeout(() => {
+      //     this.triggered = false; //触发onRestore，并关闭刷新图标  
+      //     this._freshing = false;
+      //   }, 3000)
+      //   console.log("onRefreshDone")
+      //   return
+      // },
+      // onRestore: function() {
+      //   console.log("onRestore")
+      // },
+      // cxGetDataFun: function(tabItem) {
+      //   tabItem.pageIndex = 1;
+      //   tabItem.isMore = true;
+      //   console.log(tabItem)
+      //   this.selectKehuFun(tabItem);
+      // },
+
       async changeTab(e) {
 
         if (scrollTimer) {
@@ -97,7 +193,10 @@
           //第一次切换tab，动画结束后需要加载数据
           let tabItem = this.tabBars[this.tabCurrentIndex];
           if (this.tabCurrentIndex !== 0 && tabItem.loaded !== true) {
-            this.loadNewsList('add');
+            // this.loadNewsList('add');
+            this.selectKehuFun(this.tabBars[this.tabCurrentIndex])
+            /////////////////
+            /////////////////
             tabItem.loaded = true;
           }
         }, 300)
@@ -122,8 +221,11 @@
   page,
   .content {
     background-color: #f8f8f8;
-    height: 100%;
     overflow: hidden;
+  }
+
+  .body {
+    height: 100vh;
   }
 
   .nav-bar {
@@ -171,5 +273,17 @@
   view {
     display: flex;
     flex-direction: column;
+  }
+
+  .content {
+    min-height: 100%;
+  }
+
+  .swiper-box {
+    flex: 1;
+  }
+
+  tabBar-admin {
+    flex: 0;
   }
 </style>

@@ -61,8 +61,13 @@
       login() {
         this.$refs.form.validate().then(res => {
           console.log(this.form)
+          uni.showLoading({
+            title: '加载中...',
+            mask: true
+          })
           this.$request.post('/api/admin/login', this.form).then(res => {
             console.log(res)
+            uni.hideLoading();
             if (res.statusCode !== 200) {
               this.$.toast('用户名或密码不正确');
             } else {
@@ -84,7 +89,9 @@
                   }, 1000)
                 }
               })
-              uni.setStorageSync('user', res.data)
+              uni.setStorageSync('token', res.data.jwt)
+              uni.setStorageSync('current_user', res.data)
+              uni.setStorageSync('login_status', true)
             }
           })
         }).catch(err => {

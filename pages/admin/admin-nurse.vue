@@ -1,51 +1,66 @@
 <template>
-  <view>
-    <scroll-view id="nav-bar" class="nav-bar" scroll-x scroll-with-animation :scroll-left="scrollLeft">
-      <view v-for="(item,index) in tabBars" :key="item.id" class="nav-item"
-        :class="{current: index === tabCurrentIndex}" :id="'tab'+index" @click="changeTab(index)">{{item.name}}</view>
-    </scroll-view>
-    <!-- 内容部分 -->
-    <swiper id="swiper" class="swiper-box" :duration="200" :current="tabCurrentIndex" @change="changeTab">
-      <swiper-item v-for="tabItem in tabBars" :key="tabItem.id">
-        <scroll-view scroll-y="true" :style="{height: '80vh'}" @scrolltolower="selectKehuFun(tabItem)" refresher-enabled
-          :refresher-threshold="200" :refresher-triggered="tabItem.triggered" refresher-background="white"
-          @refresherrefresh="onRefresh(tabItem)" @refresherrestore="onRestore(tabItem)">
-          <view v-if="tabItem.list.length > 0">
-            <!--            <view v-for="(item, index) in list" :key="index" @click="khCardClickFun(item)"> -->
-            <view v-for="(item, index) in tabItem.list" :key="index">
-              <!--              <khCard :item=" item" :isSelect="isSelect" :index="index" @cxGetDataFun="cxGetDataFun">
-              </khCard> -->
-              <view>{{item.name}}</view>
-            </view>
-            <view>{{tabItem.triggered}}</view>
-            <!--            <getMore :isMore="isMore" nullMsg="已加载全部~"></getMore>
-            <view class="h200"></view> -->
+  <view class="body">
+    <view class="body">
+      <view class='nav'>
+        <scroll-view id="nav-bar" class="nav-bar" scroll-x scroll-with-animation :scroll-left="scrollLeft">
+          <view v-for="(item,index) in tabBars" :key="item.id" class="nav-item"
+            :class="{current: index === tabCurrentIndex}" :id="'tab'+index" @click="changeTab(index)">{{item.name}}
           </view>
-          <dataNull v-else src="/static/img/dataNull.png" title="暂无相关客户哦~"></dataNull>
         </scroll-view>
-      </swiper-item>
-    </swiper>
-
-    <view class="tab-bar-line"></view>
-    <tabBar-admin :currentPage="0"></tabBar-admin>
+      </view>
+      <!-- 内容部分 -->
+      <swiper style="min-height: 100vh;" :current="tabCurrentIndex" @change="changeTab">
+        <swiper-item v-for="(tabItem, tabItemIndex) in tabBars" :key="tabItem.id">
+          <scroll-view style="height: 100%;" scroll-y="true" scroll-with-animation>
+            <view :id="'top'+tabItemIndex" style="width: 100%;height: 180upx;">边距盒子</view>
+            <view class='content'>
+              <view class='card' v-for="(item,index) in tabItem.list" v-if="tabItem.list.length > 0" :key="index">
+                <view>{{item.id}}</view>
+                <view>{{item.name}}</view>
+                <view>{{item.gender}}</view>
+                <view>{{item.birthdate}}</view>
+                <u-button class='button' type='default' @click="viewNurseInfo(item.id)" text="view"></u-button>
+              </view>
+              <view class='noCard' v-if="tabItem.list.length===0">
+                暂无信息
+              </view>
+            </view>
+            <view style="width: 100%;height: 150upx;opacity:0;">底部占位盒子</view>
+          </scroll-view>
+        </swiper-item>
+      </swiper>
+    </view>0
+    <view>
+      <addBtn url="/pages/patient/add-patient" :params="{department: (tabCurrentIndex+1)}"></addBtn>
+      <tabBar-admin class="bottom-bar" :currentPage="0"></tabBar-admin>
+    </view>
   </view>
 </template>
 
 <script>
   import common from "common/js/common.js"
   import khCard from 'components/card/kehu.vue'
+
   let windowWidth = 0,
     scrollTimer = false,
     tabBar;
+
+  const h = uni.getSystemInfoSync().statusBarHeight;
   export default {
+    computed: {
+      barHeight() {
+        return `calc(100vh - 44px - ${h}px)`
+      }
+    },
     data() {
       return {
         tabCurrentIndex: 0,
         scrollLeft: 0,
-        scrollHeight: '80vh',
         enableScroll: true,
         department_list: [],
         tabBars: [],
+        triggered: false,
+        _freshing: false,
       }
     },
     onReady() {
@@ -59,7 +74,14 @@
     async onLoad() {
       windowWidth = uni.getSystemInfoSync().windowWidth;
       this.loadTabbars();
-      uni.$on('cxGetDataFun', this.cxGetDataFun)
+      uni.$on('addNewNurse', (res) => {
+        this.selectKehuFun(this.tabBars[res.department])
+      })
+      // uni.$on('cxGetDataFun', this.cxGetDataFun)
+    },
+
+    onUnload() {
+      uni.$off('addNewNurse');
     },
 
     methods: {
@@ -81,12 +103,10 @@
         this.tabBars.forEach(item => {
           this.selectKehuFun(item)
         })
-        console.log(this.tabBars)
       },
 
       selectKehuFun: function(tabItem) {
         console.log(tabItem)
-        console.log(tabItem.isMore)
         if (!tabItem.isMore) {
           return
         }
@@ -98,39 +118,42 @@
         let params = {
           department: departmentNo
         }
-        console.log(departmentNo)
         this.$request.get('/api/nurse', params).then(res => {
+          console.log(res)
           if (res.statusCode !== 200) {
             this.$.toast('获取失败，错误代码' + res.statusCode);
           } else {
-            console.log(res)
-            console.log(tabItem.triggered)
             let data = res.data;
             tabItem.list = data.nurse
           }
         })
-        console.log(tabItem.list)
         uni.hideLoading();
-        tabItem._freshing = false;
-        tabItem.triggered = false;
       },
 
-      onRefresh: function(tabItem) {
-        if (tabItem._freshing) return
-        tabItem._freshing = true;
-        this.cxGetDataFun(tabItem);
-        tabItem._freshing = false;
-        console.log("onRefreshDone")
-        return
-      },
-      onRestore: function(e) {
-        tabItem.triggered = 'restore'; // 需要重置
-      },
-      cxGetDataFun: function(tabItem) {
-        tabItem.pageIndex = 1;
-        tabItem.isMore = true;
-        this.selectKehuFun(tabItem);
-      },
+      // onRefresh: function(tabItem) {
+      //   if (this._freshing) return
+      //   this._freshing = true;
+      //   if (!this.triggered) {
+      //     this.triggered = true;
+      //   }
+      //   console.log(tabItem)
+      //   this.cxGetDataFun(tabItem);
+      //   setTimeout(() => {
+      //     this.triggered = false; //触发onRestore，并关闭刷新图标  
+      //     this._freshing = false;
+      //   }, 3000)
+      //   console.log("onRefreshDone")
+      //   return
+      // },
+      // onRestore: function() {
+      //   console.log("onRestore")
+      // },
+      // cxGetDataFun: function(tabItem) {
+      //   tabItem.pageIndex = 1;
+      //   tabItem.isMore = true;
+      //   console.log(tabItem)
+      //   this.selectKehuFun(tabItem);
+      // },
 
       async changeTab(e) {
 
@@ -200,16 +223,42 @@
           }).exec();
         });
       },
+      viewNurseInfo(id) {
+        console.log(id)
+        let targetUrl = '/pages/nurse/nurse-info'
+        targetUrl = targetUrl + '?id=' + id
+        uni.navigateTo({
+          url: targetUrl
+        })
+      },
     },
   }
 </script>
 
 <style lang='scss'>
-  page,
-  .content {
-    background-color: #f8f8f8;
-    height: 100%;
+  @import url("/static/style/admin-home.css");
+
+  .body {
+    width: 100vw;
+    min-height: 100vh;
     overflow: hidden;
+    color: #6B8082;
+    position: relative;
+    background-color: #f6f6f6;
+  }
+
+  .nav {
+    position: fixed;
+    left: 0;
+    color: white;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    font-size: 24upx;
+    background-color: #50B7EA;
+    z-index: 996;
   }
 
   .nav-bar {
@@ -252,14 +301,5 @@
         width: 50%;
       }
     }
-  }
-
-  swiper {
-    height: 80vh;
-  }
-
-  view {
-    display: flex;
-    flex-direction: column;
   }
 </style>

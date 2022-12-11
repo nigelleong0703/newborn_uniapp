@@ -1,0 +1,27 @@
+.content {
+  width: 100%;
+}
+
+.card {
+  width: 90%;
+  height: 368upx;
+  background-color: white;
+  margin: 0 auto 42upx auto;
+  background: #FFFFFF;
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.10);
+  border-radius: 5px;
+  position: relative;
+}
+
+.noCard {
+  width: 90%;
+  height: 200upx;
+  margin: auto;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999999;
+  box-shadow: 0 0 10upx 0 rgba(0, 0, 0, 0.10);
+  border-radius: 10upx;
+}

@@ -3,9 +3,9 @@
     <view class="form">
       <view class="form-content">
         <u--form labelPosition="left" :model="form1" ref="form1">
-          <view class="second-title">患者基本信息</view>
+          <view class="second-title">护士基本信息</view>
           <u-form-item label="姓名" label-width="120" prop="name" ref="item1">
-            <u--input v-model="form1.name" placeholder="请输入患者姓名"></u--input>
+            <u--input v-model="form1.name" placeholder="请输入护士姓名"></u--input>
           </u-form-item>
           <u-form-item label="性别" label-width="120" prop="gender" ref="item2">
             <u-radio-group v-model="form1.gender">
@@ -14,48 +14,41 @@
               </u-radio>
             </u-radio-group>
           </u-form-item>
-          <u-form-item label="生日日期" label-width="120" prop="birthdate" @click="time_picker = true; hideKeyboard()"
-            ref="item3">
-            <u--input v-model="form1.birthdate" placeholder="请输入患者生日日期" disabled disabledColor="#ffffff">
-            </u--input>
+          <u-form-item label="身份证号" label-width="120" prop="guardianId" ref="item3">
+            <u--input v-model="form1.nurseId" placeholder="请输入身份证号" type='idcard'></u--input>
           </u-form-item>
-          <view class="second-title">监护人信息</view>
-          <u-form-item label="监护人姓名" label-width="120" prop="guardian" ref="item4">
-            <u--input v-model="form1.guardian" placeholder="请输入监护人姓名"></u--input>
-            </u--input>
+          <u-form-item label="联系电话" label-width="120" prop="tel" ref="item4">
+            <u--input v-model="form1.tel" placeholder="请输入联系电话号码" type="tel"></u--input>
           </u-form-item>
-          <u-form-item label="监护人身份证号" label-width="120" prop="guardianId" ref="item5">
-            <u--input v-model="form1.guardianId" placeholder="请输入身份证号" type='idcard'></u--input>
-          </u-form-item>
-          <u-form-item label="监护人关系" label-width="120" prop="relation" ref="item6"
-            @click="guardian_picker = true; hideKeyboard()">
-            <u--input v-model="form1.relation" disabled disabledColor="#ffffff" placeholder="请选择监护人关系" border="none">
-            </u--input>
-            <u-icon slot="right" name="arrow-right"></u-icon>
-          </u-form-item>
-          <u-form-item label="联系电话" label-width="120" prop="tel" ref="item7">
-            <u--input v-model="form1.tel" placeholder="请输入监护人联系电话号码" type="tel"></u--input>
-          </u-form-item>
-          <view class="second-title">入院信息</view>
-          <u-form-item label="科室" label-width="120" prop="department" ref="item8"
+          <u-form-item label="科室" label-width="120" prop="department" ref="item5"
             @click="department_picker = true; hideKeyboard()">
             <u--input v-model="form1.department" disabled disabledColor="#ffffff" placeholder="请选择科室" border="none">
             </u--input>
             <u-icon slot="right" name="arrow-right"></u-icon>
           </u-form-item>
-          <u-form-item label="过敏信息" label-width="120" prop="allergy" ref="item9">
-            <u--textarea placeholder="请填写过敏信息" v-model="form1.allergy" count></u--textarea>
+          <u-form-item label="入职日期" label-width="120" prop="registerdate" @click="time_picker = true; hideKeyboard()"
+            ref="item6">
+            <u--input v-model="form1.registerdate" placeholder="请输入护士入职日期" disabled disabledColor="#ffffff">
+            </u--input>
+          </u-form-item>
+          <view class="second-title">登录信息</view>
+          <u-form-item label="用户名" label-width="120" prop="username" ref="item7">
+            <u--input v-model="form1.username" placeholder="请输入监护人姓名"></u--input>
+            </u--input>
+          </u-form-item>
+          <u-form-item label="密码" label-width="120" prop="password" ref="item8">
+            <u--input v-model="form1.password" placeholder="请输入新的密码" type='password'></u--input>
+          </u-form-item>
+          <u-form-item label="密码验证" label-width="120" prop="password_verify" ref="item9">
+            <u--input v-model="form1.password_verify" placeholder="请重新输入密码" type='password'></u--input>
           </u-form-item>
         </u--form>
-        <u-action-sheet :show="guardian_picker" :actions="guardian_list" title="监护人关系" description="请选择监护人与患者关系"
-          closeOnClickOverlay @close="guardian_picker = false" @select='relation_select'>
-        </u-action-sheet>
         <u-action-sheet :show="department_picker" :actions="department_list" title="科室选择" description="请选择负责科室"
           closeOnClickOverlay @close="department_picker = false" @select='department_select'>
         </u-action-sheet>
-        <u-datetime-picker ref="datetimePicker" :show="time_picker" mode="date" closeOnClickOverlay
-          @close="time_picker = false" @cancel="time_picker = false" @confirm='time_select' @change='change'
-          :formatter="formatter">
+        <u-datetime-picker v-model="post.registerdate" ref="datetimePicker" :show="time_picker" mode="date"
+          closeOnClickOverlay @close="time_picker = false" @cancel="time_picker = false" @confirm='time_select'
+          @change='change' :formatter="formatter">
         </u-datetime-picker>
       </view>
     </view>
@@ -71,6 +64,15 @@
   import common from "common/js/common.js"
   export default {
     data() {
+      var validatePass2 = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请再次输入密码'));
+        } else if (value !== this.form1.password) {
+          callback(new Error('两次输入密码不一致!'));
+        } else {
+          callback();
+        }
+      };
       return {
         formatter(type, value) {
           if (type == 'year') {
@@ -95,30 +97,34 @@
         time_picker: false,
         showSex: false,
         form1: {
+          username: '',
+          password: '',
           name: '',
-          gender: '',
-          birthdate: '',
-
-          guardian: '',
-          guardianId: '',
-          relation: '',
           tel: '',
-
           department: '',
-          allergy: ''
+          gender: '',
+          password_verify: '',
+          registerdate: '',
+          nurseId: '',
         },
         post: {
+          username: '',
+          password: '',
           name: '',
-          gender: '',
-          birthdate: '',
-
-          guardian: '',
-          guardianId: '',
-          relation: '',
           tel: '',
-
           department: '',
-          allergy: ''
+          gender: '',
+          password_verify: '',
+          registerdate: '',
+          nurseId: '',
+        },
+        post1: {
+          username: '',
+          password: '',
+          name: '',
+          tel: '',
+          department: '',
+          gender: '',
         },
         birthday: Number(new Date()),
         guardian_list: [{
@@ -161,25 +167,13 @@
             message: '请选择男或女',
             trigger: ['blur', 'change']
           },
-          'birthdate': {
+          'registerdate': {
             type: 'string',
             required: true,
             message: '请输入患者生日日期',
             trigger: ['blur', 'change']
           },
-          'guardian': [{
-            type: 'string',
-            required: true,
-            message: '请填写姓名',
-            trigger: ['blur', 'change']
-          }, {
-            validator: (rule, value, callback) => {
-              return uni.$u.test.chinese(value);
-            },
-            message: "姓名必须为中文",
-            trigger: ["change", "blur"],
-          }],
-          'guardianId': [{
+          'nurseId': [{
             type: 'string',
             required: true,
             message: '身份证号码不能为空',
@@ -191,12 +185,6 @@
             message: "请输入有效身份证号码",
             trigger: ["change", "blur"],
           }],
-          'relation': {
-            type: 'string',
-            required: true,
-            message: '请选择监护人关系',
-            trigger: ['blur', 'change']
-          },
           'tel': [{
             type: 'string',
             required: true,
@@ -215,6 +203,38 @@
             message: '请选择科室',
             trigger: ['blur', 'change']
           }],
+          'username': [{
+            type: 'string',
+            required: true,
+            message: '请填写用户名',
+            trigger: ['blur', 'change']
+          }],
+          'password': [{
+            type: 'string',
+            required: true,
+            message: '请填写密码',
+            trigger: ['blur', 'change']
+          }, {
+            min: 6,
+            max: 16,
+            message: '长度在 6 到 12 个字符',
+            trigger: ['blur', 'change'],
+          }],
+          'password_verify': [{
+            type: 'string',
+            required: true,
+            message: '请填写密码',
+            trigger: ['blur', 'change']
+          }, {
+            min: 6,
+            max: 16,
+            message: '长度在 6 到 12 个字符',
+            trigger: ['blur', 'change'],
+          }, {
+            validator: validatePass2,
+            trigger: ['blur', 'change'],
+            required: true
+          }],
         },
         genderlist: [{
             id: '1',
@@ -231,6 +251,9 @@
     },
     onLoad(option) {
       this.department_list = common.getDepartment_list()
+      var time = common.loadSystemTime()
+      this.post.registerdate = time[0]
+      this.form1.registerdate = time[1]
       if (option.department) {
         let passedDepartment = option.department
         this.form1.department = this.department_list[passedDepartment - 1].name
@@ -255,14 +278,15 @@
       submit() {
         // 如果有错误，会在catch中返回报错信息数组，校验通过则在then中返回true
         this.$refs.form1.validate().then(res => {
-          this.post.name = this.form1.name
-          this.post.gender = this.form1.gender
-          this.post.guardian = this.form1.guardian
-          this.post.guardianId = this.form1.guardianId
-          this.post.tel = this.form1.tel
-          this.post.allergy = this.form1.allergy
-          console.log(this.post)
-          this.$request.post('/api/patient/add', this.post).then(res => {
+          this.post1.username = this.form1.username
+          this.post1.password = this.form1.password
+          this.post1.name = this.form1.name
+          this.post1.tel = this.form1.tel
+          this.post1.department = this.post.department
+          this.post1.gender = this.form1.gender
+          // this.convertToForm();
+          console.log(this.post1)
+          this.$request.post('/api/nurse/add', this.post1).then(res => {
             console.log(res)
             if (res.statusCode !== 200) {
               this.$.toast('提交失败');
@@ -273,13 +297,11 @@
                 success: () => {
                   setTimeout(() => {
                     uni.$emit('refurbish', {})
-                    uni.$emit('addNewPatient', {
-                      department: this.post.department
-                    })
                     uni.navigateBack();
                   }, 1000)
                 }
               })
+
             }
           })
 
@@ -290,8 +312,9 @@
 
       },
       reset() {
-        const validateList = ['form1.name', 'form1.gender', 'form1.birthdate',
-          'form1.guardian', 'form1.guardianId', 'form1.relation', 'form1.tel', 'form1.department', 'form1.allergy',
+        const validateList = ['form1.username', 'form1.password', 'form1.name',
+          'form1.tel', 'form1.department', 'form1.gender', 'form1.registerdate', 'form1.password_verify',
+          'form1.nurseId',
         ]
         this.$refs.form1.resetFields()
         this.form1.department = ''
@@ -304,19 +327,25 @@
       hideKeyboard() {
         uni.hideKeyboard()
       },
-      relation_select(e) {
-        this.post.relation = e.id
-        this.form1.relation = e.name
-      },
       department_select(e) {
         this.form1.department = e.name
         this.post.department = e.id
       },
       time_select(e) {
         var bd = Math.round(e.value / 1000)
-        this.form1.birthdate = uni.$u.timeFormat(bd, 'yyyy-mm-dd')
-        this.post.birthdate = bd
+        this.form1.registerdate = uni.$u.timeFormat(bd, 'yyyy-mm-dd')
+        this.post.registerdate = bd
         this.time_picker = false
+      },
+      convertToForm() {
+        Object.entries(this.post1).forEach((entry) => {
+          const [key, value] = entry;
+          console.log(key)
+          console.log(this.post.key)
+          this.post1.key = this.post.key
+          console.log(this.post1.key)
+        });
+        console.log(this.post1)
       }
     },
   }

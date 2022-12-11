@@ -70,7 +70,7 @@
 </script>
 
 <style>
-  image {
+  .u-page__item__slot-icon {
     width: 40rpx;
     height: 40rpx;
   }

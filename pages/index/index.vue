@@ -69,13 +69,6 @@
     justify-content: center;
   }
 
-  .logo {
-    margin-top: 200rpx;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 50rpx;
-  }
-
   .text-area {
     display: flex;
     justify-content: center;

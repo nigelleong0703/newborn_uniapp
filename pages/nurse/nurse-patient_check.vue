@@ -7,11 +7,11 @@
             <view class="button">
                 <u-button type="primary" icon="plus" shape="circle" @click="add_ward"></u-button>
             </view>
-            <view class="patient-check">
+            <view v-for="(check, index) in checkList" :key="check.seq">
                 <u-cell-group>
-                    <u-cell title="巡视记录 1" isLink url='/pages/nurse/nurse-patient_check-info'></u-cell>
+                    <u-cell :title="'巡视记录' + '	' + (index + 1)" @click="cell_click(check)" :border='false'
+                        :isLink='true' customStyle="margin-bottom: 5px"></u-cell>
                 </u-cell-group>
-                </u-collapse>
             </view>
             <view class="navigate-bar">
                 <u-tabbar :value="value5" @change="name => value5 = name" :fixed="true" :border="false"
@@ -29,18 +29,24 @@
 export default {
     data() {
         return {
-            title: "患者: 王小杨",
+            title: "巡视记录",
             value5: 2,
+            checkList: [],
+            patient_id: '',
         }
     },
 
     onLoad() {
+        let patient_info = uni.getStorageSync('selected_patient')
+        console.log(patient_info)
+        this.patient_id = patient_info.id
+        this.getCheck_list()
     },
 
     methods: {
         add_ward() {
             uni.navigateTo({
-                url: '/pages/patient/add-patient-ward',
+                url: '/pages/patient/add-patient-ward?id=' + this.patient_id,
                 success(res) {
                     console.log(res);
                 },
@@ -90,6 +96,22 @@ export default {
         },
         change(e) {
             // console.log('change', e)
+        },
+        cell_click(check) {
+            uni.setStorageSync('selected_check', check)
+            console.log(uni.getStorageSync('selected_check'))
+            uni.navigateTo({
+                url: "nurse-patient_check-info"
+            })
+        },
+        getCheck_list() {
+            let path = '/api/check?patientId=' + this.patient_id
+            console.log(path)
+			//////////////////////////////////
+            this.$request.get(path).then(res => {
+                console.log(res)
+                this.checkList = res.data.check;
+            })
         }
     }
 }

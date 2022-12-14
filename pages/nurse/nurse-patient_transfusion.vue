@@ -7,9 +7,10 @@
             <view class="button">
                 <u-button type="primary" icon="plus" shape="circle" @click="add_transfusion"></u-button>
             </view>
-            <view class="patient-transfusion">
+            <view v-for="(transfusion, index) in transfusionList" :key="transfusion.seq">
                 <u-cell-group>
-                    <u-cell title="输液记录 1" isLink url='/pages/nurse/nurse-patient_transfusion-info'></u-cell>
+                    <u-cell :title="'输液记录' + '	' + (index + 1)" @click="cell_click(transfusion)" :border='false'
+                        :isLink='true' customStyle="margin-bottom: 5px"></u-cell>
                 </u-cell-group>
             </view>
             <view class="navigate-bar">
@@ -28,18 +29,24 @@
 export default {
     data() {
         return {
-            title: "患者: 王小杨",
+            title: '输液记录',
             value4: 1,
+            transfusionList: [],
+            patient_id: '',
         }
     },
 
     onLoad() {
+        let patient_info = uni.getStorageSync('selected_patient')
+        console.log(patient_info)
+        this.patient_id = patient_info.id
+        this.getTransfusion_list()
     },
 
     methods: {
         add_transfusion() {
             uni.navigateTo({
-                url: '/pages/patient/add-patient-transfusion',
+                url: '/pages/patient/add-patient-transfusion?id=' + this.patient_id,
                 success(res) {
                     console.log(res);
                 },
@@ -89,6 +96,22 @@ export default {
         },
         change(e) {
             // console.log('change', e)
+        },
+		cell_click(transfusion) {
+			uni.setStorageSync('selected_transfusion', transfusion)
+			console.log(uni.getStorageSync('selected_transfusion'))
+		    uni.navigateTo({
+		        url: "nurse-patient_transfusion-info"
+		    })
+		},
+        getTransfusion_list() {
+            let path = '/api/transfusion?patientId=' + this.patient_id
+            console.log(path)
+			//////////////////////////////////
+            this.$request.get(path).then(res => {
+                console.log(res)
+                this.transfusionList = res.data.transfusion;
+            })
         }
     }
 }

@@ -7,9 +7,16 @@
             <view class="button">
                 <u-button type="primary" icon="plus" shape="circle" @click="add_patient"></u-button>
             </view>
-            <view class="patient-list">
+            <view v-for="(patient, index) in patientList" :key="patient.seq">
                 <u-cell-group>
-                    <u-cell icon="man" title="P0001 王小杨" isLink url='/pages/nurse/nurse-patient_info'></u-cell>
+                    <view v-if="patient.gender = '0'">
+                        <u-cell icon="man" :title="patient.id + '	' + patient.name" @click="cell_click(patient)"
+                            :border='false' :isLink='true' customStyle="margin-bottom: 5px"></u-cell>
+                    </view>
+                    <view v-else-if="patient.gender = '1'">
+                        <u-cell icon="woman" :title="patient.id + '	' + patient.name" @click="cell_click(patient)"
+                            :border='false' :isLink='true' customStyle="margin-bottom: 5px"></u-cell>
+                    </view>
                 </u-cell-group>
             </view>
             <view class="navigate-bar">
@@ -28,11 +35,18 @@ export default {
     data() {
         return {
             title: "患者列表",
-            value1: 0
+            value1: 0,
+            patientList: [],
         }
     },
 
     onLoad() {
+        this.getPatient_list()
+    },
+
+    mounted() {
+        var backbutton = document.getElementsByClassName('uni-page-head-hd')[0]
+        if (backbutton) backbutton.style.display = 'none';
     },
 
     methods: {
@@ -60,6 +74,27 @@ export default {
             uni.navigateTo({
                 url: '/pages/nurse/nurse-info'
             })
+        },
+        getPatient_list() {
+            let nurse_info = uni.getStorageSync('current_user')
+            let path = '/api/patient?department=' + nurse_info.department
+            //////////////////////////////////
+            this.$request.get(path).then(res => {
+                console.log(res)
+                this.patientList = res.data.patient;
+            })
+        },
+        cell_click(patient) {
+            uni.setStorageSync('selected_patient', patient)
+            console.log(uni.getStorageSync('selected_patient'))
+            uni.navigateTo({
+                url: "nurse-patient_info"
+            })
+        },
+        onBackPress(options) {
+            if (options.from == 'backbutton' || 'navigateBack') {
+                return true;
+            }
         }
     }
 }

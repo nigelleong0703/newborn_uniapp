@@ -1,15 +1,19 @@
 <template>
     <view class="content">
         <view class="body">
-            <view class="text-area">
+            <!-- <view class="text-area">
                 <text class="title">{{ title }}</text>
-            </view>
+            </view> -->
             <view class="patient-check-info">
-                <u-cell-group>
-                    <u-cell title="床号" value="A1-1"></u-cell>
-                    <u-cell title="时间" value=""></u-cell>
-                    <u-cell title="医护人员" value=""></u-cell>
-                    <u-cell title="隐患记录" value=""></u-cell>
+                <view class="second-title">巡视信息</view>
+                <u-cell-group :border='false'>
+                    <u-cell title="巡视 ID" :value="checkInfo.id" :border='false'></u-cell>
+                    <u-cell title="患者 ID" :value="checkInfo.patientId" :border='false'></u-cell>
+                    <u-cell title="护士 ID" :value="checkInfo.nurseId" :border='false'></u-cell>
+                    <u-cell title="巡房时间" :value="time" :border='false'></u-cell>
+                    <u-cell title="输液 ID" :value="checkInfo.transfusionId" :border='false'></u-cell>
+                    <u-cell title="患者状态/隐患" :value="checkInfo.info" :border='false'></u-cell>
+
                 </u-cell-group>
             </view>
             <view class="navigate-bar">
@@ -25,15 +29,22 @@
 </template>
 
 <script>
+import common from "common/js/common.js"
 export default {
     data() {
         return {
             title: "患者: 王小杨",
             value7: 2,
+            checkInfo: '',
+            time: ''
         }
     },
 
     onLoad() {
+        let patient_info = uni.getStorageSync('selected_check')
+        console.log(patient_info)
+        this.patient_id = patient_info.id
+        this.getCheck_info()
     },
 
     methods: {
@@ -69,6 +80,15 @@ export default {
                     console.log(err);
                 }
             })
+        },
+        getCheck_info() {
+            let path = '/api/check/' + this.patient_id
+			//////////////////////////////////
+            this.$request.get(path).then(res => {
+                console.log(res)
+                this.checkInfo = res.data;
+                this.time = common.dateTimeStr(res.data.time);
+            })
         }
     }
 }
@@ -76,7 +96,7 @@ export default {
 
 <style>
 .content {
-    height: 75vh;
+    height: 70vh;
     display: flex;
     flex-direction: column;
     align-content: center;
@@ -102,5 +122,13 @@ export default {
 
 .navigate-bar {
     height: 100vh;
+}
+
+.second-title {
+    margin-left: 10px;
+    font-size: 25px;
+    font-weight: bold;
+    display: flex;
+    justify-content: left;
 }
 </style>

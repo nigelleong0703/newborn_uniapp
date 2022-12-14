@@ -231,85 +231,98 @@ export default {
             ],
         }
     },
-    onLoad() {
-        this.department_list = common.getDepartment_list()
+    onLoad(option) {
+      this.department_list = common.getDepartment_list()
+      if (option.department) {
+        let passedDepartment = option.department
+        this.form1.department = this.department_list[passedDepartment - 1].name
+        this.post.department = passedDepartment
+      }
     },
     onReady() {
         this.$refs.datetimePicker.setFormatter(this.formatter)
         this.$refs.form1.setRules(this.rules)
     },
     methods: {
-        navigateBack() {
-            uni.navigateBack()
-        },
-        sexSelect(e) {
-            this.form1.gender = e.id
-            this.$refs.form1.validateField('gender')
-        },
-        change(e) {
-            // console.log('change', e);
-        },
-        submit() {
-            // 如果有错误，会在catch中返回报错信息数组，校验通过则在then中返回true
-            this.$refs.form1.validate().then(res => {
-                this.post.name = this.form1.name
-                this.post.gender = this.form1.gender
-                this.post.guardian = this.form1.guardian
-                this.post.guardianId = this.form1.guardianId
-                this.post.tel = this.form1.tel
-                this.post.allergy = this.form1.allergy
-                console.log(this.post)
-                this.$request.post('/api/patient/add', this.post).then(res => {
-                    console.log(res)
-                    if (res.statusCode !== 200) {
-                        this.$.toast('提交失败');
-                    } else {
-                        uni.showToast({
-                            title: "添加成功！",
-                            duration: 1000,
-                            success: () => {
-                                setTimeout(() => {
-                                    uni.$emit('refurbish', {})
-                                    uni.navigateBack();
-                                }, 1000)
-                            }
-                        })
-                    }
-                })
+      navigateBack() {
+        uni.navigateBack()
+      },
+      sexSelect(e) {
+        this.form1.gender = e.id
+        this.$refs.form1.validateField('gender')
+      },
+      change(e) {
+        // console.log('change', e);
+      },
+      submit() {
+        // 如果有错误，会在catch中返回报错信息数组，校验通过则在then中返回true
+        this.$refs.form1.validate().then(res => {
+          this.post.name = this.form1.name
+          this.post.gender = this.form1.gender
+          this.post.guardian = this.form1.guardian
+          this.post.guardianId = this.form1.guardianId
+          this.post.tel = this.form1.tel
+          this.post.allergy = this.form1.allergy
+          console.log(this.post)
+          this.$request.post('/api/patient/add', this.post).then(res => {
+            console.log(res)
+            if (res.statusCode !== 200) {
+              this.$.toast('提交失败');
+            } else {
+              uni.showToast({
+                title: "添加成功！",
+                duration: 1000,
+                success: () => {
+                  setTimeout(() => {
+                    uni.$emit('refurbish', {})
+                    uni.$emit('addNewPatient', {
+                      department: this.post.department
+                    })
+                    uni.navigateBack();
+                  }, 1000)
+                }
+              })
+            }
+          })
+
+
 
             }).catch(errors => {
                 uni.$u.toast('信息有误')
                 console.log(errors)
             })
 
-        },
-        reset() {
-            const validateList = ['form1.name', 'form1.gender', 'form1.birthdate',
-                'form1.guardian', 'form1.guardianId', 'form1.relation', 'form1.tel', 'form1.department', 'form1.allergy',
-            ]
-            this.$refs.form1.resetFields()
-            this.$refs.form1.clearValidate()
-            setTimeout(() => {
-                this.$refs.form1.clearValidate(validateList)
-            }, 10)
-        },
-        hideKeyboard() {
-            uni.hideKeyboard()
-        },
-        relation_select(e) {
-            this.post.relation = e.id
-            this.form1.relation = e.name
-        },
-        department_select(e) {
-            this.form1.department = e.name
-            this.post.department = e.id
-        },
-        time_select(e) {
-            var bd = Math.round(e.value / 1000)
-            this.form1.birthdate = uni.$u.timeFormat(bd, 'yyyy-mm-dd')
-            this.post.birthdate = bd
-            this.time_picker = false
-        }
+
+      },
+      reset() {
+        const validateList = ['form1.name', 'form1.gender', 'form1.birthdate',
+          'form1.guardian', 'form1.guardianId', 'form1.relation', 'form1.tel', 'form1.department', 'form1.allergy',
+        ]
+        this.$refs.form1.resetFields()
+        this.form1.department = ''
+        this.$refs.form1.clearValidate()
+        this.$refs.form1.clearValidate(validateList)
+        setTimeout(() => {
+          this.$refs.form1.clearValidate(validateList)
+        }, 10)
+      },
+      hideKeyboard() {
+        uni.hideKeyboard()
+      },
+      relation_select(e) {
+        this.post.relation = e.id
+        this.form1.relation = e.name
+      },
+      department_select(e) {
+        this.form1.department = e.name
+        this.post.department = e.id
+      },
+      time_select(e) {
+        var bd = Math.round(e.value / 1000)
+        this.form1.birthdate = uni.$u.timeFormat(bd, 'yyyy-mm-dd')
+        this.post.birthdate = bd
+        this.time_picker = false
+      }
     },
 }
 </script>

@@ -26,28 +26,28 @@
             selectedIconPath: "/static/tabBar/nurse_selected.png",
             text: '护士',
             customIcon: false,
-            "pagePath": "pages/admin/admin-nurse"
+            "pagePath": "pages/admin/admin_index/admin-nurse"
           },
-          {
-            iconPath: "/static/tabBar/doctor.png",
-            selectedIconPath: "/static/tabBar/doctor_selected.png",
-            text: '医生',
-            customIcon: false,
-            "pagePath": "pages/admin/admin-doctor"
-          },
+          // {
+          //   iconPath: "/static/tabBar/doctor.png",
+          //   selectedIconPath: "/static/tabBar/doctor_selected.png",
+          //   text: '医生',
+          //   customIcon: false,
+          //   "pagePath": "pages/admin/admin_index/admin-doctor"
+          // },
           {
             iconPath: "/static/tabBar/patient.png",
             selectedIconPath: "/static/tabBar/patient_selected.png",
             text: '患者',
             customIcon: false,
-            "pagePath": "pages/admin/admin-patient"
+            "pagePath": "pages/admin/admin_index/admin-patient"
           },
           {
             iconPath: "/static/tabBar/info.png",
             selectedIconPath: "/static/tabBar/info_selected.png",
             text: '我的',
             customIcon: false,
-            "pagePath": "pages/admin/admin-info"
+            "pagePath": "pages/admin/admin_index/admin-info"
           }
         ],
       }
@@ -70,7 +70,7 @@
 </script>
 
 <style>
-  image {
+  .u-page__item__slot-icon {
     width: 40rpx;
     height: 40rpx;
   }

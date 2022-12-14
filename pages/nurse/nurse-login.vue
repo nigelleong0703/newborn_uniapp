@@ -61,44 +61,52 @@ export default {
 
     },
     methods: {
-        login() {
-            this.$refs.form.validate().then(res => {
-                console.log(this.form)
-                this.$request.post('/api/nurse/login', this.form).then(res => {
-                    console.log(res)
-                    if (res.statusCode !== 200) {
-                        this.$.toast('用户名或密码不正确');
-                    } else {
-                        uni.showToast({
-                            title: "登录成功",
-                            duration: 1000,
-                            success: () => {
-                                setTimeout(() => {
-                                    uni.$emit('refurbish', {})
-                                    uni.navigateTo({
-                                        url: "nurse-patient_list",
-                                        success(res) {
-                                            console.log(res);
-                                        },
-                                        fail(err) {
-                                            console.log(err);
-                                        }
-                                    });
-                                }, 1000)
-                            }
-                        })
-                        uni.setStorageSync('current_user', res.data)
-                    }
-                })
-            }).catch(err => {
-                console.log('表单错误信息：', err);
-            })
-        },
-        navadmin() {
-            uni.navigateTo({
-                url: "pages/contact-admin/contact-admin",
-            })
-        }
+      login() {
+        this.$refs.form.validate().then(res => {
+          console.log(this.form)
+          uni.showLoading({
+            title: '加载中...',
+            mask: true
+          });
+          this.$request.post('/api/nurse/login', this.form).then(res => {
+            console.log(res);
+            uni.hideLoading();
+            if (res.statusCode !== 200) {
+              this.$.toast('用户名或密码不正确');
+            } else {
+              uni.showToast({
+                title: "登录成功",
+                duration: 1000,
+                success: () => {
+                  setTimeout(() => {
+                    uni.$emit('refurbish', {})
+                    uni.navigateTo({
+                      url: "nurse-patient_list",
+                      success(res) {
+                        console.log(res);
+                      },
+                      fail(err) {
+                        console.log(err);
+                      }
+                    });
+                  }, 1000)
+                }
+              })
+              uni.setStorageSync('token', res.data.jwt)
+              uni.setStorageSync('current_user', res.data)
+              uni.setStorageSync('login_status', true)
+            }
+          })
+        }).catch(err => {
+          console.log('表单错误信息：', err);
+        })
+      },
+      navadmin() {
+        uni.navigateTo({
+          url: "pages/contact-admin/contact-admin",
+        })
+      }
+
     }
 }
 </script>

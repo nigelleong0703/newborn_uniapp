@@ -9,7 +9,7 @@
             </view>
             <view v-for="(transfusion, index) in transfusionList" :key="transfusion.seq">
                 <u-cell-group>
-                    <u-cell :title="'输液记录' + '		' + (index + 1)" @click="cell_click(patient)" :border='false'
+                    <u-cell :title="'输液记录' + '	' + (index + 1)" @click="cell_click(transfusion)" :border='false'
                         :isLink='true' customStyle="margin-bottom: 5px"></u-cell>
                 </u-cell-group>
             </view>
@@ -97,7 +97,9 @@ export default {
         change(e) {
             // console.log('change', e)
         },
-		cell_click(patient) {
+		cell_click(transfusion) {
+			uni.setStorageSync('selected_transfusion', transfusion)
+			console.log(uni.getStorageSync('selected_transfusion'))
 		    uni.navigateTo({
 		        url: "nurse-patient_transfusion-info"
 		    })

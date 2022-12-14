@@ -64,7 +64,7 @@ export default {
     },
 
     onLoad() {
-        let patient_info = uni.getStorageSync('selected_patient')
+        let patient_info = uni.getStorageSync('selected_transfusion')
         console.log(patient_info)
         this.patient_id = patient_info.id
         this.getTransfusion_info()

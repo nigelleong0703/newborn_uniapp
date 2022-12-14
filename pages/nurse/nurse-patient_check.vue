@@ -9,7 +9,7 @@
             </view>
             <view v-for="(check, index) in checkList" :key="check.seq">
                 <u-cell-group>
-                    <u-cell :title="'巡视记录' + '		' + (index + 1)" @click="cell_click(patient)" :border='false'
+                    <u-cell :title="'巡视记录' + '	' + (index + 1)" @click="cell_click(check)" :border='false'
                         :isLink='true' customStyle="margin-bottom: 5px"></u-cell>
                 </u-cell-group>
             </view>
@@ -97,7 +97,9 @@ export default {
         change(e) {
             // console.log('change', e)
         },
-        cell_click(patient) {
+        cell_click(check) {
+            uni.setStorageSync('selected_check', check)
+            console.log(uni.getStorageSync('selected_check'))
             uni.navigateTo({
                 url: "nurse-patient_check-info"
             })

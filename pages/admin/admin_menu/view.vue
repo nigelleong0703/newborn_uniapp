@@ -33,10 +33,13 @@
       return {
         title: "管理员资料",
         adminInfo: '',
+        windowHeight: '',
       }
     },
 
     onLoad() {
+      this.windowHeight = uni.getSystemInfoSync().windowHeight;
+      console.log(this.windowHeight)
       this.getAdminInfo()
     },
 

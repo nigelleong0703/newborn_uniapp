@@ -99,13 +99,6 @@
         "disableScroll": true
       }
     },
-
-    {
-      "path": "pages/nurse/test",
-      "style": {
-        "navigationBarTitleText": ""
-      }
-    },
     // {
     //   "path": "pages/admin/admin-info",
     //   "style": {
@@ -174,7 +167,13 @@
         "disableScroll": true,
         "navigationBarBackgroundColor": "#ffaa00"
       }
-
+    }, {
+      "path": "pages/admin/admin_menu/editlogin",
+      "style": {
+        "navigationBarTitleText": "管理员修改登陆记录",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#ffaa00"
+      }
     }
   ],
   "globalStyle": {

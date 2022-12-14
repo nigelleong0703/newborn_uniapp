@@ -142,6 +142,7 @@
         this.$refs.form1.validate().then(res => {
           this.post1.username = this.form1.username
           this.post1.password = this.form1.password
+          console.log('资料')
           console.log(this.post1)
           uni.showLoading({
             title: '加载中'

@@ -38,17 +38,15 @@
         },
         rules: {
           username: {
-            rules: [{
-              required: true,
-              errorMessage: '请输入用户名'
-            }],
+            type: 'string',
+            required: true,
+            message: '请输入用户名',
             validateTrigger: 'submit'
           },
           password: {
-            rules: [{
-              required: true,
-              errorMessage: '请输入密码'
-            }],
+            type: 'string',
+            required: true,
+            message: '请输入密码',
             validateTrigger: 'submit'
           },
         }
@@ -57,47 +55,40 @@
     onLoad() {
 
     },
+    onReady() {
+      this.$refs.form.setRules(this.rules)
+    },
     methods: {
       login() {
         this.$refs.form.validate().then(res => {
-          console.log(this.form)
           uni.showLoading({
-            title: '加载中...',
-            mask: true
-          })
+            title: '加载中'
+          });
           this.$request.post('/api/admin/login', this.form).then(res => {
             console.log(res)
             uni.hideLoading();
-            if (res.statusCode !== 200) {
-              this.$.toast('用户名或密码不正确');
+            if (res.statusCode == 200) {
+              this.$db.set('token', res.data.jwt)
+              this.$db.set('current_user', res.data)
+              this.$db.set('login_status', true)
+              this.redirectHandler()
             } else {
-              uni.showToast({
-                title: "登录成功",
-                duration: 1000,
-                success: () => {
-                  setTimeout(() => {
-                    uni.$emit('refurbish', {})
-                    uni.reLaunch({
-                      url: "admin-nurse",
-                      success(res) {
-                        console.log(res);
-                      },
-                      fail(err) {
-                        console.log(err);
-                      }
-                    });
-                  }, 1000)
-                }
-              })
-              uni.setStorageSync('token', res.data.jwt)
-              uni.setStorageSync('current_user', res.data)
-              uni.setStorageSync('login_status', true)
+              this.$common.errorToShow(res.data.message + '(' + res.statusCode + ')')
             }
           })
         }).catch(err => {
           console.log('表单错误信息：', err);
         })
       },
+      redirectHandler() {
+        this.$common.successToShow('登录成功!', () => {
+          uni.$emit('refurbish', {})
+          uni.reLaunch({
+            url: "admin_index/admin-nurse"
+          })
+        })
+      },
+
     }
   }
 </script>

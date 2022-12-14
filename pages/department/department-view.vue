@@ -1,19 +1,27 @@
 <template>
-  <view class="body">
+  <view class="body" :style="'height: '+ windowHeight + 'px'">
     <view class="topbar">
       <view :id="'top'" style="width: 100%;height: 50upx;"></view>
-      <view class="title">
-        <text class="title">{{ title }}</text>
+      <view class="top-title-bar">
+        <view class="title">
+          <text class="title">{{ title }}</text>
+        </view>
+        <view class="add">
+          <u-button class='add-button' @click="popup_show = true">增加</u-button>
+        </view>
       </view>
-      <u-button @click="popup_show = true">增加</u-button>
       <view :id="'top'" style="width: 100%;height: 50upx;"></view>
     </view>
     <view class='content'>
       <scroll-view scroll-y="true" scroll-with-animation>
+        <view :id="'top'" style="width: 100%;height: 50upx;"></view>
         <view class='card' v-for="(item,index) in department_list" v-if="department_list.length > 0" :key="index">
-          <view>{{item.id}}</view>
-          <view>{{item.name}}</view>
-          <u-button class='button' type='default' @click="editDepartmentButton(index)" text="view"></u-button>
+          <view class="card-item card-item-view">{{item.id}} {{item.name}}</view>
+          <view class="card-item-edit">
+            <u-button class='button card-item card-button' plain color="orange" @click="editDepartmentButton(index)"
+              text="修改">
+            </u-button>
+          </view>
         </view>
         <view class='noCard' v-if="department_list.length===0">
           暂无信息
@@ -29,8 +37,10 @@
               <u--input v-model="newDepartmentForm.name" placeholder="请输入要添加的科室名称"></u--input>
             </u-form-item>
           </u--form>
-          <u-button class="confirm-button" type="primary" shape="circle" text="确定添加" @click="addDepartment">
-          </u-button>
+          <view class="confirm-button">
+            <u-button color='orange' type="primary" shape="circle" text="确定添加" @click="addDepartment">
+            </u-button>
+          </view>
         </view>
       </u-popup>
       <u-popup :safeAreaInsetBottom="true" :safeAreaInsetTop="true" :show="popup_show_edit" mode="bottom"
@@ -42,8 +52,10 @@
               <u--input v-model="editDepartmentForm.name" placeholder="请输入新的名称"></u--input>
             </u-form-item>
           </u--form>
-          <u-button class="confirm-button" type="primary" shape="circle" text="确定修改" @click="editDepartment">
-          </u-button>
+          <view class="confirm-button">
+            <u-button color='orange' type="primary" shape="circle" text="确定修改" @click="editDepartment">
+            </u-button>
+          </view>
         </view>
       </u-popup>
     </view>
@@ -53,9 +65,7 @@
 <script>
   import common from "common/js/common.js"
 
-
-  let windowWidth = 0,
-    scrollTimer = false,
+  let scrollTimer = false,
     tabBar;
 
   export default {
@@ -66,6 +76,8 @@
         popup_show: false,
         popup_show_edit: false,
         department_list: [],
+        onloading: true,
+        windowHeight: '',
         newDepartmentForm: {
           name: '',
         },
@@ -85,13 +97,12 @@
       }
     },
 
-    onReady() {
-      // this.$refs.newDepartmentForm.setRules(this.rules1)
-    },
+    onReady() {},
 
     async onLoad() {
-      windowWidth = uni.getSystemInfoSync().windowWidth;
-      this.loadTabbars();
+      this.windowHeight = uni.getSystemInfoSync().windowHeight;
+      console.log(this.windowHeight)
+      this.initData();
     },
 
     onUnload() {
@@ -99,9 +110,19 @@
     },
 
     methods: {
-      loadTabbars() {
-        this.department_list = common.getDepartment_list();
-        console.log(common.getDepartment_list());
+      initData() {
+        uni.showLoading({
+          title: '加载中'
+        });
+        this.$request.get('/api/list/department').then(res => {
+          uni.hideLoading();
+          console.log(res)
+          this.department_list = res.data
+        })
+        // this.$api.get('/api/list/department').then(res => {
+        //   console.log(res)
+        //   uni.setStorageSync('department_list', res.data)
+        // })
       },
 
       open() {
@@ -118,7 +139,10 @@
       addDepartment() {
         this.$refs.newDepartmentForm.validate().then(res => {
           console.log(this.newDepartmentForm)
-          this.$request.post('/api/list/department/add', this.newDepartmentForm).then(res => {
+          let newformData = new FormData();
+          newformData.append('name', this.newDepartmentForm.name);
+          console.log(newformData);
+          this.$request.post('/api/list/department/add', newformData).then(res => {
             console.log(res)
             if (res.statusCode !== 200) {
               this.$.toast('提交失败');
@@ -132,6 +156,7 @@
                   }, 1000)
                 }
               })
+
 
             }
           })
@@ -162,17 +187,18 @@
           id: ''
         }
       },
-      addDepartment() {
+      editDepartment() {
         this.$refs.editDepartmentForm.validate().then(res => {
           console.log(this.editDepartmentForm)
-          this.$request.post('/api/list/department/update/' + this.editDepartmentForm.id, this.editDepartmentForm
+          this.$request.post('/api/list/department/update/' + this.editDepartmentForm.id, this
+            .editDepartmentForm
             .name).then(res => {
             console.log(res)
             if (res.statusCode !== 200) {
               this.$.toast('提交失败');
             } else {
               uni.showToast({
-                title: "添加成功！",
+                title: "修改成功！",
                 duration: 1000,
                 success: () => {
                   setTimeout(() => {
@@ -195,20 +221,37 @@
 
 <style lang='scss'>
   .body {
-    width: 100vw;
-    min-height: 100vh;
     overflow: hidden;
     color: #6B8082;
     position: relative;
-    background-color: #f6f6f6;
+  }
 
-    view {
-      width: 100%
+  .top-title-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .title {
+      width: 60%;
+      text-align: left;
+      top: 10%;
+      left: 10%;
+    }
+
+    .add {
+      width: 40%;
+    }
+
+    .add-button {
+      width: 70px;
+      height: 30px;
+      margin-right: 5vw;
+      margin-left: auto;
     }
   }
 
   .topbar {
-    background-color: #f6f6f6;
+    background-color: #ffaa00;
     width: 100%;
     z-index: 10;
   }
@@ -222,16 +265,50 @@
 
   .content {
     margin-left: 5%;
+    margin-right: 5%;
+    height: 100%
   }
 
   .card {
-    height: 150upx;
+    height: 100upx;
     background-color: white;
     margin: 0 auto 42upx auto;
     background: #FFFFFF;
     box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.10);
     border-radius: 5px;
     position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .card-item {
+      margin: 10px auto
+    }
+
+    .card-item-view {
+      width: 60%;
+      text-align: left;
+      top: 10%;
+      margin-left: 5%;
+      align-self: center;
+      font-size: 35rpx;
+      font-weight: bold;
+    }
+
+    .card-item-edit {
+      width: 40%;
+      align-self: center;
+
+      .card-item-edit .button {
+        width: 100px;
+        margin-right: 10vw;
+        margin-left: auto;
+      }
+    }
+
+    .card-button {
+      width: 70px;
+    }
   }
 
   .noCard {
@@ -243,12 +320,12 @@
     align-items: center;
     justify-content: center;
     color: #999999;
-    box-shadow: 0 0 10upx 0 rgba(0, 0, 0, 0.10);
+    box-shadow: 0 0 20upx 0 rgba(0, 0, 0, 0.10);
     border-radius: 10upx;
   }
 
   .u-popup-slot {
-    width: 200px;
+    width: 100%;
     @include flex;
     justify-content: center;
     align-items: center;
@@ -269,19 +346,17 @@
     margin-right: 15vw;
     margin-top: 52rpx;
     margin-bottom: 52rpx;
-    background-color: #FBFBFB;
+    background-color: #ffffff;
     font-size: 26rpx;
     padding: 10rpx;
   }
 
   .confirm-button {
-    width: 400rpx;
-    height: 70rpx;
-    color: #FFFFFF;
-    border-radius: 36rpx;
-    text-align: center;
-    line-height: 70rpx;
-    font-size: 30rpx;
-    margin-bottom: 82rpx;
+    width: 60%;
+    margin-bottom: 20px;
+  }
+
+  scroll-view {
+    height: 100%
   }
 </style>

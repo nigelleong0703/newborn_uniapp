@@ -1,57 +1,57 @@
 <template>
-  <view class="body" :style="{height: barHeight}">
-    <view class="body">
-      <view class='nav'>
-        <scroll-view id="nav-bar" class="nav-bar" scroll-x scroll-with-animation :scroll-left="scrollLeft">
-          <view v-for="(item,index) in tabBars" :key="item.id" class="nav-item"
-            :class="{current: index === tabCurrentIndex}" :id="'tab'+index" @click="changeTab(index)">{{item.name}}
-          </view>
-        </scroll-view>
-      </view>
-      <!-- 内容部分 -->
-      <swiper style="min-height: 100vh;" :current="tabCurrentIndex" @change="changeTab">
-        <swiper-item v-for="(tabItem, tabItemIndex) in tabBars" :key="tabItem.id">
-          <scroll-view style="height: 100%;" scroll-y="true" scroll-with-animation>
-            <view :id="'top'+tabItemIndex" style="width: 100%;height: 180upx;">边距盒子</view>
-            <view class='content'>
-              <view class='card' v-for="(item,index) in tabItem.list" v-if="tabItem.list.length > 0" :key="index">
-                <view>{{item.id}}</view>
-                <view>{{item.name}}</view>
-                <view>{{item.gender}}</view>
-                <view>{{item.birthdate}}</view>
-                <u-button class='button' type='default' @click="viewNurseInfo(item.id)" text="view"></u-button>
+  <view class="body">
+    <view class='nav'>
+      <scroll-view id="nav-bar" class="nav-bar" scroll-x scroll-with-animation :scroll-left="scrollLeft">
+        <view v-for="(item,index) in tabBars" :key="item.id" class="nav-item"
+          :class="{current: index === tabCurrentIndex}" :id="'tab'+index" @click="changeTab(index)">{{item.name}}</view>
+      </scroll-view>
+    </view>
+
+    <!--   </view> -->
+    <swiper style="min-height: 100vh;" :current="tabCurrentIndex" @change="changeTab">
+      <swiper-item v-for="(tabItem, tabItemIndex) in tabBars" :key="tabItem.id">
+        <scroll-view style="height: 100%;" scroll-y="true" scroll-with-animation>
+          <view :id="'top'+tabItemIndex" style="width: 100%;height: 180upx;">边距盒子</view>
+          <view class='content'>
+            <view class='card' v-for="(item,index) in tabItem.list" v-if="tabItem.list.length > 0" :key="index">
+              <view class="card-item card-item-view">
+                <view class="first-title-patient">
+                  {{item.id}} - {{item.name}}
+                </view>
+                <view class="second-title-patient">
+                  {{item.gender}} {{item.birthdate}}
+                </view>
               </view>
-              <view class='noCard' v-if="tabItem.list.length===0">
-                暂无信息
+              <view class="card-item-edit">
+                <u-button class='button card-button' plain color="orange" @click="viewPatientInfo(item.id)" text="查看">
+                </u-button>
               </view>
             </view>
-            <view style="width: 100%;height: 150upx;opacity:0;">底部占位盒子</view>
-          </scroll-view>
-        </swiper-item>
-      </swiper>
-    </view>0
+            <view class='noCard' v-if="tabItem.list.length===0">
+              暂无信息
+            </view>
+          </view>
+          <view style="width: 100%;height: 150upx;opacity:0;"></view>
+        </scroll-view>
+      </swiper-item>
+    </swiper>
     <view>
       <addBtn url="/pages/patient/add-patient" :params="{department: (tabCurrentIndex+1)}"></addBtn>
-      <tabBar-admin class="bottom-bar" :currentPage="0"></tabBar-admin>
+      <tabBar-admin class="bottom-bar" :currentPage="1"></tabBar-admin>
     </view>
   </view>
 </template>
 
 <script>
   import common from "common/js/common.js"
-  import khCard from 'components/card/kehu.vue'
+  import refresh from 'components/refresh.vue';
 
   let windowWidth = 0,
     scrollTimer = false,
     tabBar;
 
-  const h = uni.getSystemInfoSync().statusBarHeight;
+
   export default {
-    computed: {
-      barHeight() {
-        return `calc(100vh - 44px - ${h}px)`
-      }
-    },
     data() {
       return {
         tabCurrentIndex: 0,
@@ -59,29 +59,35 @@
         enableScroll: true,
         department_list: [],
         tabBars: [],
-        triggered: false,
-        _freshing: false,
       }
     },
+
     onReady() {
       this._lastTabIndex = 0;
       this.swiperWidth = 0;
       this.tabbarWidth = 0;
       this.tabListSize = {};
       this._touchTabIndex = 0;
+      this.$forceUpdate();
     },
+
 
     async onLoad() {
       windowWidth = uni.getSystemInfoSync().windowWidth;
-      this.loadTabbars();
-      uni.$on('addNewNurse', (res) => {
-        this.selectKehuFun(this.tabBars[res.department])
+      this.loadTabbars()
+      this.$forceUpdate();
+      console.log(this.tabBars);
+      uni.$on('addNewPatient', (res) => {
+        this.selectKehuFun(res.department - 1).then(res => {
+          this.tabBars[res.department - 1].list = res
+        })
+        this.$forceUpdate();
       })
-      // uni.$on('cxGetDataFun', this.cxGetDataFun)
     },
 
+
     onUnload() {
-      uni.$off('addNewNurse');
+      uni.$off('addNewPatient');
     },
 
     methods: {
@@ -91,72 +97,58 @@
         let tabList = this.department_list;
         var index = 0;
         tabList.forEach(item => {
-          item.list = [];
-          item.moreShow = false;
-          item.triggered = false;
-          item.isMore = true;
-          item._freshing = false;
           item.index = index
+          item.noData = true;
+          item.refreshText = '';
+          item.refreshing = false;
+          item.list = [];
           index++;
         })
+        tabList.forEach(item => {
+          console.log(item.index)
+          this.selectKehuFun(item.index).then(res => {
+            item.list = res
+            item.list.forEach(itemInfo => {
+              if (itemInfo.gender == 0) {
+                itemInfo.gender = '男'
+              } else {
+                itemInfo.gender = '女'
+              }
+              console.log(itemInfo.gender)
+              itemInfo.birthdate = uni.$u.timeFormat(itemInfo.birthdate)
+              console.log(itemInfo.birthdate)
+            })
+          })
+        })
         this.tabBars = tabList;
-        this.tabBars.forEach(item => {
-          this.selectKehuFun(item)
-        })
       },
 
-      selectKehuFun: function(tabItem) {
-        console.log(tabItem)
-        if (!tabItem.isMore) {
-          return
-        }
-        uni.showLoading({
-          title: '加载中...',
-          mask: true
-        })
-        let departmentNo = tabItem.index + 1
-        let params = {
-          department: departmentNo
-        }
-        this.$request.get('/api/nurse', params).then(res => {
-          console.log(res)
-          if (res.statusCode !== 200) {
-            this.$.toast('获取失败，错误代码' + res.statusCode);
-          } else {
-            let data = res.data;
-            tabItem.list = data.nurse
+      selectKehuFun(index) {
+        return new Promise((resolve, reject) => {
+          let that = this
+          uni.showLoading({
+            title: '加载中...',
+            mask: true
+          })
+          let departmentNo = index + 1
+          let params = {
+            department: departmentNo
           }
-        })
-        uni.hideLoading();
-      },
+          that.$request.get('/api/patient', params).then(res => {
+            console.log(res)
 
-      // onRefresh: function(tabItem) {
-      //   if (this._freshing) return
-      //   this._freshing = true;
-      //   if (!this.triggered) {
-      //     this.triggered = true;
-      //   }
-      //   console.log(tabItem)
-      //   this.cxGetDataFun(tabItem);
-      //   setTimeout(() => {
-      //     this.triggered = false; //触发onRestore，并关闭刷新图标  
-      //     this._freshing = false;
-      //   }, 3000)
-      //   console.log("onRefreshDone")
-      //   return
-      // },
-      // onRestore: function() {
-      //   console.log("onRestore")
-      // },
-      // cxGetDataFun: function(tabItem) {
-      //   tabItem.pageIndex = 1;
-      //   tabItem.isMore = true;
-      //   console.log(tabItem)
-      //   this.selectKehuFun(tabItem);
-      // },
+            if (res.statusCode === 200) {
+              resolve(res.data.patient)
+            } else {
+              that.$.toast('获取失败，错误代码' + res.statusCode);
+              reject()
+            }
+          })
+          uni.hideLoading();
+        })
+      },
 
       async changeTab(e) {
-
         if (scrollTimer) {
           //多次切换只执行最后一次
           clearTimeout(scrollTimer);
@@ -186,7 +178,7 @@
           //点击切换时先切换再滚动tabbar，避免同时切换视觉错位
           this.tabCurrentIndex = index;
         }
-        //延迟300ms,等待swiper动画结束再修改tabbar
+        //延迟200ms,等待swiper动画结束再修改tabbar
         scrollTimer = setTimeout(() => {
           if (width - nowWidth / 2 > windowWidth / 2) {
             //如果当前项越过中心点，将其放在屏幕中心
@@ -199,18 +191,21 @@
           }
           this.tabCurrentIndex = index;
 
-
           //第一次切换tab，动画结束后需要加载数据
           let tabItem = this.tabBars[this.tabCurrentIndex];
           if (this.tabCurrentIndex !== 0 && tabItem.loaded !== true) {
             // this.loadNewsList('add');
-            this.selectKehuFun(this.tabBars[this.tabCurrentIndex])
+            // this.selectKehuFun(this.tabCurrentIndex).then(res => {
+            //   this.tabBars[this.tabCurrentIndex].list = res
+            // })
+            this.$forceUpdate();
             /////////////////
             /////////////////
             tabItem.loaded = true;
           }
-        }, 300)
+        }, 100)
       },
+
       getElSize(id) {
         return new Promise((res, rej) => {
           let el = uni.createSelectorQuery().select('#' + id);
@@ -223,12 +218,13 @@
           }).exec();
         });
       },
-      viewNurseInfo(id) {
+
+      viewPatientInfo(id) {
         console.log(id)
-        let targetUrl = '/pages/nurse/nurse-info'
-        targetUrl = targetUrl + '?id=' + id
+        let patientUrl = '/pages/patient/patient-info'
+        patientUrl = patientUrl + '?id=' + id
         uni.navigateTo({
-          url: targetUrl
+          url: patientUrl
         })
       },
     },

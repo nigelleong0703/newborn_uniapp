@@ -17,7 +17,6 @@ const request = (options = {}) => {
 }
 
 const get = (url, data, options = {}) => {
-
   options.type = 'GET';
   options.data = data;
   options.url = url;
@@ -31,8 +30,16 @@ const post = (url, data, options = {}) => {
   return request(options)
 }
 
+const patch = (url, data, options = {}) => {
+  options.type = 'PATCH';
+  options.data = data;
+  options.url = url;
+  return request(options)
+}
+
 export default {
   request,
   get,
-  post
+  post,
+  patch
 }

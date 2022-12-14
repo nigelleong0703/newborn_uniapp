@@ -92,7 +92,7 @@
       }
     },
     {
-      "path": "pages/admin/admin-info",
+      "path": "pages/admin/admin_index/admin-info",
       "style": {
         "navigationBarTitleText": "管理员",
         "navigationBarBackgroundColor": "#ffaa00",
@@ -107,46 +107,24 @@
       }
     },
     {
-      "path": "pages/admin/admin-nurse",
+      "path": "pages/admin/admin_index/admin-nurse",
       "style": {
         "navigationBarTitleText": "管理员",
         "navigationBarBackgroundColor": "#ffaa00",
         "disableScroll": true
-        // "navigationStyle": "custom",
-        // "app-plus": {
-        //   "animationType": "fade-in",
-        //   "background": "transparent",
-        //   "backgroundColor": "#ffaa00",
-        //   "popGesture": "none",
-        //   "titleNView": {
-        //     "titleSize": "18px",
-        //     "autoBackButton": false
-        //   }
-        // }
       }
 
     },
     {
-      "path": "pages/admin/admin-doctor",
+      "path": "pages/admin/admin_index/admin-doctor",
       "style": {
         "navigationBarTitleText": "管理员",
         "navigationBarBackgroundColor": "#ffaa00",
         "disableScroll": true
-        // "navigationStyle": "custom",
-        // "app-plus": {
-        //   "animationType": "fade-in",
-        //   "background": "transparent",
-        //   "backgroundColor": "#ffaa00",
-        //   "popGesture": "none",
-        //   "titleNView": {
-        //     "titleSize": "18px",
-        //     "autoBackButton": false
-        //   }
-        // }
       }
     },
     {
-      "path": "pages/admin/admin-patient",
+      "path": "pages/admin/admin_index/admin-patient",
       "style": {
         "navigationBarTitleText": "管理员",
         "navigationBarBackgroundColor": "#ffaa00",
@@ -167,7 +145,7 @@
       }
 
     }, {
-      "path": "pages/admin/add-admin",
+      "path": "pages/admin/admin_menu/add-admin",
       "style": {
         "navigationBarTitleText": "管理员添加",
         "enablePullDownRefresh": false
@@ -178,15 +156,17 @@
       "style": {
         "navigationBarTitleText": "科室",
         "enablePullDownRefresh": false,
-        "disableScroll": true
+        "disableScroll": true,
+        "navigationBarBackgroundColor": "#ffaa00"
       }
 
     }, {
-      "path": "pages/admin/admin-view",
+      "path": "pages/admin/admin_menu/view",
       "style": {
-        "navigationBarTitleText": "管理员管理",
+        "navigationBarTitleText": "管理员基本信息",
         "enablePullDownRefresh": false,
-        "disableScroll": true
+        "disableScroll": true,
+        "navigationBarBackgroundColor": "#ffaa00"
       }
 
     }

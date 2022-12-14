@@ -107,6 +107,7 @@ export default {
         getTransfusion_list() {
             let path = '/api/transfusion?patientId=' + this.patient_id
             console.log(path)
+			//////////////////////////////////
             this.$request.get(path).then(res => {
                 console.log(res)
                 this.transfusionList = res.data.transfusion;

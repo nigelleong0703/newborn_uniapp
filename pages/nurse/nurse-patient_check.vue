@@ -107,6 +107,7 @@ export default {
         getCheck_list() {
             let path = '/api/check?patientId=' + this.patient_id
             console.log(path)
+			//////////////////////////////////
             this.$request.get(path).then(res => {
                 console.log(res)
                 this.checkList = res.data.check;

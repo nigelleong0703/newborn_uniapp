@@ -76,7 +76,10 @@ export default {
             })
         },
         getPatient_list() {
-            this.$request.get('/api/patient').then(res => {
+            let nurse_info = uni.getStorageSync('current_user')
+            let path = '/api/patient?department=' + nurse_info.department
+            //////////////////////////////////
+            this.$request.get(path).then(res => {
                 console.log(res)
                 this.patientList = res.data.patient;
             })

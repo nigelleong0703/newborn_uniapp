@@ -83,6 +83,7 @@ export default {
         },
         getCheck_info() {
             let path = '/api/check/' + this.patient_id
+			//////////////////////////////////
             this.$request.get(path).then(res => {
                 console.log(res)
                 this.checkInfo = res.data;

@@ -115,6 +115,7 @@ export default {
         },
         getTransfusion_info() {
             let path = '/api/transfusion/' + this.patient_id
+			//////////////////////////////////
             this.$request.get(path).then(res => {
                 console.log(res)
                 this.transfusionInfo = res.data;
@@ -123,14 +124,17 @@ export default {
                 this.drug_startTime = common.dateTimeStr(res.data.drug.startTime);
                 this.drug_finishTime = common.dateTimeStr(res.data.drug.finishTime);
             })
+			//////////////////////////////////
             this.$request.get('/api/list/vein').then(res => {
                 console.log(res)
                 this.vein_list = res.data;
             })
+			//////////////////////////////////
             this.$request.get('/api/list/tool').then(res => {
                 console.log(res)
                 this.tool_list = res.data;
             })
+			//////////////////////////////////
             this.$request.get('/api/list/drug').then(res => {
                 console.log(res)
                 this.drug_list = res.data;

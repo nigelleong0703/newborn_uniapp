@@ -120,9 +120,11 @@ export default {
         },
         getPatient_info() {
             let path = '/api/patient/' + this.patient_id
+            //////////////////////////////////
             this.$request.get(path).then(res => {
                 console.log(res)
                 this.patientInfo = res.data;
+                console.log(res.data.gender);
                 this.birthdate = common.dateTimeStr(res.data.birthdate);
                 this.inDate = common.dateTimeStr(res.data.inDate);
                 this.outDate = common.dateTimeStr(res.data.outDate);

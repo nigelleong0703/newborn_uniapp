@@ -97,6 +97,11 @@ export default {
         change(e) {
             // console.log('change', e)
         },
+		cell_click(patient) {
+		    uni.navigateTo({
+		        url: "nurse-patient_transfusion-info"
+		    })
+		},
         getTransfusion_list() {
             let path = '/api/transfusion?patientId=' + this.patient_id
             console.log(path)

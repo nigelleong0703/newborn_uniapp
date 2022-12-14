@@ -48,7 +48,7 @@ export default {
 
 <style>
 .content {
-    height: 100vh;
+    height: 75vh;
     display: flex;
     flex-direction: column;
     align-content: center;

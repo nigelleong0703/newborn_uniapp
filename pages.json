@@ -25,70 +25,81 @@
       "path": "pages/contact-admin/contact-admin",
       "style": {
         "navigationBarTitleText": "联系管理员",
-        "enablePullDownRefresh": false
+        "enablePullDownRefresh": false,
+		"navigationBarBackgroundColor": "#ffaa00"
       }
     },
     {
       "path": "pages/patient/add-patient",
       "style": {
         "navigationBarTitleText": "患者添加",
-        "enablePullDownRefresh": false
+        "enablePullDownRefresh": false,
+		"navigationBarBackgroundColor": "#ffaa00"
       }
     },
     {
       "path": "pages/patient/add-patient-ward",
       "style": {
         "navigationBarTitleText": "巡视添加",
-        "enablePullDownRefresh": false
+        "enablePullDownRefresh": false,
+		"navigationBarBackgroundColor": "#ffaa00"
       }
     },
     {
       "path": "pages/patient/add-patient-transfusion",
       "style": {
         "navigationBarTitleText": "输液添加",
-        "enablePullDownRefresh": false
+        "enablePullDownRefresh": false,
+		"navigationBarBackgroundColor": "#ffaa00"
       }
     },
     {
       "path": "pages/nurse/nurse-patient_list",
       "style": {
-        "navigationBarTitleText": "患者列表"
+        "navigationBarTitleText": "护士",
+		"navigationBarBackgroundColor": "#ffaa00"
       }
     },
     {
       "path": "pages/nurse/nurse-info",
       "style": {
-        "navigationBarTitleText": "护士信息"
+        "navigationBarTitleText": "护士基本信息",
+		"navigationBarBackgroundColor": "#ffaa00"
       }
     },
     {
       "path": "pages/nurse/nurse-patient_info",
       "style": {
-        "navigationBarTitleText": "基本信息"
+        "navigationBarTitleText": "患者基本信息",
+		"navigationBarBackgroundColor": "#ffaa00"
       }
     },
     {
       "path": "pages/nurse/nurse-patient_transfusion",
       "style": {
-        "navigationBarTitleText": "输液记录"
+        "navigationBarTitleText": "输液记录列表",
+		"navigationBarBackgroundColor": "#ffaa00"
       }
     },
     {
       "path": "pages/nurse/nurse-patient_check",
       "style": {
-        "navigationBarTitleText": "巡视记录"
+        "navigationBarTitleText": "巡视记录列表",
+		"navigationBarBackgroundColor": "#ffaa00"
       }
     },
     {
       "path": "pages/nurse/nurse-patient_transfusion-info",
       "style": {
-        "navigationBarTitleText": "输液记录信息"
+        "navigationBarTitleText": "输液信息",
+		"navigationBarBackgroundColor": "#ffaa00"
       }
     },
     {
       "path": "pages/nurse/nurse-patient_check-info",
       "style": {
-        "navigationBarTitleText": "巡视记录信息"
+        "navigationBarTitleText": "巡视信息",
+		"navigationBarBackgroundColor": "#ffaa00"
       }
     },
     {
@@ -100,12 +111,6 @@
       }
     },
 
-    {
-      "path": "pages/nurse/test",
-      "style": {
-        "navigationBarTitleText": ""
-      }
-    },
     // {
     //   "path": "pages/admin/admin-info",
     //   "style": {
@@ -174,7 +179,13 @@
         "disableScroll": true,
         "navigationBarBackgroundColor": "#ffaa00"
       }
-
+    }, {
+      "path": "pages/admin/admin_menu/editlogin",
+      "style": {
+        "navigationBarTitleText": "管理员修改登陆记录",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#ffaa00"
+      }
     }
   ],
   "globalStyle": {

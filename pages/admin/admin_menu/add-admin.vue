@@ -99,11 +99,8 @@
             required: true,
             message: '请填写用户名',
             trigger: ['blur', 'change']
-          }],
-          'status': [{
-            type: 'number',
-            required: false,
-            message: '请填写有效状态',
+          }, {
+            validator: this.$common.validateUsername,
             trigger: ['blur', 'change']
           }],
           'password': [{
@@ -112,10 +109,8 @@
             message: '请填写密码',
             trigger: ['blur', 'change']
           }, {
-            min: 6,
-            max: 16,
-            message: '长度在 6 到 12 个字符',
-            trigger: ['blur', 'change'],
+            validator: this.$common.validatePassword,
+            trigger: ['blur', 'change']
           }],
           'password_verify': [{
             type: 'string',
@@ -123,15 +118,16 @@
             message: '请填写密码',
             trigger: ['blur', 'change']
           }, {
-            min: 6,
-            max: 16,
-            message: '长度在 6 到 12 个字符',
-            trigger: ['blur', 'change'],
-          }, {
-            validator: validatePass2,
+            validator: this.validateSamePassword,
             trigger: ['blur', 'change'],
             required: true
           }],
+          'status': [{
+            type: 'number',
+            required: false,
+            message: '请填写有效状态',
+            trigger: ['blur', 'change']
+          }]
         },
       }
     },
@@ -210,6 +206,15 @@
       department_select(e) {
         this.form1.department = e.name
         this.post.department = e.id
+      },
+      validateSamePassword(rule, value, callback) {
+        if (value === '') {
+          callback(new Error('请再次输入密码'));
+        } else if (value !== this.form1.password) {
+          callback(new Error('两次输入密码不一致!'));
+        } else {
+          callback();
+        }
       },
     },
   }

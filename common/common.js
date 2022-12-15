@@ -99,6 +99,69 @@ function loadToHide() {
   uni.hideToast()
 }
 
+var validateUsername = (rule, value, callback) => {
+  if (value === '') {
+    callback(new Error('请再次输入用户名'))
+  } else {
+    let usernameLength = /^[a-zA-Z0-9]{5,12}$/
+    let usernamePattern = /^(?=^[a-zA-Z]+[0-9]+$)([a-zA-Z0-9]{5,12})$/
+    if (usernameLength.test(value) === false) {
+      callback(new Error('用户名长度必须在5-12之间'));
+    } else if (usernamePattern.test(value) === false) {
+      callback(new Error('用户名需包含字母和数字，且所有数字在字母之后'));
+    } else {
+      callback();
+    }
+  }
+}
+
+var validatePassword = (rule, value, callback) => {
+  if (value === '') {
+    callback(new Error('请再次输入密码'))
+  } else {
+    let passwordLength = /^[a-zA-Z0-9]{8,15}$/
+    let passwordPattern = /(?=(?:.*[A-Z]){1,})(?=(?:.*[a-z]){1,})(?=(?:.*\d){1,})([A-Za-z0-9]{8,15})$/
+    if (passwordLength.test(value) === false) {
+      callback(new Error('密码长度必须在8-15之间'));
+    } else if (passwordPattern.test(value) === false) {
+      callback(new Error('密码必须且只可以有大字母，小字母和数字'));
+    } else {
+      callback();
+    }
+  }
+}
+
+var validateOldPassword = (rule, value, callback) => {
+  if (value === '') {
+    callback(new Error('请再次输入密码'));
+  } else {
+    this.$request.post('/api/admin/login', {
+      username: this.oldusername,
+      password: value
+    }).then(res => {
+      console.log(res)
+      if (res.statusCode == 200) {
+        callback()
+      } else {
+        callback(new Error('与旧密码不一致!'))
+      }
+    })
+  }
+}
+
+var validateSamePassword = (rule, value, value2, callback) => {
+  if (value === '') {
+    callback(new Error('请再次输入密码'));
+  } else if (value !== value2) {
+    callback(new Error('两次输入密码不一致!'));
+  } else {
+    callback();
+  }
+}
+
+function valSamePassword(value2) {
+  return validateSamePassword(rule, value, value2, callback)
+}
 
 module.exports = {
   dateTimeStr,
@@ -112,4 +175,9 @@ module.exports = {
   errorToShow,
   loadToShow,
   loadToHide,
+  validateUsername,
+  validatePassword,
+  validateOldPassword,
+  validateSamePassword,
+  valSamePassword
 }

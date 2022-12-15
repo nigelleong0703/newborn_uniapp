@@ -33,7 +33,7 @@
           </u-form-item>
           <view class="second-title">登录信息</view>
           <u-form-item label="用户名" label-width="120" prop="username" ref="item7">
-            <u--input v-model="form1.username" placeholder="请输入监护人姓名"></u--input>
+            <u--input v-model="form1.username" placeholder="请输入护士用户名"></u--input>
             </u--input>
           </u-form-item>
           <u-form-item label="密码" label-width="120" prop="password" ref="item8">
@@ -208,6 +208,9 @@
             required: true,
             message: '请填写用户名',
             trigger: ['blur', 'change']
+          }, {
+            validator: this.$common.validateUsername,
+            trigger: ['blur', 'change']
           }],
           'password': [{
             type: 'string',
@@ -215,10 +218,8 @@
             message: '请填写密码',
             trigger: ['blur', 'change']
           }, {
-            min: 6,
-            max: 16,
-            message: '长度在 6 到 12 个字符',
-            trigger: ['blur', 'change'],
+            validator: this.$common.validatePassword,
+            trigger: ['blur', 'change']
           }],
           'password_verify': [{
             type: 'string',
@@ -226,12 +227,7 @@
             message: '请填写密码',
             trigger: ['blur', 'change']
           }, {
-            min: 6,
-            max: 16,
-            message: '长度在 6 到 12 个字符',
-            trigger: ['blur', 'change'],
-          }, {
-            validator: validatePass2,
+            validator: this.validateSamePassword,
             trigger: ['blur', 'change'],
             required: true
           }],
@@ -346,7 +342,16 @@
           console.log(this.post1.key)
         });
         console.log(this.post1)
-      }
+      },
+      validateSamePassword(rule, value, callback) {
+        if (value === '') {
+          callback(new Error('请再次输入密码'));
+        } else if (value !== this.form1.password) {
+          callback(new Error('两次输入密码不一致!'));
+        } else {
+          callback();
+        }
+      },
     },
   }
 </script>

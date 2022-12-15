@@ -120,31 +120,6 @@
         uni.hideLoading();
       },
 
-      // onRefresh: function(tabItem) {
-      //   if (this._freshing) return
-      //   this._freshing = true;
-      //   if (!this.triggered) {
-      //     this.triggered = true;
-      //   }
-      //   console.log(tabItem)
-      //   this.cxGetDataFun(tabItem);
-      //   setTimeout(() => {
-      //     this.triggered = false; //触发onRestore，并关闭刷新图标  
-      //     this._freshing = false;
-      //   }, 3000)
-      //   console.log("onRefreshDone")
-      //   return
-      // },
-      // onRestore: function() {
-      //   console.log("onRestore")
-      // },
-      // cxGetDataFun: function(tabItem) {
-      //   tabItem.pageIndex = 1;
-      //   tabItem.isMore = true;
-      //   console.log(tabItem)
-      //   this.selectKehuFun(tabItem);
-      // },
-
       async changeTab(e) {
 
         if (scrollTimer) {

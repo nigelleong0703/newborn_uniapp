@@ -110,7 +110,6 @@
         "disableScroll": true
       }
     },
-
     // {
     //   "path": "pages/admin/admin-info",
     //   "style": {
@@ -186,6 +185,22 @@
         "enablePullDownRefresh": false,
         "navigationBarBackgroundColor": "#ffaa00"
       }
+    }, {
+      "path": "pages/admin/admin-nurse/admin-nurse-info",
+      "style": {
+        "navigationBarTitleText": "管理员护士",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#ffaa00"
+      }
+
+    }, {
+      "path": "pages/admin/admin-patient/admin-patient-info",
+      "style": {
+        "navigationBarTitleText": "管理员患者",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#ffaa00"
+      }
+
     }
   ],
   "globalStyle": {

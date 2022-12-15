@@ -15,11 +15,18 @@
             <view :id="'top'+tabItemIndex" style="width: 100%;height: 180upx;">边距盒子</view>
             <view class='content'>
               <view class='card' v-for="(item,index) in tabItem.list" v-if="tabItem.list.length > 0" :key="index">
-                <view>{{item.id}}</view>
-                <view>{{item.name}}</view>
-                <view>{{item.gender}}</view>
-                <view>{{item.birthdate}}</view>
-                <u-button class='button' type='default' @click="viewNurseInfo(item.id)" text="view"></u-button>
+                <view class="card-item card-item-view">
+                  <view class="first-title-patient">
+                    {{item.name}}
+                  </view>
+                  <view class="second-title-patient">
+                    {{item.gender2}} {{item.tel}}
+                  </view>
+                </view>
+                <view class="card-item-edit">
+                  <u-button class='button card-button' plain color="orange" @click="viewNurseInfo(item.id)" text="查看">
+                  </u-button>
+                </view>
               </view>
               <view class='noCard' v-if="tabItem.list.length===0">
                 暂无信息
@@ -31,7 +38,7 @@
       </swiper>
     </view>0
     <view>
-      <addBtn url="/pages/patient/add-patient" :params="{department: (tabCurrentIndex+1)}"></addBtn>
+      <addBtn url="/pages/nurse/add-nurse" :params="{department: (tabCurrentIndex+1)}"></addBtn>
       <tabBar-admin class="bottom-bar" :currentPage="0"></tabBar-admin>
     </view>
   </view>
@@ -125,6 +132,13 @@
           } else {
             let data = res.data;
             tabItem.list = data.nurse
+            tabItem.list.forEach(itemInfo => {
+              if (itemInfo.gender == 1) {
+                itemInfo.gender2 = '男'
+              } else {
+                itemInfo.gender2 = '女'
+              }
+            })
           }
         })
         uni.hideLoading();
@@ -225,7 +239,7 @@
       },
       viewNurseInfo(id) {
         console.log(id)
-        let targetUrl = '/pages/nurse/nurse-info'
+        let targetUrl = '/pages/admin/admin-nurse/admin-nurse-info'
         targetUrl = targetUrl + '?id=' + id
         uni.navigateTo({
           url: targetUrl

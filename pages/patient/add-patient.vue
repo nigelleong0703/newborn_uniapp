@@ -248,7 +248,8 @@
       },
       sexSelect(e) {
         console.log(e)
-        this.form1.gender = e.id
+        this.form1.gender = e
+        this.post.gender = e
         this.$refs.form1.validateField('gender')
       },
       change(e) {
@@ -258,7 +259,6 @@
         // 如果有错误，会在catch中返回报错信息数组，校验通过则在then中返回true
         this.$refs.form1.validate().then(res => {
           this.post.name = this.form1.name
-          this.post.gender = this.form1.gender
           this.post.guardian = this.form1.guardian
           this.post.guardianId = this.form1.guardianId
           this.post.tel = this.form1.tel

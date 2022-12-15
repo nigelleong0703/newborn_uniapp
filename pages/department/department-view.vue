@@ -139,10 +139,7 @@
       addDepartment() {
         this.$refs.newDepartmentForm.validate().then(res => {
           console.log(this.newDepartmentForm)
-          let newformData = new FormData();
-          newformData.append('name', this.newDepartmentForm.name);
-          console.log(newformData);
-          this.$request.post('/api/list/department/add', newformData).then(res => {
+          this.$request.post('/api/list/department/add', this.newDepartmentForm).then(res => {
             console.log(res)
             if (res.statusCode !== 200) {
               this.$.toast('提交失败');
@@ -190,9 +187,11 @@
       editDepartment() {
         this.$refs.editDepartmentForm.validate().then(res => {
           console.log(this.editDepartmentForm)
-          this.$request.post('/api/list/department/update/' + this.editDepartmentForm.id, this
-            .editDepartmentForm
-            .name).then(res => {
+          this.$request.patch('/api/list/department/update/' + this.editDepartmentForm.id, {
+            name: this
+              .editDepartmentForm
+              .name
+          }).then(res => {
             console.log(res)
             if (res.statusCode !== 200) {
               this.$.toast('提交失败');

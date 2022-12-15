@@ -32,32 +32,6 @@
   import common from "common/js/common.js"
   export default {
     data() {
-      var validatePass = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请再次输入密码'));
-        } else {
-          this.$request.post('/api/admin/login', {
-            username: this.oldusername,
-            password: value
-          }).then(res => {
-            console.log(res)
-            if (res.statusCode == 200) {
-              callback()
-            } else {
-              callback(new Error('与旧密码不一致!'))
-            }
-          })
-        }
-      };
-      var validatePass2 = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请再次输入密码'));
-        } else if (value !== this.form1.password) {
-          callback(new Error('两次输入密码不一致!'));
-        } else {
-          callback();
-        }
-      };
       return {
         oldusername: '',
         form1: {
@@ -76,6 +50,9 @@
             required: true,
             message: '请填写用户名',
             trigger: ['blur', 'change']
+          }, {
+            validator: this.$common.validateUsername,
+            trigger: ['blur', 'change']
           }],
           'password': [{
             type: 'string',
@@ -83,10 +60,8 @@
             message: '请填写密码',
             trigger: ['blur', 'change']
           }, {
-            min: 5,
-            max: 16,
-            message: '长度在 5 到 12 个字符',
-            trigger: ['blur', 'change'],
+            validator: this.$common.validatePassword,
+            trigger: ['blur', 'change']
           }],
           'password_verify': [{
             type: 'string',
@@ -94,12 +69,7 @@
             message: '请填写密码',
             trigger: ['blur', 'change']
           }, {
-            min: 5,
-            max: 16,
-            message: '长度在 5 到 12 个字符',
-            trigger: ['blur', 'change'],
-          }, {
-            validator: validatePass2,
+            validator: this.validateSamePassword,
             trigger: ['blur', 'change'],
             required: true
           }],
@@ -109,12 +79,7 @@
             message: '请填写密码',
             trigger: ['blur', 'change']
           }, {
-            min: 5,
-            max: 16,
-            message: '长度在 5 到 12 个字符',
-            trigger: ['blur', 'change'],
-          }, {
-            validator: validatePass,
+            validator: this.validateOldPassword,
             validateTrigger: 'submit',
             required: true
           }],
@@ -188,6 +153,34 @@
       },
       hideKeyboard() {
         uni.hideKeyboard()
+      },
+
+      validateOldPassword(rule, value, callback) {
+        if (value === '') {
+          callback(new Error('请再次输入密码'));
+        } else {
+          this.$request.post('/api/admin/login', {
+            username: this.oldusername,
+            password: value
+          }).then(res => {
+            console.log(res)
+            if (res.statusCode == 200) {
+              callback()
+            } else {
+              callback(new Error('与旧密码不一致!'))
+            }
+          })
+        }
+      },
+
+      validateSamePassword(rule, value, callback) {
+        if (value === '') {
+          callback(new Error('请再次输入密码'));
+        } else if (value !== this.form1.password) {
+          callback(new Error('两次输入密码不一致!'));
+        } else {
+          callback();
+        }
       },
     },
   }

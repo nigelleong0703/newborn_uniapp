@@ -6,7 +6,7 @@
         <view class='member-top-c'>
           <view class="user-name">{{admin_info.name}}</view>
           <view class="user-username">{{admin_info.username}}</view>
-          <view class="user-department">科室：{{admin_info.department}}</view>
+          <view class="user-department">科室：{{department}}</view>
         </view>
       </view>
 
@@ -73,6 +73,8 @@
       return {
         admin_info: {},
         hasLogin: false,
+        department_list: [],
+        department: '',
         adminMenus: [{
             name: '基本信息',
             icon: '/static/admin-info/about.png',
@@ -97,11 +99,11 @@
       }
     },
     onReady() {
-      this.initData()
+
     },
 
     onLoad() {
-
+      this.initData()
     },
 
     methods: {
@@ -113,6 +115,15 @@
           this.hasLogin = false
         }
         console.log(this.admin_info)
+        this.$request.get('/api/list/department').then(res => {
+          this.department_list = res.data
+          this.department_list.unshift({
+            id: 0,
+            name: '全部'
+          })
+          console.log(this.department_list)
+          this.department = this.department_list[this.admin_info.department].name
+        })
       },
 
       logout() {

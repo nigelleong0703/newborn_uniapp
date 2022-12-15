@@ -16,10 +16,10 @@
             <view class='card' v-for="(item,index) in tabItem.list" v-if="tabItem.list.length > 0" :key="index">
               <view class="card-item card-item-view">
                 <view class="first-title-patient">
-                  {{item.id}} - {{item.name}}
+                  {{item.name}}
                 </view>
                 <view class="second-title-patient">
-                  {{item.gender}} {{item.birthdate}}
+                  {{item.gender2}} {{item.birthdate}}
                 </view>
               </view>
               <view class="card-item-edit">
@@ -109,12 +109,12 @@
           this.selectKehuFun(item.index).then(res => {
             item.list = res
             item.list.forEach(itemInfo => {
-              if (itemInfo.gender == 0) {
-                itemInfo.gender = '男'
+              if (itemInfo.gender == 1) {
+                itemInfo.gender2 = '男'
               } else {
-                itemInfo.gender = '女'
+                itemInfo.gender2 = '女'
               }
-              console.log(itemInfo.gender)
+              console.log(itemInfo.gender2)
               itemInfo.birthdate = uni.$u.timeFormat(itemInfo.birthdate)
               console.log(itemInfo.birthdate)
             })
@@ -221,7 +221,7 @@
 
       viewPatientInfo(id) {
         console.log(id)
-        let patientUrl = '/pages/patient/patient-info'
+        let patientUrl = '/pages/admin/admin-patient/admin-patient-info'
         patientUrl = patientUrl + '?id=' + id
         uni.navigateTo({
           url: patientUrl

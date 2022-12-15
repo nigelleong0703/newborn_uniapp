@@ -7,13 +7,10 @@
             <view class="patient-check-info">
                 <view class="second-title">巡视信息</view>
                 <u-cell-group :border='false'>
-                    <u-cell title="巡视 ID" :value="checkInfo.id" :border='false'></u-cell>
-                    <u-cell title="患者 ID" :value="checkInfo.patientId" :border='false'></u-cell>
-                    <u-cell title="护士 ID" :value="checkInfo.nurseId" :border='false'></u-cell>
+                    <u-cell title="患者姓名" :value="patientname" :border='false'></u-cell>
+                    <u-cell title="护士姓名" :value="nursename" :border='false'></u-cell>
                     <u-cell title="巡房时间" :value="time" :border='false'></u-cell>
-                    <u-cell title="输液 ID" :value="checkInfo.transfusionId" :border='false'></u-cell>
                     <u-cell title="患者状态/隐患" :value="checkInfo.info" :border='false'></u-cell>
-
                 </u-cell-group>
             </view>
             <view class="navigate-bar">
@@ -36,11 +33,17 @@ export default {
             title: "患者: 王小杨",
             value7: 2,
             checkInfo: '',
-            time: ''
+            time: '',
+            patientname: '',
+            nursename: ''
         }
     },
 
     onLoad() {
+        let patient_name = uni.getStorageSync('selected_patient')
+        this.patientname = patient_name.name
+        let nurse_name = uni.getStorageSync('current_user')
+        this.nursename = nurse_name.name
         let patient_info = uni.getStorageSync('selected_check')
         console.log(patient_info)
         this.patient_id = patient_info.id
@@ -83,7 +86,7 @@ export default {
         },
         getCheck_info() {
             let path = '/api/check/' + this.patient_id
-			//////////////////////////////////
+            //////////////////////////////////
             this.$request.get(path).then(res => {
                 console.log(res)
                 this.checkInfo = res.data;
@@ -96,7 +99,7 @@ export default {
 
 <style>
 .content {
-    height: 70vh;
+    height: 75vh;
     display: flex;
     flex-direction: column;
     align-content: center;

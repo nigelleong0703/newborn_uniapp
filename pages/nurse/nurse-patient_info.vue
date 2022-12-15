@@ -7,14 +7,13 @@
             <view class="patient-info">
                 <view class="second-title">患者信息</view>
                 <u-cell-group :border='false'>
-                    <u-cell title="患者ID" :value="patientInfo.id" :border='false'></u-cell>
                     <u-cell title="姓名" :value="patientInfo.name" :border='false'></u-cell>
-                    <u-cell title="性别" :value="patientInfo.gender" :border='false'></u-cell>
+                    <u-cell title="性别" :value="gender_list[patientInfo.gender].name" :border='false'></u-cell>
                     <u-cell title="出生日期" :value="birthdate" :border='false'></u-cell>
                 </u-cell-group>
                 <view class="second-title">监护人信息</view>
                 <u-cell-group :border='false'>
-                    <u-cell title="监护人ID" :value="patientInfo.guardianId" :border='false'></u-cell>
+                    <u-cell title="监护人 ID" :value="patientInfo.guardianId" :border='false'></u-cell>
                     <u-cell title="监护人姓名" :value="patientInfo.guardian" :border='false'></u-cell>
                     <u-cell title="关系" :value="relationList[(patientInfo.relation) - 1].name" :border='false'></u-cell>
                     <u-cell title="联系电话" :value="patientInfo.tel" :border='false'></u-cell>
@@ -55,24 +54,31 @@ export default {
             outDate: '',
             relationList: [{
                 id: 1,
-                name: '父亲',
+                name: '父亲'
             }, {
                 id: 2,
-                name: '母亲',
+                name: '母亲'
             }, {
                 id: 3,
-                name: '爷爷',
+                name: '爷爷'
             }, {
                 id: 4,
-                name: '奶奶',
+                name: '奶奶'
             }, {
                 id: 5,
-                name: '亲戚',
+                name: '亲戚'
             }, {
                 id: 6,
-                name: '其他',
+                name: '其他'
             }],
-            department_list: []
+            department_list: [],
+            gender_list: [{
+                id: 1,
+                name: '男',
+            }, {
+                id: 2,
+                name: '女',
+            }]
         }
     },
 
@@ -136,7 +142,7 @@ export default {
 
 <style>
 .content {
-    height: 70vh;
+    height: 75vh;
     display: flex;
     flex-direction: column;
     align-content: center;

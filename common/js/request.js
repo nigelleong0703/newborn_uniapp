@@ -37,9 +37,45 @@ const patch = (url, data, options = {}) => {
   return request(options)
 }
 
+const getDepartmentList = () => {
+  return get('/api/list/department')
+}
+const adminLogin = (data) => {
+  return post('/api/admin/login', data)
+}
+
+const nurseList = departmentNo => {
+  return get('/api/nurse', {
+    department: departmentNo
+  })
+}
+
+const nurseDetail = id => {
+  return get('/api/nurse/${id}')
+}
+
+const editDepartment = (id, data) => {
+  let newUrl = '/api/list/department/update/' + id
+  console.log(newUrl)
+  console.log(data.name)
+  return patch(newUrl, {
+    name: data.name
+  })
+}
+
+const addDepartment = (data) => {
+  console.log(data)
+  return post('/api/list/department/add', data)
+}
+
 export default {
-  request,
   get,
   post,
-  patch
+  patch,
+  getDepartmentList,
+  adminLogin,
+  nurseList,
+  nurseDetail,
+  editDepartment,
+  addDepartment
 }

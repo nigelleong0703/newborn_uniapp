@@ -5,94 +5,9 @@ import * as common from './common.js'
 import * as db from './db.js'
 import {
   get,
-  post
-} from './js/common.js'
-
-// const post = (url, data, callback) => {
-//   uni.showLoading({
-//     title: '加载中'
-//   });
-//   console.log(url)
-//   console.log(data)
-
-//   uni.request({
-//     url: apiBaseUrl + url || '',
-//     method: 'POST',
-//     data: data || {},
-//     header: {},
-//     success: (response) => {
-//       uni.hideLoading();
-//       callback(response);
-//     },
-//     complete: () => {
-//       uni.hideLoading();
-//     },
-//     fail: (error) => {
-//       uni.hideLoading();
-//       if (error && error.response) {
-//         showError(error.response);
-//       }
-//     },
-//   });
-
-// }
-
-// const get = (url, callback) => {
-//   uni.showLoading({
-//     title: '加载中'
-//   });
-//   uni.request({
-//     url: url,
-//     header: {},
-//     method: 'GET',
-//     success: (response) => {
-//       uni.hideLoading();
-//       callback(response.data);
-//     },
-//     fail: (error) => {
-//       uni.hideLoading();
-//       if (error && error.response) {
-//         showError(error.response);
-//       }
-//     },
-//     complete: () => {
-//       setTimeout(function() {
-//         uni.hideLoading();
-//       }, 250);
-//     }
-//   });
-// }
-
-// const get = (url, data = {}) => {
-//   uni.showLoading({
-//     title: '加载中'
-//   });
-//   console.log(apiBaseUrl + url)
-//   return new Promise((resolve, reject) => {
-//     uni.request({
-//       url: apiBaseUrl + url,
-//       method: 'GET',
-//       data: data,
-//       header: {},
-//     }).then(data => {
-//       uni.hideLoading();
-//       let [err, res] = data;
-//       resolve(res);
-//     }).catch(error => {
-//       uni.hideLoading();
-//       reject(error)
-//     })
-//   });
-// }
-
-
-
-// const post = (url, data, options = {}) => {
-//   options.type = 'POST';
-//   options.data = data;
-//   options.url = url;
-//   return request(options)
-// }
+  post,
+  patch
+} from 'common/js/request.js'
 
 const showError = error => {
   let errorMsg = ''
@@ -153,17 +68,30 @@ const adminLogin = (data) => {
   return post('/api/admin/login', data)
 }
 
-export {
-  // request,
-  // get,
-  // post,
-  getDepartmentList,
-  adminLogin
-};
-// export const {
-//   getDepartmentList: function() {
-//     return get('/api/list/department')
-//   }
-// }
+const nurseList = departmentNo => {
+  return get('/api/nurse', {
+    department: departmentNo
+  })
+}
 
-// export const adminLogin = (data, callback) => post('/api/admin/login', data, callback);
+const nurseDetail = id => {
+  return get('/api/nurse/${id}')
+}
+
+const editDepartment = (id, data) => {
+  let newUrl = '/api/list/department/update/' + id
+  console.log(newUrl)
+  console.log(data.name)
+  return patch(newUrl, {
+    name: data.name
+  })
+}
+
+
+export {
+  getDepartmentList,
+  adminLogin,
+  nurseList,
+  nurseDetail,
+  editDepartment
+};

@@ -14,19 +14,8 @@
           <scroll-view style="height: 100%;" scroll-y="true" scroll-with-animation>
             <view :id="'top'+tabItemIndex" style="width: 100%;height: 180upx;">边距盒子</view>
             <view class='content'>
-              <view class='card' v-for="(item,index) in tabItem.list" v-if="tabItem.list.length > 0" :key="index">
-                <view class="card-item card-item-view">
-                  <view class="first-title-patient">
-                    {{item.name}}
-                  </view>
-                  <view class="second-title-patient">
-                    {{item.gender2}} {{item.tel}}
-                  </view>
-                </view>
-                <view class="card-item-edit">
-                  <u-button class='button card-button' plain color="orange" @click="viewNurseInfo(item.id)" text="查看">
-                  </u-button>
-                </view>
+              <view v-for="(item,index) in tabItem.list" v-if="tabItem.list.length > 0" :key="index">
+                <nurseCard :profile="item" buttonTitle="查看"></nurseCard>
               </view>
               <view class='noCard' v-if="tabItem.list.length===0">
                 暂无信息
@@ -36,7 +25,7 @@
           </scroll-view>
         </swiper-item>
       </swiper>
-    </view>0
+    </view>
     <view>
       <addBtn url="/pages/nurse/add-nurse" :params="{department: (tabCurrentIndex+1)}"></addBtn>
       <tabBar-admin class="bottom-bar" :currentPage="0"></tabBar-admin>
@@ -46,7 +35,7 @@
 
 <script>
   import common from "common/js/common.js"
-  import khCard from 'components/card/kehu.vue'
+  import nurseCard from "components/card/nurseCard"
 
   let windowWidth = 0,
     scrollTimer = false,
@@ -58,6 +47,9 @@
       barHeight() {
         return `calc(100vh - 44px - ${h}px)`
       }
+    },
+    components: {
+      nurseCard
     },
     data() {
       return {
@@ -144,31 +136,6 @@
         uni.hideLoading();
       },
 
-      // onRefresh: function(tabItem) {
-      //   if (this._freshing) return
-      //   this._freshing = true;
-      //   if (!this.triggered) {
-      //     this.triggered = true;
-      //   }
-      //   console.log(tabItem)
-      //   this.cxGetDataFun(tabItem);
-      //   setTimeout(() => {
-      //     this.triggered = false; //触发onRestore，并关闭刷新图标  
-      //     this._freshing = false;
-      //   }, 3000)
-      //   console.log("onRefreshDone")
-      //   return
-      // },
-      // onRestore: function() {
-      //   console.log("onRestore")
-      // },
-      // cxGetDataFun: function(tabItem) {
-      //   tabItem.pageIndex = 1;
-      //   tabItem.isMore = true;
-      //   console.log(tabItem)
-      //   this.selectKehuFun(tabItem);
-      // },
-
       async changeTab(e) {
 
         if (scrollTimer) {
@@ -236,14 +203,6 @@
             res(data);
           }).exec();
         });
-      },
-      viewNurseInfo(id) {
-        console.log(id)
-        let targetUrl = '/pages/admin/admin-nurse/admin-nurse-info'
-        targetUrl = targetUrl + '?id=' + id
-        uni.navigateTo({
-          url: targetUrl
-        })
       },
     },
   }

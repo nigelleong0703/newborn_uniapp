@@ -157,11 +157,13 @@
 
 <style lang='scss'>
   .body {
-    width: 100vw;
-    overflow: hidden;
+    width: 100%;
+    overflow: scroll;
     color: #ffffff;
     position: relative;
     background-color: #ffffff;
+    margin-left: auto;
+    margin-right: auto
   }
 
   .button {

@@ -6,19 +6,22 @@
     {
       "path": "pages/index/index",
       "style": {
-        "navigationBarTitleText": ""
+        "navigationBarTitleText": "",
+        "disableScroll": true
       }
     },
     {
       "path": "pages/nurse/nurse-login",
       "style": {
-        "navigationBarTitleText": "护士登录"
+        "navigationBarTitleText": "护士登录",
+        "disableScroll": true
       }
     },
     {
       "path": "pages/admin/admin-login",
       "style": {
-        "navigationBarTitleText": "管理员登陆"
+        "navigationBarTitleText": "管理员登录",
+        "disableScroll": true
       }
     },
     {
@@ -26,7 +29,7 @@
       "style": {
         "navigationBarTitleText": "联系管理员",
         "enablePullDownRefresh": false,
-		"navigationBarBackgroundColor": "#ffaa00"
+        "navigationBarBackgroundColor": "#ffaa00"
       }
     },
     {
@@ -34,7 +37,7 @@
       "style": {
         "navigationBarTitleText": "患者添加",
         "enablePullDownRefresh": false,
-		"navigationBarBackgroundColor": "#ffaa00"
+        "navigationBarBackgroundColor": "#ffaa00"
       }
     },
     {
@@ -42,7 +45,7 @@
       "style": {
         "navigationBarTitleText": "巡视添加",
         "enablePullDownRefresh": false,
-		"navigationBarBackgroundColor": "#ffaa00"
+        "navigationBarBackgroundColor": "#ffaa00"
       }
     },
     {
@@ -50,64 +53,63 @@
       "style": {
         "navigationBarTitleText": "输液添加",
         "enablePullDownRefresh": false,
-		"navigationBarBackgroundColor": "#ffaa00"
+        "navigationBarBackgroundColor": "#ffaa00"
       }
     },
     {
       "path": "pages/nurse/nurse-patient_list",
       "style": {
         "navigationBarTitleText": "护士",
-		"navigationBarBackgroundColor": "#ffaa00"
+        "navigationBarBackgroundColor": "#ffaa00"
       }
     },
     {
       "path": "pages/nurse/nurse-info",
       "style": {
         "navigationBarTitleText": "护士基本信息",
-		"navigationBarBackgroundColor": "#ffaa00"
+        "navigationBarBackgroundColor": "#ffaa00"
       }
     },
     {
       "path": "pages/nurse/nurse-patient_info",
       "style": {
         "navigationBarTitleText": "患者基本信息",
-		"navigationBarBackgroundColor": "#ffaa00"
+        "navigationBarBackgroundColor": "#ffaa00"
       }
     },
     {
       "path": "pages/nurse/nurse-patient_transfusion",
       "style": {
         "navigationBarTitleText": "输液记录列表",
-		"navigationBarBackgroundColor": "#ffaa00"
+        "navigationBarBackgroundColor": "#ffaa00"
       }
     },
     {
       "path": "pages/nurse/nurse-patient_check",
       "style": {
         "navigationBarTitleText": "巡视记录列表",
-		"navigationBarBackgroundColor": "#ffaa00"
+        "navigationBarBackgroundColor": "#ffaa00"
       }
     },
     {
       "path": "pages/nurse/nurse-patient_transfusion-info",
       "style": {
         "navigationBarTitleText": "输液信息",
-		"navigationBarBackgroundColor": "#ffaa00"
+        "navigationBarBackgroundColor": "#ffaa00"
       }
     },
     {
       "path": "pages/nurse/nurse-patient_check-info",
       "style": {
         "navigationBarTitleText": "巡视信息",
-		"navigationBarBackgroundColor": "#ffaa00"
+        "navigationBarBackgroundColor": "#ffaa00"
       }
     },
     {
       "path": "pages/admin/admin_index/admin-info",
       "style": {
         "navigationBarTitleText": "管理员",
-        "navigationBarBackgroundColor": "#ffaa00",
-        "disableScroll": true
+        "navigationBarBackgroundColor": "#ffaa00"
       }
     },
     // {
@@ -124,14 +126,6 @@
         "disableScroll": true
       }
 
-    },
-    {
-      "path": "pages/admin/admin_index/admin-doctor",
-      "style": {
-        "navigationBarTitleText": "管理员",
-        "navigationBarBackgroundColor": "#ffaa00",
-        "disableScroll": true
-      }
     },
     {
       "path": "pages/admin/admin_index/admin-patient",
@@ -166,7 +160,6 @@
       "style": {
         "navigationBarTitleText": "科室",
         "enablePullDownRefresh": false,
-        "disableScroll": true,
         "navigationBarBackgroundColor": "#ffaa00"
       }
 
@@ -210,33 +203,5 @@
     "backgroundColor": "#ffffff"
   },
   "uniIdRouter": {}
-  // "tabBar": {
-  //   "color": "#7A7E83",
-  //   "selectedColor": "#ffaa00",
-  //   "borderStyle": "white",
-  //   "backgroundColor": "#white",
-  //   "custom": true,
-  //   "list": [{
-  //       "pagePath": "pages/admin/admin-nurse",
-  //       "text": "护士",
-  //       "customIcon": false
-  //     },
-  //     {
-  //       "pagePath": "pages/admin/admin-doctor",
-  //       "text": "医生",
-  //       "customIcon": false
-  //     },
-  //     {
-  //       "pagePath": "pages/admin/admin-patient",
-  //       "text": "患者",
-  //       "customIcon": false
-  //     },
-  //     {
-  //       "pagePath": "pages/admin/admin-info",
-  //       "text": "我的",
-  //       "customIcon": false
-  //     }
-  //   ],
-  //   "current": 0
-  // }
+
 }

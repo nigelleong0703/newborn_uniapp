@@ -1,5 +1,5 @@
 <template>
-  <view class="body" :style="'height: '+ windowHeight + 'px'">
+  <view class="body">
     <view class="topbar">
       <view :id="'top'" style="width: 100%;height: 50upx;"></view>
       <view class="top-title-bar">
@@ -257,7 +257,6 @@
 
   .u-popup-slot {
     width: 100%;
-    @include flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;

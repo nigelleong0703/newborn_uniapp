@@ -194,7 +194,32 @@
         "navigationBarBackgroundColor": "#ffaa00"
       }
 
+    }, {
+      "path": "pages/drug/drug-view",
+      "style": {
+        "navigationBarTitleText": "药品",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#ffaa00"
+      }
+
+    }, {
+      "path": "pages/vein/vein-view",
+      "style": {
+        "navigationBarTitleText": "静脉",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#ffaa00"
+      }
+
+    }, {
+      "path": "pages/tool/tool-view",
+      "style": {
+        "navigationBarTitleText": "工具",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#ffaa00"
+      }
+
     }
+
   ],
   "globalStyle": {
     "navigationBarTextStyle": "black",

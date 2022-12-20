@@ -125,7 +125,11 @@
                 duration: 1000,
                 success: () => {
                   setTimeout(() => {
+                    let currentInfo = this.$db.get('current_user');
+                    currentInfo.username = this.psot1.username;
+                    this.$db.set('current_user', currentInfo)
                     uni.$emit('refurbish', {})
+                    uni.$emit('editAdminLogin', {})
                     uni.navigateBack();
                   }, 1000)
                 }

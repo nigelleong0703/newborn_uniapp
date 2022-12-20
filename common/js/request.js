@@ -40,6 +40,19 @@ const patch = (url, data, options = {}) => {
 const getDepartmentList = () => {
   return get('/api/list/department')
 }
+
+const getToolList = () => {
+  return get('/api/list/tool')
+}
+
+const getDrugList = () => {
+  return get('/api/list/drug')
+}
+
+const getVeinList = () => {
+  return get('/api/list/vein')
+}
+
 const adminLogin = (data) => {
   return post('/api/admin/login', data)
 }
@@ -63,19 +76,71 @@ const editDepartment = (id, data) => {
   })
 }
 
+const editDrug = (id, data) => {
+  let newUrl = '/api/list/drug/update/' + id
+  console.log(newUrl)
+  console.log(data.name)
+  return patch(newUrl, {
+    name: data.name
+  })
+}
+
+const editTool = (id, data) => {
+  let newUrl = '/api/list/tool/update/' + id
+  console.log(newUrl)
+  console.log(data.name)
+  return patch(newUrl, {
+    name: data.name
+  })
+}
+
+const editVein = (id, data) => {
+  let newUrl = '/api/list/vein/update/' + id
+  console.log(newUrl)
+  console.log(data.name)
+  return patch(newUrl, {
+    name: data.name
+  })
+}
+
 const addDepartment = (data) => {
   console.log(data)
   return post('/api/list/department/add', data)
 }
+
+const addDrug = (data) => {
+  console.log(data)
+  return post('/api/list/drug/add', data)
+}
+
+const addTool = (data) => {
+  console.log(data)
+  return post('/api/list/tool/add', data)
+}
+
+const addVein = (data) => {
+  console.log(data)
+  return post('/api/list/vein/add', data)
+}
+
 
 export default {
   get,
   post,
   patch,
   getDepartmentList,
+  getDrugList,
+  getToolList,
+  getVeinList,
   adminLogin,
   nurseList,
   nurseDetail,
   editDepartment,
-  addDepartment
+  editDrug,
+  editTool,
+  editVein,
+  addDepartment,
+  addDrug,
+  addTool,
+  addVein,
 }

@@ -4,15 +4,15 @@
     <view class='content'>
       <view :id="'top'" style="width: 100%;height: 50upx"></view>
       <view>
-        <view v-if="department_list.length> 0">
-          <view v-for="(item,index) in department_list" :key="index">
-            <departmentCard :profile="item" buttonTitle="修改" @editSuccess="editSuccess"></departmentCard>
+        <view v-if="tool_list.length> 0">
+          <view v-for="(item,index) in tool_list" :key="index">
+            <toolCard :profile="item" buttonTitle="修改" @editSuccess="editSuccess"></toolCard>
           </view>
           <view class='endOfList'>
             已到达最底部啦！
           </view>
         </view>
-        <view class='noCard' v-if="department_list.length===0">
+        <view class='noCard' v-if="tool_list.length===0">
           暂无信息
         </view>
         <view style="width: 100%;height: 150upx;opacity:0;"></view>
@@ -21,17 +21,17 @@
         @open="open" :closeable="true" :overlay="true">
         <view class="u-popup-slot">
           <view class="tips">
-            添加科室
+            添加工具
           </view>
           <view class="form">
-            <u--form labelPosition="left" :model="newDepartmentForm" ref="newDepartmentForm">
+            <u--form labelPosition="left" :model="newToolForm" ref="newToolForm">
               <u-form-item prop="name" ref="item1">
-                <u--input v-model="newDepartmentForm.name" placeholder="请输入要添加的科室名称"></u--input>
+                <u--input v-model="newToolForm.name" placeholder="请输入要添加的工具名称"></u--input>
               </u-form-item>
             </u--form>
           </view>
           <view class="confirm-button">
-            <u-button color='orange' type="primary" shape="circle" text="确定添加" @click="addDepartment">
+            <u-button color='orange' type="primary" shape="circle" text="确定添加" @click="addTool">
             </u-button>
           </view>
         </view>
@@ -42,7 +42,7 @@
 
 <script>
   import common from "common/js/common.js"
-  import departmentCard from "components/card/departmentCard"
+  import toolCard from "components/card/toolCard"
   import topTitleBar from "components/topTitleBar/topTitleBar"
 
   let scrollTimer = false,
@@ -50,30 +50,26 @@
 
   export default {
     components: {
-      departmentCard
+      toolCard
     },
     data() {
       return {
-        title: '科室列表',
+        title: '工具列表',
         bdlLoading: true,
         popup_show: false,
         popup_show_edit: false,
-        department_list: [],
+        tool_list: [],
         onloading: true,
         windowHeight: '',
-        newDepartmentForm: {
+        newToolForm: {
           name: '',
-        },
-        editDepartmentForm: {
-          name: '',
-          id: '',
         },
         editName: '',
         rules1: {
           'name': {
             type: 'string',
             required: true,
-            message: '请输入科室名称',
+            message: '请输入工具名称',
             trigger: ['blur', 'change']
           }
         }
@@ -88,27 +84,23 @@
       this.initData();
     },
 
-    onUnload() {
-      uni.$off('addNewNurse');
-    },
-
     methods: {
       initData() {
         uni.showLoading({
           title: '加载中...',
           mask: true
         })
-        this.$request.get('/api/list/department').then(res => {
+        this.$request.getToolList().then(res => {
           uni.hideLoading();
           console.log(res)
-          this.department_list = res.data
+          this.tool_list = res.data
         })
       },
 
       open() {
         this.$nextTick(() => { //在弹窗加载出来只有 show 才会变成 true
           if (this.popup_show == true) {
-            this.$refs.newDepartmentForm.setRules(this.rules1)
+            this.$refs.newToolForm.setRules(this.rules1)
           }
         })
       },
@@ -116,14 +108,14 @@
         this.popup_show = false
       },
 
-      addDepartment() {
+      addTool() {
         let that = this
-        that.$refs.newDepartmentForm.validate().then(res => {
-          console.log(that.newDepartmentForm)
+        that.$refs.newToolForm.validate().then(res => {
+          console.log(that.newToolForm)
           uni.showLoading({
             title: '加载中'
           });
-          that.$request.addDepartment(that.newDepartmentForm).then(res => {
+          that.$request.addTool(that.newToolForm).then(res => {
             uni.hideLoading()
             console.log(res)
             if (res.statusCode !== 200) {

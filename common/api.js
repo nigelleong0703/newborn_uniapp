@@ -64,6 +64,19 @@ const showError = error => {
 const getDepartmentList = () => {
   return get('/api/list/department')
 }
+
+const getDrugList = () => {
+  return get('/api/list/drug')
+}
+
+const getVeinList = () => {
+  return get('/api/list/vein', {})
+}
+
+const getToolList = () => {
+  return get('/api/list/tool', {})
+}
+
 const adminLogin = (data) => {
   return post('/api/admin/login', data)
 }
@@ -93,5 +106,8 @@ export {
   adminLogin,
   nurseList,
   nurseDetail,
-  editDepartment
+  editDepartment,
+  getDrugList,
+  getToolList,
+  getVeinList,
 };

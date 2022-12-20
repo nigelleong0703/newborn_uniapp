@@ -2,61 +2,6 @@
   width: 100%;
 }
 
-
-
-.card {
-  width: 90%;
-  height: 200upx;
-  background-color: white;
-  margin: 0 auto 42upx auto;
-  background: #FFFFFF;
-  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.10);
-  border-radius: 5px;
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-
-}
-
-/* .card-item {
-  margin: 10px auto
-} */
-
-.card-item-view {
-  width: 70%;
-  text-align: left;
-  top: 10%;
-  margin-left: 5%;
-  align-self: center;
-}
-
-.card-item-edit {
-  width: 40%;
-  align-self: center;
-
-  .card-item-edit .button {
-    width: 100px;
-    margin-right: 10vw;
-    margin-left: auto;
-  }
-}
-
-.card-button {
-  width: 70px;
-}
-
-.first-title-patient {
-  font-size: 23px;
-  font-weight: bold;
-  color: #000000
-}
-
-.second-title-patient {
-  font-size: 15px;
-}
-
 .noCard {
   width: 90%;
   height: 200upx;

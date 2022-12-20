@@ -31,7 +31,7 @@
       <view class='cell-group'>
         <view class='cell-item right-img'>
           <view class='cell-item-hd'>
-            <view class='cell-hd-title'>科室操作</view>
+            <view class='cell-hd-title'>医院操作</view>
           </view>
         </view>
       </view>
@@ -92,10 +92,27 @@
           },
         ],
         departmentMenus: [{
-          name: '科室列表',
-          icon: '/static/admin-info/department.png',
-          url: '/pages/department/department-view',
-        }]
+            name: '科室列表',
+            icon: '/static/admin-info/department.png',
+            url: '/pages/department/department-view',
+          },
+          {
+            name: '静脉列表',
+            icon: '/static/admin-info/vein.png',
+            url: '/pages/vein/vein-view',
+          },
+          {
+            name: '工具列表',
+            icon: '/static/admin-info/tool.png',
+            url: '/pages/tool/tool-view',
+          },
+          {
+            name: '药品列表',
+            icon: '/static/admin-info/drug.png',
+            url: '/pages/drug/drug-view',
+          },
+
+        ],
       }
     },
     onReady() {
@@ -103,7 +120,18 @@
     },
 
     onLoad() {
-      this.initData()
+      this.initData();
+      uni.$on('editAdmin', (res) => {
+        this.initData();
+      });
+      uni.$on('editAdminLogin', (res) => {
+        this.initData();
+      });
+    },
+
+    onUnload() {
+      uni.$off('editAdmin');
+      uni.$off('editAdminLogin');
     },
 
     methods: {
@@ -157,11 +185,13 @@
 
 <style lang='scss'>
   .body {
-    width: 100vw;
-    overflow: hidden;
+    width: 100%;
+    overflow: scroll;
     color: #ffffff;
     position: relative;
     background-color: #ffffff;
+    margin-left: auto;
+    margin-right: auto
   }
 
   .button {

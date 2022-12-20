@@ -13,19 +13,8 @@
         <scroll-view style="height: 100%;" scroll-y="true" scroll-with-animation>
           <view :id="'top'+tabItemIndex" style="width: 100%;height: 180upx;">边距盒子</view>
           <view class='content'>
-            <view class='card' v-for="(item,index) in tabItem.list" v-if="tabItem.list.length > 0" :key="index">
-              <view class="card-item card-item-view">
-                <view class="first-title-patient">
-                  {{item.name}}
-                </view>
-                <view class="second-title-patient">
-                  {{item.gender2}} {{item.birthdate}}
-                </view>
-              </view>
-              <view class="card-item-edit">
-                <u-button class='button card-button' plain color="orange" @click="viewPatientInfo(item.id)" text="查看">
-                </u-button>
-              </view>
+            <view v-for="(item,index) in tabItem.list" v-if="tabItem.list.length > 0" :key="index">
+              <patientCard :profile="item" buttonTitle="查看"></patientCard>
             </view>
             <view class='noCard' v-if="tabItem.list.length===0">
               暂无信息
@@ -44,14 +33,16 @@
 
 <script>
   import common from "common/js/common.js"
-  import refresh from 'components/refresh.vue';
+  import patientCard from "components/card/patientCard"
 
   let windowWidth = 0,
     scrollTimer = false,
     tabBar;
 
-
   export default {
+    components: {
+      patientCard
+    },
     data() {
       return {
         tabCurrentIndex: 0,

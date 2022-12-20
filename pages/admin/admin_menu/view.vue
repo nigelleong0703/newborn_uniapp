@@ -1,5 +1,5 @@
 <template>
-  <view class="body" :style="'height: '+ windowHeight + 'px'">
+  <view class="body">
     <view class="topbar">
       <view :id="'top'" style="width: 100%;height: 50upx;"></view>
       <view class="top-title-bar">
@@ -17,7 +17,7 @@
         <view class="nurse-info">
           <u-cell-group :border='false'>
             <u-cell title="姓名" :value="adminInfo.name" :border='false'></u-cell>
-            <u-cell title="科室" :value="department_list[adminInfo.department].name" :border='false'></u-cell>
+            <u-cell title="科室" :value="adminInfo.department_name" :border='false'></u-cell>
             <u-cell title="状态" :value="adminInfo.status" :border='false'></u-cell>
           </u-cell-group>
         </view>
@@ -60,7 +60,14 @@
     data() {
       return {
         title: "管理员资料",
-        adminInfo: '',
+        adminInfo: {
+          name: '',
+          status: '',
+          department: '',
+          department_name: '',
+          id: '',
+        },
+        currentInfo: '',
         windowHeight: '',
         department_list: [],
         popup_show_edit: false,
@@ -103,13 +110,12 @@
           name: '全部'
         })
         console.log(this.department_list)
+        this.getAdminInfo()
       })
       // this.department_list.unshift({
       //   id: 0,
       //   name: '全部'
       // })
-      console.log(this.department_list)
-      this.getAdminInfo()
     },
 
     methods: {
@@ -117,7 +123,12 @@
         // console.log('change', e)
       },
       getAdminInfo() {
-        this.adminInfo = this.$db.get('current_user')
+        this.currentInfo = this.$db.get('current_user');
+        this.adminInfo.name = this.currentInfo.name;
+        this.adminInfo.status = this.currentInfo.status;
+        this.adminInfo.department = this.currentInfo.department;
+        this.adminInfo.department_name = this.department_list[this.currentInfo.department].name;
+        this.adminInfo.id = this.currentInfo.id
         console.log(this.adminInfo)
       },
       open_edit() {
@@ -157,13 +168,19 @@
             if (res.statusCode !== 200) {
               this.$.toast('提交失败(' + res.statusCode + ')');
             } else {
+              this.currentInfo.name = this.adminInfoForm.name;
+              this.currentInfo.department = this.department;
+              this.currentInfo.status = this.adminInfoForm.status
+              this.$db.set('current_user', this.currentInfo)
               uni.showToast({
                 title: "修改成功！",
                 duration: 1000,
                 success: () => {
                   setTimeout(() => {
                     uni.$emit('refurbish', {})
-                    uni.navigateBack();
+                    uni.$emit('editAdmin', {})
+                    this.close_edit();
+                    this.getAdminInfo();
                   }, 1000)
                 }
               })
@@ -257,7 +274,6 @@
 
   .u-popup-slot {
     width: 100%;
-    @include flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;

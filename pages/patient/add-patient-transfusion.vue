@@ -265,8 +265,9 @@ export default {
             } else return false
         },
         convertToForm() {
-            this.post1.nurseId = this.transfusion1.nurseId
-            this.post1.patientId = this.transfusion1.patientId
+			this.post1.nurseId = parseInt(this.transfusion1.nurseId, 10);
+			console.log(this.post1.nurseId)
+            this.post1.patientId = parseInt(this.transfusion1.patientId, 10)
             this.post1.startTime = Math.round(this.post1.startTime / 1000)
             if (this.transfusion1.name == '') {
                 console.log('true')
@@ -277,8 +278,8 @@ export default {
                 this.post1.name = this.transfusion1.name;
             }
             for (let i = 0; i < this.count; i++) {
-                this.post1.drug[i].rate = this.transfusion1.drug[i].rate
-                this.post1.drug[i].dose = this.transfusion1.drug[i].dose
+                this.post1.drug[i].rate = parseInt(this.transfusion1.drug[i].rate, 10)
+                this.post1.drug[i].dose = parseInt(this.transfusion1.drug[i].dose, 10)
             }
         },
         addDrugObject() {

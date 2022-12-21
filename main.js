@@ -6,6 +6,8 @@ import request from './common/js/request.js'
 import $ from './common/js/toast.js'
 import uView from '@/uni_modules/uview-ui'
 import tabBar_admin from 'components/tabBar/tabBar_admin.vue'
+import tabBar_nurse from 'components/tabBar/tabBar_nurse.vue'
+import tabBar_info from 'components/tabBar/tabBar_info.vue'
 import * as Db from './common/db.js'
 import * as Config from './common/config.js'
 import * as Common from './common/common.js'
@@ -23,6 +25,8 @@ Vue.config.productionTip = false
 
 Vue.use(uView)
 Vue.component('tabBar-admin', tabBar_admin)
+Vue.component('tabBar-nurse', tabBar_nurse)
+Vue.component('tabBar-info', tabBar_info)
 
 App.mpType = 'app'
 const app = new Vue({

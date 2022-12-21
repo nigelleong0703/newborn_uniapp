@@ -16,32 +16,33 @@
                 <view class="second-title">输液信息</view>
                 <u-cell-group :border='false'>
                     <u-cell title="输液名称" :value="transfusionInfo.name" :border='false'></u-cell>
-                    <u-cell title="静脉选择" :value="vein_list[(transfusionInfo.vein) - 1].name" :border='false'></u-cell>
-                    <u-cell title="输液工具选择" :value="tool_list[(transfusionInfo.tool) - 1].name" :border='false'></u-cell>
-                    <u-cell title="输液状态" :value="status_list[transfusionInfo.status].name" :border='false'></u-cell>
+                    <u-cell title="静脉选择" :value="vein_name" :border='false'></u-cell>
+                    <u-cell title="输液工具选择" :value="tool_name" :border='false'></u-cell>
+                    <u-cell title="输液状态" :value="status_name" :border='false'></u-cell>
                 </u-cell-group>
                 <view v-for="(drug, index) in drug" :key="drug.seq">
                     <view class="second-title">药物{{ drug.seq }}</view>
                     <u-cell-group :border='false'>
                         <u-cell title="药品" :value="drug_list[(drug.drug) - 1].name" :border='false'></u-cell>
-                        <u-cell title="药物剂量" :value="drug.dose + 'ml'" :border='false'></u-cell>
+                        <u-cell title="药物剂量" :value="drug.dose + '	ml'" :border='false'></u-cell>
                         <u-cell title="输液速度" :value="drug.rate + '	滴/分钟'" :border='false'></u-cell>
-                        <u-cell title="开始时间" :value="drug_startTime" :border='false'></u-cell>
+                        <u-cell title="开始时间" :value="drug.startTime" :border='false'></u-cell>
                         <u-cell title="状态" :value="drug_status_list[drug.status].name" :border='false'></u-cell>
                     </u-cell-group>
                 </view>
                 <view class="button">
-                    <u-button type="primary" text="换药" shape="circle" size="normal" @click=""></u-button>
-                    <u-button type="error" text="结束" shape="circle" size="normal" @click=""></u-button>
+                    <u-button type="primary" text="换药" shape="circle" size="normal" @click="change_drug"></u-button>
+                    <u-button type="error" text="结束" shape="circle" size="normal" @click="finish"></u-button>
                 </view>
-                <view class="navigate-bar">
+                <!--                <view class="navigate-bar">
                     <u-tabbar :value="value6" @change="name => value6 = name" :fixed="true" :border="false"
                         :placeholder="true" :safeAreaInsetBottom="true">
                         <u-tabbar-item text="基本信息" icon="account" @click="patient_info"></u-tabbar-item>
                         <u-tabbar-item text="输液记录" icon="pushpin-fill" @click="patient_transfusion"></u-tabbar-item>
                         <u-tabbar-item text="巡视记录" icon="eye-fill" @click="patient_check"></u-tabbar-item>
                     </u-tabbar>
-                </view>
+                </view> -->
+                <tabBar-nurse :currentPage="1"></tabBar-nurse>
             </view>
         </view>
     </view>
@@ -54,11 +55,13 @@ export default {
         return {
             title: "患者: 王小杨",
             value6: 1,
-            transfusionInfo: '',
+            transfusionInfo: {
+                info: '',
+                name: ''
+            },
             drug: [],
             transfusion_startTime: '',
             transfusion_endTime: '',
-            drug_startTime: '',
             vein_list: [],
             tool_list: [],
             drug_list: [],
@@ -92,10 +95,16 @@ export default {
             }, {
                 id: 1,
                 name: '进行中'
-            },{
+            }, {
                 id: 2,
                 name: '未开始'
-            }]
+            }],
+            vein_name: '',
+            tool_name: '',
+            status_name: '',
+            drug_name: '',
+            drug_status_name: '',
+            transfusion_id: ''
         }
     },
 
@@ -104,9 +113,9 @@ export default {
         this.patientname = patient_name.name
         let nurse_name = uni.getStorageSync('current_user')
         this.nursename = nurse_name.name
-        let patient_info = uni.getStorageSync('selected_transfusion')
-        console.log(patient_info)
-        this.patient_id = patient_info.id
+        let transfusion_info = uni.getStorageSync('selected_transfusion')
+        console.log(transfusion_info)
+        this.transfusion_id = transfusion_info.id
         this.getTransfusion_info()
     },
 
@@ -154,16 +163,6 @@ export default {
             // console.log('change', e)
         },
         getTransfusion_info() {
-            let path = '/api/transfusion/' + this.patient_id
-            //////////////////////////////////
-            this.$request.get(path).then(res => {
-                console.log(res)
-                this.transfusionInfo = res.data;
-                this.transfusion_startTime = common.dateTimeStr(res.data.startTime);
-                this.transfusion_endTime = common.dateTimeStr(res.data.endTime);
-                this.drug = res.data.drug;
-                this.drug_startTime = common.dateTimeStr(res.data.drug.startTime);
-            })
             //////////////////////////////////
             this.$request.get('/api/list/vein').then(res => {
                 console.log(res)
@@ -179,8 +178,42 @@ export default {
                 console.log(res)
                 this.drug_list = res.data;
             })
-        }
-    }
+
+            let path = '/api/transfusion/' + this.transfusion_id
+            //////////////////////////////////
+            this.$request.get(path).then(res => {
+                this.transfusionInfo = res.data;
+                console.log(res)
+                this.transfusion_startTime = common.dateTimeStr(res.data.startTime);
+                //当后端传回来是null的时候代表还没结束，直到点击结束按钮才更新输液结束时间
+                if (this.transfusion_endTime != "null") {
+                    this.transfusion_endTime = common.dateTimeStr(res.data.finishTime);
+                }
+                this.drug = res.data.drug;
+                this.vein_name = this.vein_list[(res.data.vein) - 1].name;
+                this.tool_name = this.tool_list[(res.data.tool) - 1].name;
+                this.status_name = this.status_list[(res.data.status)].name;
+            })
+        },
+        change_drug() {
+            let path = '/api/transfusion/update/' + this.transfusion_id + '/next'
+            console.log(path)
+            this.$request.patch(path).then(res => {
+                console.log(res)
+                this.status_name = this.status_list[(res.data.status) + 1].name;
+                this.drug_startTime = common.dateTimeStr(res.data.drug.startTime);
+            })
+        },
+        finish() {
+            let path = '/api/transfusion/update/' + this.transfusion_id + '/finish'
+            console.log(path)
+            this.$request.patch(path).then(res => {
+                console.log(res)
+                this.status_name = this.status_list[0].name;
+                this.transfusion_endTime = common.dateTimeStr(res.data.finishTime);
+            })
+        },
+    },
 }
 </script>
 

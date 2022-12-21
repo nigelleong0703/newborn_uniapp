@@ -13,14 +13,15 @@
                         :isLink='true' customStyle="margin-bottom: 5px"></u-cell>
                 </u-cell-group>
             </view>
-            <view class="navigate-bar">
+<!--            <view class="navigate-bar">
                 <u-tabbar :value="value4" @change="name => value4 = name" :fixed="true" :border="false"
                     :placeholder="true" :safeAreaInsetBottom="true">
                     <u-tabbar-item text="基本信息" icon="account" @click="patient_info"></u-tabbar-item>
                     <u-tabbar-item text="输液记录" icon="pushpin-fill" @click="patient_transfusion"></u-tabbar-item>
                     <u-tabbar-item text="巡视记录" icon="eye-fill" @click="patient_check"></u-tabbar-item>
                 </u-tabbar>
-            </view>
+            </view> -->
+			<tabBar-nurse :currentPage="1"></tabBar-nurse>
         </view>
     </view>
 </template>

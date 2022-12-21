@@ -16,9 +16,6 @@
                         <u--input v-model="patrol1.time" placeholder="时间" disabled disabledColor="#ffffff">
                         </u--input>
                     </u-form-item>
-                    <u-form-item label="输液ID" label-width="120" prop="transfusionId" ref="item4">
-                        <u--input v-model="patrol1.transfusionId" placeholder="输液ID"></u--input>
-                    </u-form-item>
                     <u-form-item label="患者状态/隐患" label-width="120" prop="info" ref="item5">
                         <u--textarea v-model="patrol1.info" placeholder="隐患">
                         </u--textarea>
@@ -50,14 +47,12 @@ export default {
             patrol1: {
                 patientId: '',
                 nurseId: '',
-                transfusionId: '',
                 info: '',
                 time: '',
             },
             post: {
                 nurseId: '',
                 patientId: '',
-                transfusionId: '',
                 info: '',
                 time: '',
             },
@@ -161,9 +156,8 @@ export default {
             this.time_picker = false
         },
         convertToForm() {
-            this.post.nurseId = this.patrol1.nurseId
-            this.post.patientId = this.patrol1.patientId
-            this.post.transfusionId = ''
+            this.post.nurseId = parseInt(this.patrol1.nurseId, 10)
+            this.post.patientId = parseInt(this.patrol1.patientId, 10)
             this.post.info = this.patrol1.info
             this.post.time = Math.round(this.post.time / 1000)
         },

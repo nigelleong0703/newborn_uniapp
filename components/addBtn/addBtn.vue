@@ -42,7 +42,6 @@
           uni.navigateTo({
             url: temp
           })
-          uni.hideHomeButton()
         }
       }
     }

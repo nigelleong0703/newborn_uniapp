@@ -10,12 +10,13 @@
           <u-form-item label="性别" label-width="120" prop="gender" ref="item2">
             <u-radio-group v-model="form1.gender">
               <u-radio :customStyle="{marginRight: '16px'}" v-for="(item, index) in genderlist" :key="index"
-                :label="item.name" :name="item.name">
+                :label="item.name" :name="item.name" @change='sexSelect(item.id)'>
               </u-radio>
             </u-radio-group>
           </u-form-item>
           <u-form-item label="身份证号" label-width="120" prop="guardianId" ref="item3">
-            <u--input v-model="form1.nurseId" placeholder="请输入身份证号" type='idcard'></u--input>
+            <u--input v-model="form1.nurseId" placeholder="请输入身份证号" type=' idcard'>
+            </u--input>
           </u-form-item>
           <u-form-item label="联系电话" label-width="120" prop="tel" ref="item4">
             <u--input v-model="form1.tel" placeholder="请输入联系电话号码" type="tel"></u--input>
@@ -162,7 +163,8 @@
           }],
           'gender': {
             type: 'string',
-            max: 1,
+            min: 1,
+            max: 2,
             required: true,
             message: '请选择男或女',
             trigger: ['blur', 'change']
@@ -233,12 +235,12 @@
           }],
         },
         genderlist: [{
-            id: '1',
+            id: 1,
             name: '男',
             disabled: false
           },
           {
-            id: '2',
+            id: 2,
             name: '女',
             disabled: false
           }
@@ -265,7 +267,10 @@
         uni.navigateBack()
       },
       sexSelect(e) {
-        this.form1.gender = e.id
+        console.log(e)
+        this.form1.gender = e
+        this.post.gender = e
+        this.post1.gender = e
         this.$refs.form1.validateField('gender')
       },
       change(e) {
@@ -279,7 +284,6 @@
           this.post1.name = this.form1.name
           this.post1.tel = this.form1.tel
           this.post1.department = this.post.department
-          this.post1.gender = this.form1.gender
           // this.convertToForm();
           console.log(this.post1)
           this.$request.post('/api/nurse/add', this.post1).then(res => {

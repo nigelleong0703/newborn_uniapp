@@ -7,8 +7,8 @@
       <view class="nurse-info">
         <u-cell-group :border='false'>
           <u-cell title="姓名" :value="nurseInfo.name" :border='false'></u-cell>
-          <u-cell title="性别" :value="gender_list[(nurseInfo.gender) - 1].name" :border='false'></u-cell>
-          <u-cell title="科室" :value="department_list[nurseInfo.department - 1].name" :border='false'></u-cell>
+          <u-cell title="性别" :value="gender_name" :border='false'></u-cell>
+          <u-cell title="科室" :value="department_name" :border='false'></u-cell>
           <u-cell title="联系电话" :value="nurseInfo.tel" :border='false'></u-cell>
         </u-cell-group>
       </view>
@@ -23,7 +23,10 @@
       return {
         title: "护士资料",
         value2: 1,
-        nurseInfo: '',
+        nurseInfo: {
+          name: '',
+          tel: '',
+        },
         passedID: '',
         gender_list: [{
           id: 1,
@@ -32,6 +35,9 @@
           id: 2,
           name: '女',
         }],
+        department_list: '',
+        gender_name: '',
+        department_name: '',
       }
     },
 
@@ -54,6 +60,8 @@
         this.$request.get(path).then(res => {
           this.nurseInfo = res.data;
           console.log(res)
+          this.gender_name = this.gender_list[(res.data.gender) - 1].name;
+          this.department_name = this.department_list[(res.data.department) - 1].name;
         })
       }
     }

@@ -5,19 +5,19 @@
         <view class="second-title">患者信息</view>
         <u-cell-group :border='false'>
           <u-cell title="姓名" :value="patientInfo.name" :border='false'></u-cell>
-          <u-cell title="性别" :value="gender_list[patientInfo.gender].name" :border='false'></u-cell>
+          <u-cell title="性别" :value="gender_name" :border='false'></u-cell>
           <u-cell title="出生日期" :value="birthdate" :border='false'></u-cell>
         </u-cell-group>
         <view class="second-title">监护人信息</view>
         <u-cell-group :border='false'>
           <u-cell title="监护人 ID" :value="patientInfo.guardianId" :border='false'></u-cell>
           <u-cell title="监护人姓名" :value="patientInfo.guardian" :border='false'></u-cell>
-          <u-cell title="关系" :value="relationList[patientInfo.relation- 1].name" :border='false'></u-cell>
+          <u-cell title="关系" :value="relation_name" :border='false'></u-cell>
           <u-cell title="联系电话" :value="patientInfo.tel" :border='false'></u-cell>
         </u-cell-group>
         <view class="second-title">入院信息</view>
         <u-cell-group :border='false'>
-          <u-cell title="科室" :value="department_list[patientInfo.department-1].name" :border='false'></u-cell>
+          <u-cell title="科室" :value="department_name" :border='false'></u-cell>
           <u-cell title="房号" :value="patientInfo.room" :border='false'></u-cell>
           <u-cell title="床号" :value="patientInfo.bed" :border='false'></u-cell>
           <u-cell title="进院日期" :value="inDate" :border='false'></u-cell>
@@ -66,7 +66,10 @@
         }, {
           id: 2,
           name: '女',
-        }]
+        }],
+        gender_name: '',
+        relation_name: '',
+        department_name: ''
       }
     },
 
@@ -103,6 +106,9 @@
           this.birthdate = common.dateTimeStr(res.data.birthdate);
           this.inDate = common.dateTimeStr(res.data.inDate);
           this.outDate = common.dateTimeStr(res.data.outDate);
+          this.gender_name = this.gender_list[(res.data.gender) - 1].name;
+          this.relation_name = this.relationList[(res.data.relation) - 1].name;
+          this.department_name = this.department_list[(res.data.department) - 1].name;
         })
       }
     }

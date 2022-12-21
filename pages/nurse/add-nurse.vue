@@ -289,10 +289,10 @@
           this.$request.post('/api/nurse/add', this.post1).then(res => {
             console.log(res)
             if (res.statusCode !== 200) {
-              this.$.toast('提交失败');
+              this.$.toast(res.data.message);
             } else {
               uni.showToast({
-                title: "添加成功！",
+                title: res.data.message,
                 duration: 1000,
                 success: () => {
                   setTimeout(() => {

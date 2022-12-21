@@ -24,9 +24,9 @@
                     <view class="second-title">药物{{ drug.seq }}</view>
                     <u-cell-group :border='false'>
                         <u-cell title="药品" :value="drug_list[(drug.drug) - 1].name" :border='false'></u-cell>
-                        <u-cell title="药物剂量" :value="drug.dose + 'ml'" :border='false'></u-cell>
+                        <u-cell title="药物剂量" :value="drug.dose + '	ml'" :border='false'></u-cell>
                         <u-cell title="输液速度" :value="drug.rate + '	滴/分钟'" :border='false'></u-cell>
-                        <u-cell title="开始时间" :value="drug_startTime" :border='false'></u-cell>
+                        <u-cell title="开始时间" :value="drug.startTime" :border='false'></u-cell>
                         <u-cell title="状态" :value="drug_status_list[drug.status].name" :border='false'></u-cell>
                     </u-cell-group>
                 </view>
@@ -62,7 +62,6 @@ export default {
             drug: [],
             transfusion_startTime: '',
             transfusion_endTime: '',
-            drug_startTime: '',
             vein_list: [],
             tool_list: [],
             drug_list: [],
@@ -186,15 +185,11 @@ export default {
                 this.transfusionInfo = res.data;
                 console.log(res)
                 this.transfusion_startTime = common.dateTimeStr(res.data.startTime);
-				//当后端传回来是null的时候代表还没结束，直到点击结束按钮才更新输液结束时间
+                //当后端传回来是null的时候代表还没结束，直到点击结束按钮才更新输液结束时间
                 if (this.transfusion_endTime != "null") {
                     this.transfusion_endTime = common.dateTimeStr(res.data.finishTime);
                 }
                 this.drug = res.data.drug;
-				//当后端传回来是null的时候代表还没开始，直到点击换药按钮才更新药物开始结束时间
-                if (this.drug_startTime != "null") {
-                    this.drug_startTime = common.dateTimeStr(res.data.drug.startTime);
-                }
                 this.vein_name = this.vein_list[(res.data.vein) - 1].name;
                 this.tool_name = this.tool_list[(res.data.tool) - 1].name;
                 this.status_name = this.status_list[(res.data.status)].name;

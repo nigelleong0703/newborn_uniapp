@@ -8,20 +8,19 @@
                 <view class="second-title">患者信息</view>
                 <u-cell-group :border='false'>
                     <u-cell title="姓名" :value="patientInfo.name" :border='false'></u-cell>
-                    <u-cell title="性别" :value="gender_list[patientInfo.gender].name" :border='false'></u-cell>
+                    <u-cell title="性别" :value="gender_name" :border='false'></u-cell>
                     <u-cell title="出生日期" :value="birthdate" :border='false'></u-cell>
                 </u-cell-group>
                 <view class="second-title">监护人信息</view>
                 <u-cell-group :border='false'>
                     <u-cell title="监护人 ID" :value="patientInfo.guardianId" :border='false'></u-cell>
                     <u-cell title="监护人姓名" :value="patientInfo.guardian" :border='false'></u-cell>
-                    <u-cell title="关系" :value="relationList[(patientInfo.relation) - 1].name" :border='false'></u-cell>
+                    <u-cell title="关系" :value="relation_name" :border='false'></u-cell>
                     <u-cell title="联系电话" :value="patientInfo.tel" :border='false'></u-cell>
                 </u-cell-group>
                 <view class="second-title">入院信息</view>
                 <u-cell-group :border='false'>
-                    <u-cell title="科室" :value="department_list[patientInfo.department - 1].name"
-                        :border='false'></u-cell>
+                    <u-cell title="科室" :value="department_name" :border='false'></u-cell>
                     <u-cell title="房号" :value="patientInfo.room" :border='false'></u-cell>
                     <u-cell title="床号" :value="patientInfo.bed" :border='false'></u-cell>
                     <u-cell title="进院日期" :value="inDate" :border='false'></u-cell>
@@ -29,14 +28,15 @@
                     <u-cell title="过敏信息" :value="patientInfo.allergy" :border='false'></u-cell>
                 </u-cell-group>
             </view>
-            <view class="navigate-bar">
+<!--            <view class="navigate-bar">
                 <u-tabbar :value="value3" @change="name => value3 = name" :fixed="true" :border="false"
                     :placeholder="true" :safeAreaInsetBottom="true">
                     <u-tabbar-item text="基本信息" icon="account" @click="patient_info"></u-tabbar-item>
                     <u-tabbar-item text="输液记录" icon="pushpin-fill" @click="patient_transfusion"></u-tabbar-item>
                     <u-tabbar-item text="巡视记录" icon="eye-fill" @click="patient_check"></u-tabbar-item>
                 </u-tabbar>
-            </view>
+            </view> -->
+			<tabBar-nurse :currentPage="0"></tabBar-nurse>
         </view>
     </view>
 </template>
@@ -48,7 +48,15 @@ export default {
         return {
             title: "基本信息",
             value3: 0,
-            patientInfo: '',
+            patientInfo: {
+				name:'',
+				guardianId:'',
+				guardian:'',
+				tel:'',
+				room:'',
+				bed:'',
+				allergy:''
+			},
             birthdate: '',
             inDate: '',
             outDate: '',
@@ -71,14 +79,17 @@ export default {
                 id: 6,
                 name: '其他'
             }],
-            department_list: [],
-            gender_list: [{
+            departmentList: [],
+            genderList: [{
                 id: 1,
                 name: '男',
-            }, {
+            },{
                 id: 2,
                 name: '女',
-            }]
+            }],
+			gender_name:'',
+			relation_name:'',
+			department_name:''
         }
     },
 
@@ -87,7 +98,7 @@ export default {
         console.log(patient_info)
         this.patient_id = patient_info.id
         this.getPatient_info()
-        this.department_list = common.getDepartment_list()
+        this.departmentList = common.getDepartment_list()
     },
 
     methods: {
@@ -130,10 +141,12 @@ export default {
             this.$request.get(path).then(res => {
                 console.log(res)
                 this.patientInfo = res.data;
-                console.log(res.data.gender);
                 this.birthdate = common.dateTimeStr(res.data.birthdate);
                 this.inDate = common.dateTimeStr(res.data.inDate);
                 this.outDate = common.dateTimeStr(res.data.outDate);
+				this.gender_name=this.genderList[(res.data.gender)-1].name;
+				this.relation_name=this.relationList[(res.data.relation)-1].name;
+				this.department_name=this.departmentList[(res.data.department)-1].name;
             })
         }
     }

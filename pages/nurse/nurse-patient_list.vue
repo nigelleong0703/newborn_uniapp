@@ -19,13 +19,14 @@
                     </view>
                 </u-cell-group>
             </view>
-            <view class="navigate-bar">
+<!--            <view class="navigate-bar">
                 <u-tabbar :value="value1" @change="name => value1 = name" :fixed="true" :border="false"
                     :placeholder="true" :safeAreaInsetBottom="true">
                     <u-tabbar-item text="首页" icon="home" @click="patient_list"></u-tabbar-item>
                     <u-tabbar-item text="我的" icon="account" @click="nurse_info"></u-tabbar-item>
                 </u-tabbar>
-            </view>
+            </view> -->
+			<tabBar-info :currentPage="0"></tabBar-info>
         </view>
     </view>
 </template>
@@ -36,7 +37,12 @@ export default {
         return {
             title: "患者列表",
             value1: 0,
-            patientList: [],
+            patientList: [{
+				gender:'',
+				id:'',
+				name:'',
+				seq:''
+			}],
         }
     },
 

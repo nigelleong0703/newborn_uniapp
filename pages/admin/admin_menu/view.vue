@@ -101,6 +101,7 @@
     },
 
     async onLoad() {
+      this.$request.checkLogin();
       this.windowHeight = uni.getSystemInfoSync().windowHeight;
       console.log(this.windowHeight)
       this.$request.get('/api/list/department').then(res => {

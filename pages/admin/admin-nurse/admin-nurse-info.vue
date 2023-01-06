@@ -42,6 +42,7 @@
     },
 
     onLoad(option) {
+      this.$request.checkLogin();
       if (option.id) {
         this.passedID = option.id
       }

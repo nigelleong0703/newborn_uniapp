@@ -1,4 +1,27 @@
+import * as db from 'common/db';
+
 const baseUrl = 'http://43.138.3.76:8000'
+
+function checkLogin() {
+  // console.log(uni.getStorageSync('token'))
+  if (!uni.getStorageSync('token')) {
+    console.log('Token expired')
+    uni.showModal({
+      content: '令牌失效，请重新登录',
+      showCancel: false,
+      success: (res) => {
+        if (res.confirm) {
+          db.set('login_status', false)
+          db.clear()
+          uni.reLaunch({
+            url: '/pages/index/index'
+          })
+        }
+      }
+    })
+  }
+  return
+}
 
 const request = (options = {}) => {
   return new Promise((resolve, reject) => {
@@ -57,14 +80,24 @@ const adminLogin = (data) => {
   return post('/api/admin/login', data)
 }
 
-const nurseList = departmentNo => {
+const nurseList = (departmentNo) => {
   return get('/api/nurse', {
     department: departmentNo
   })
 }
 
-const nurseDetail = id => {
+const nurseDetail = (id) => {
   return get('/api/nurse/${id}')
+}
+
+const patientList = (departmentNo) => {
+  return get('/api/patient', {
+    department: departmentNo
+  })
+}
+
+const patientDetail = (id) => {
+  return get('/api/patient/${id}')
 }
 
 const editDepartment = (id, data) => {
@@ -123,11 +156,27 @@ const addVein = (data) => {
   return post('/api/list/vein/add', data)
 }
 
+const deleteAdmin = (id) => {
+  let newUrl = '/api/admin/delete/' + id;
+  return patch(newUrl)
+}
+
+const deleteNurse = (id) => {
+  let newUrl = '/api/nurse/delete/' + id;
+  return patch(newUrl)
+}
+
+const deletePatient = (id) => {
+  let newUrl = '/api/patient/delete/' + id;
+  return patch(newUrl)
+}
+
 
 export default {
   get,
   post,
   patch,
+  checkLogin,
   getDepartmentList,
   getDrugList,
   getToolList,
@@ -135,6 +184,8 @@ export default {
   adminLogin,
   nurseList,
   nurseDetail,
+  patientList,
+  patientDetail,
   editDepartment,
   editDrug,
   editTool,
@@ -143,4 +194,7 @@ export default {
   addDrug,
   addTool,
   addVein,
+  deleteAdmin,
+  deleteNurse,
+  deletePatient,
 }

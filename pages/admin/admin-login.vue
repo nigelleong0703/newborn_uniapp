@@ -1,5 +1,5 @@
 <template>
-  <view class="content">
+  <view class="content" :style="{height: scrollerHeight}">
     <view class="header">
       <image mode="aspectFit" src="/static/logo.jpg"></image>
     </view>
@@ -29,6 +29,13 @@
 
 <script>
   export default {
+    computed: {
+      scrollerHeight: function() {
+        console.log(uni.getSystemInfoSync())
+        console.log(uni.getSystemInfoSync().windowHeight - 50)
+        return (uni.getSystemInfoSync().windowHeight - 50).toString() + 'px';
+      },
+    },
     data() {
       return {
         title: "欢迎管理员",

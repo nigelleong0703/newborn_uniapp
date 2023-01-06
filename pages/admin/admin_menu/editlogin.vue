@@ -87,6 +87,7 @@
       }
     },
     onLoad(option) {
+      this.$request.checkLogin();
       this.adminId = this.$db.get('current_user').id
       this.oldusername = this.$db.get('current_user').username
       this.form1.username = this.oldusername

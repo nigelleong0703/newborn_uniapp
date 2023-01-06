@@ -1,5 +1,5 @@
 <template>
-  <view class="body">
+  <view class="body" :style="{height: scrollerHeight}">
     <view class="tab-bar-line"></view>
     <view class='content'>
       <view class='member-top'>
@@ -69,6 +69,13 @@
     scrollTimer = false,
     tabBar;
   export default {
+    computed: {
+      scrollerHeight: function() {
+        console.log(uni.getSystemInfoSync())
+        console.log(uni.getSystemInfoSync().windowHeight - 50)
+        return (uni.getSystemInfoSync().windowHeight - 50).toString() + 'px';
+      },
+    },
     data() {
       return {
         admin_info: {},
@@ -120,6 +127,7 @@
     },
 
     onLoad() {
+      this.$request.checkLogin();
       this.initData();
       uni.$on('editAdmin', (res) => {
         this.initData();
@@ -143,15 +151,13 @@
           this.hasLogin = false
         }
         console.log(this.admin_info)
-        this.$request.get('/api/list/department').then(res => {
-          this.department_list = res.data
-          this.department_list.unshift({
-            id: 0,
-            name: '全部'
-          })
-          console.log(this.department_list)
-          this.department = this.department_list[this.admin_info.department].name
+        this.department_list = this.$db.get('department_list')
+        this.department_list.unshift({
+          id: 0,
+          name: '全部'
         })
+        console.log(this.department_list)
+        this.department = this.department_list[this.admin_info.department].name
       },
 
       logout() {

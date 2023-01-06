@@ -132,6 +132,7 @@
       }
     },
     onLoad(option) {
+      this.$request.checkLogin();
       this.$request.get('/api/list/department').then(res => {
         this.department_list = res.data
       })

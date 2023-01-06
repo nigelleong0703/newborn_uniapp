@@ -1,6 +1,6 @@
 <template>
   <view class="body">
-    <view class="body">
+    <view class="body" style="position: fixed">
       <view class='nav'>
         <scroll-view id="nav-bar" class="nav-bar" scroll-x scroll-with-animation :scroll-left="scrollLeft">
           <view v-for="(item,index) in tabBars" :key="item.id" class="nav-item"
@@ -10,19 +10,10 @@
       </view>
       <!-- 内容部分 -->
       <swiper style="min-height: 100vh;" :current="tabCurrentIndex" @change="changeTab">
-        <swiper-item v-for="(tabItem, tabItemIndex) in tabBars" :key="tabItem.id">
-          <scroll-view style="height: 100%;" scroll-y="true" scroll-with-animation>
-            <view :id="'top'+tabItemIndex" style="width: 100%;height: 180upx;">边距盒子</view>
-            <view class='content'>
-              <view v-for="(item,index) in tabItem.list" v-if="tabItem.list.length > 0" :key="index">
-                <nurseCard :profile="item" buttonTitle="查看"></nurseCard>
-              </view>
-              <view class='noCard' v-if="tabItem.list.length===0">
-                暂无信息
-              </view>
-            </view>
-            <view style="width: 100%;height: 150upx;opacity:0;">底部占位盒子</view>
-          </scroll-view>
+        <swiper-item :style="{height: scrollerHeight}" v-for="(tabItem, tabItemIndex) in tabBars" :key="tabItem.id">
+          <view>
+            <ListViewPeople :tabItemIndex=tabItemIndex type="nurse"></ListViewPeople>
+          </view>
         </swiper-item>
       </swiper>
     </view>
@@ -34,22 +25,25 @@
 </template>
 
 <script>
-  import common from "common/js/common.js"
-  import nurseCard from "components/card/nurseCard"
+  import ListViewPeople from "components/ListViewPeople"
 
   let windowWidth = 0,
     scrollTimer = false,
     tabBar;
 
-  const h = uni.getSystemInfoSync().statusBarHeight;
   export default {
-    computed: {
-      barHeight() {
-        return `calc(100vh - 44px - ${h}px)`
-      }
-    },
     components: {
-      nurseCard
+      ListViewPeople
+    },
+    computed: {
+      scrollerHeight: function() {
+        console.log(uni.getSystemInfoSync())
+        console.log(uni.getSystemInfoSync().windowHeight - 50)
+        return (uni.getSystemInfoSync().windowHeight - 50).toString() + 'px';
+      },
+      windowWidth: function() {
+        return uni.getSystemInfoSync().windowWidth
+      }
     },
     data() {
       return {
@@ -71,56 +65,48 @@
     },
 
     async onLoad() {
+      this.$request.checkLogin();
       windowWidth = uni.getSystemInfoSync().windowWidth;
       this.loadTabbars();
+      // this.tabBars.forEach(item => {
+      //   this.selectKehuFun(item);
+      // })
+      this.selectKehuFun(this.tabBars[0])
       uni.$on('addNewNurse', (res) => {
         this.selectKehuFun(this.tabBars[res.department])
       })
-      // uni.$on('cxGetDataFun', this.cxGetDataFun)
     },
 
     onUnload() {
       uni.$off('addNewNurse');
+      for (let i = 0; i < this.department_list.length; i++) {
+        uni.$off('refreshData_nurse_' + i.toString())
+      }
     },
 
     methods: {
       loadTabbars() {
-        this.department_list = common.getDepartment_list();
-        console.log(common.getDepartment_list());
-        let tabList = this.department_list;
+        let that = this
+        that.department_list = that.$common.getDepartment_list();
+        let tabList = that.department_list;
         var index = 0;
         tabList.forEach(item => {
           item.list = [];
-          item.moreShow = false;
-          item.triggered = false;
-          item.isMore = true;
-          item._freshing = false;
           item.index = index
           index++;
         })
-        this.tabBars = tabList;
-        this.tabBars.forEach(item => {
-          this.selectKehuFun(item)
-        })
+        that.tabBars = tabList;
       },
 
       selectKehuFun: function(tabItem) {
-        console.log(tabItem)
-        if (!tabItem.isMore) {
-          return
-        }
+        let that = this
         uni.showLoading({
           title: '加载中...',
           mask: true
         })
-        let departmentNo = tabItem.index + 1
-        let params = {
-          department: departmentNo
-        }
-        this.$request.get('/api/nurse', params).then(res => {
-          console.log(res)
+        that.$request.nurseList(tabItem.index + 1).then(res => {
           if (res.statusCode !== 200) {
-            this.$.toast('获取失败，错误代码' + res.statusCode);
+            that.$.toast('获取失败，错误代码' + res.statusCode);
           } else {
             let data = res.data;
             tabItem.list = data.nurse
@@ -131,9 +117,11 @@
                 itemInfo.gender2 = '女'
               }
             })
+            let string = 'nurseList_' + (tabItem.index).toString()
+            that.$db.set(string, tabItem.list)
+            uni.$emit('refreshData_nurse_' + tabItem.index, {})
           }
         })
-        uni.hideLoading();
       },
 
       async changeTab(e) {
@@ -158,11 +146,14 @@
         //获取可滑动总宽度
         for (let i = 0; i <= index; i++) {
           let result = await this.getElSize('tab' + i);
+          console.log(i)
+          console.log(result)
           width += result.width;
           if (i === index) {
             nowWidth = result.width;
           }
         }
+        console.log(width)
         if (typeof e === 'number') {
           //点击切换时先切换再滚动tabbar，避免同时切换视觉错位
           this.tabCurrentIndex = index;
@@ -171,7 +162,7 @@
         scrollTimer = setTimeout(() => {
           if (width - nowWidth / 2 > windowWidth / 2) {
             //如果当前项越过中心点，将其放在屏幕中心
-            this.scrollLeft = width - nowWidth / 2 - windowWidth / 2;
+            this.scrollLeft = width - nowWidth / 2;
           } else {
             this.scrollLeft = 0;
           }
@@ -190,7 +181,7 @@
             /////////////////
             tabItem.loaded = true;
           }
-        }, 300)
+        }, 100)
       },
       getElSize(id) {
         return new Promise((res, rej) => {
@@ -204,6 +195,14 @@
           }).exec();
         });
       },
+    },
+    watch: {
+      tabBars(val, old) {
+        if (val != []) {
+          this.tabBars = val;
+          console.log(this.tabBars)
+        }
+      }
     },
   }
 </script>

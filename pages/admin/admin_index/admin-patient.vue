@@ -1,29 +1,22 @@
 <template>
   <view class="body">
-    <view class='nav'>
-      <scroll-view id="nav-bar" class="nav-bar" scroll-x scroll-with-animation :scroll-left="scrollLeft">
-        <view v-for="(item,index) in tabBars" :key="item.id" class="nav-item"
-          :class="{current: index === tabCurrentIndex}" :id="'tab'+index" @click="changeTab(index)">{{item.name}}</view>
-      </scroll-view>
-    </view>
-
-    <!--   </view> -->
-    <swiper style="min-height: 100vh;" :current="tabCurrentIndex" @change="changeTab">
-      <swiper-item v-for="(tabItem, tabItemIndex) in tabBars" :key="tabItem.id">
-        <scroll-view style="height: 100%;" scroll-y="true" scroll-with-animation>
-          <view :id="'top'+tabItemIndex" style="width: 100%;height: 180upx;">边距盒子</view>
-          <view class='content'>
-            <view v-for="(item,index) in tabItem.list" v-if="tabItem.list.length > 0" :key="index">
-              <patientCard :profile="item" buttonTitle="查看"></patientCard>
-            </view>
-            <view class='noCard' v-if="tabItem.list.length===0">
-              暂无信息
-            </view>
+    <view class="body" style="position: fixed">
+      <view class='nav'>
+        <scroll-view id="nav-bar" class="nav-bar" scroll-x scroll-with-animation :scroll-left="scrollLeft">
+          <view v-for="(item,index) in tabBars" :key="item.id" class="nav-item"
+            :class="{current: index === tabCurrentIndex}" :id="'tab'+index" @click="changeTab(index)">{{item.name}}
           </view>
-          <view style="width: 100%;height: 150upx;opacity:0;"></view>
         </scroll-view>
-      </swiper-item>
-    </swiper>
+      </view>
+      <!-- 内容部分 -->
+      <swiper :style="{height: scrollerHeight}" :current="tabCurrentIndex" @change="changeTab">
+        <swiper-item v-for="(tabItem, tabItemIndex) in tabBars" :key="tabItem.id">
+          <view>
+            <ListViewPeople :tabItemIndex=tabItemIndex type="patient"></ListViewPeople>
+          </view>
+        </swiper-item>
+      </swiper>
+    </view>
     <view>
       <addBtn url="/pages/patient/add-patient" :params="{department: (tabCurrentIndex+1)}"></addBtn>
       <tabBar-admin class="bottom-bar" :currentPage="1"></tabBar-admin>
@@ -32,16 +25,22 @@
 </template>
 
 <script>
-  import common from "common/js/common.js"
-  import patientCard from "components/card/patientCard"
+  import ListViewPeople from "components/ListViewPeople"
 
   let windowWidth = 0,
     scrollTimer = false,
     tabBar;
 
   export default {
+    computed: {
+      scrollerHeight: function() {
+        console.log(uni.getSystemInfoSync())
+        console.log(uni.getSystemInfoSync().windowHeight - 50)
+        return (uni.getSystemInfoSync().windowHeight - 50).toString() + 'px';
+      }
+    },
     components: {
-      patientCard
+      ListViewPeople
     },
     data() {
       return {
@@ -50,96 +49,77 @@
         enableScroll: true,
         department_list: [],
         tabBars: [],
+        triggered: false,
+        _freshing: false,
       }
     },
-
     onReady() {
       this._lastTabIndex = 0;
       this.swiperWidth = 0;
       this.tabbarWidth = 0;
       this.tabListSize = {};
       this._touchTabIndex = 0;
-      this.$forceUpdate();
     },
 
-
     async onLoad() {
+      this.$request.checkLogin();
       windowWidth = uni.getSystemInfoSync().windowWidth;
-      this.loadTabbars()
-      this.$forceUpdate();
-      console.log(this.tabBars);
+      this.loadTabbars();
+      this.selectKehuFun(this.tabBars[0])
       uni.$on('addNewPatient', (res) => {
-        this.selectKehuFun(res.department - 1).then(res => {
-          this.tabBars[res.department - 1].list = res
-        })
-        this.$forceUpdate();
+        this.selectKehuFun(this.tabBars[res.department])
       })
     },
 
-
     onUnload() {
       uni.$off('addNewPatient');
+      for (let i = 0; i < this.department_list.length; i++) {
+        uni.$off('refreshData_patient_' + i.toString())
+      }
     },
 
     methods: {
       loadTabbars() {
-        this.department_list = common.getDepartment_list();
-        console.log(common.getDepartment_list());
-        let tabList = this.department_list;
+        let that = this
+        that.department_list = that.$common.getDepartment_list();
+        let tabList = that.department_list;
         var index = 0;
         tabList.forEach(item => {
-          item.index = index
-          item.noData = true;
-          item.refreshText = '';
-          item.refreshing = false;
           item.list = [];
+          item.index = index
           index++;
         })
-        tabList.forEach(item => {
-          console.log(item.index)
-          this.selectKehuFun(item.index).then(res => {
-            item.list = res
-            item.list.forEach(itemInfo => {
+        that.tabBars = tabList;
+      },
+
+      selectKehuFun: function(tabItem) {
+        let that = this
+        uni.showLoading({
+          title: '加载中...',
+          mask: true
+        })
+        that.$request.patientList(tabItem.index + 1).then(res => {
+          if (res.statusCode !== 200) {
+            that.$.toast('获取失败，错误代码' + res.statusCode);
+          } else {
+            let data = res.data;
+            tabItem.list = data.patient
+            tabItem.list.forEach(itemInfo => {
               if (itemInfo.gender == 1) {
                 itemInfo.gender2 = '男'
               } else {
                 itemInfo.gender2 = '女'
               }
-              console.log(itemInfo.gender2)
-              itemInfo.birthdate = uni.$u.timeFormat(itemInfo.birthdate)
-              console.log(itemInfo.birthdate)
             })
-          })
-        })
-        this.tabBars = tabList;
-      },
-
-      selectKehuFun(index) {
-        return new Promise((resolve, reject) => {
-          let that = this
-          uni.showLoading({
-            title: '加载中...',
-            mask: true
-          })
-          let departmentNo = index + 1
-          let params = {
-            department: departmentNo
+            let string = 'patientList_' + (tabItem.index).toString()
+            that.$db.set(string, tabItem.list)
+            uni.$emit('refreshData_patient_' + tabItem.index, {})
           }
-          that.$request.get('/api/patient', params).then(res => {
-            console.log(res)
-
-            if (res.statusCode === 200) {
-              resolve(res.data.patient)
-            } else {
-              that.$.toast('获取失败，错误代码' + res.statusCode);
-              reject()
-            }
-          })
-          uni.hideLoading();
         })
       },
 
       async changeTab(e) {
+
         if (scrollTimer) {
           //多次切换只执行最后一次
           clearTimeout(scrollTimer);
@@ -169,11 +149,11 @@
           //点击切换时先切换再滚动tabbar，避免同时切换视觉错位
           this.tabCurrentIndex = index;
         }
-        //延迟200ms,等待swiper动画结束再修改tabbar
+        //延迟300ms,等待swiper动画结束再修改tabbar
         scrollTimer = setTimeout(() => {
           if (width - nowWidth / 2 > windowWidth / 2) {
             //如果当前项越过中心点，将其放在屏幕中心
-            this.scrollLeft = width - nowWidth / 2 - windowWidth / 2;
+            this.scrollLeft = width - nowWidth / 2;
           } else {
             this.scrollLeft = 0;
           }
@@ -182,21 +162,18 @@
           }
           this.tabCurrentIndex = index;
 
+
           //第一次切换tab，动画结束后需要加载数据
           let tabItem = this.tabBars[this.tabCurrentIndex];
           if (this.tabCurrentIndex !== 0 && tabItem.loaded !== true) {
             // this.loadNewsList('add');
-            // this.selectKehuFun(this.tabCurrentIndex).then(res => {
-            //   this.tabBars[this.tabCurrentIndex].list = res
-            // })
-            this.$forceUpdate();
+            this.selectKehuFun(this.tabBars[this.tabCurrentIndex])
             /////////////////
             /////////////////
             tabItem.loaded = true;
           }
         }, 100)
       },
-
       getElSize(id) {
         return new Promise((res, rej) => {
           let el = uni.createSelectorQuery().select('#' + id);
@@ -209,15 +186,14 @@
           }).exec();
         });
       },
-
-      viewPatientInfo(id) {
-        console.log(id)
-        let patientUrl = '/pages/admin/admin-patient/admin-patient-info'
-        patientUrl = patientUrl + '?id=' + id
-        uni.navigateTo({
-          url: patientUrl
-        })
-      },
+    },
+    watch: {
+      tabBars(val, old) {
+        if (val != []) {
+          this.tabBars = val;
+          console.log(this.tabBars)
+        }
+      }
     },
   }
 </script>

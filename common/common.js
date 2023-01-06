@@ -1,3 +1,6 @@
+import request from 'common/js/request';
+import * as db from 'common/db';
+
 function dateTimeStr(timestamp) {
   const timeFormat = uni.$u.timeFormat;
   return timeFormat(timestamp, 'yyyy-mm-dd hh:MM');
@@ -22,8 +25,12 @@ function submit_form(target_url, form) {
 };
 
 function getDepartment_list() {
-  return uni.getStorageSync('department_list')
+  request.getDepartmentList().then(res => {
+    db.set('department_list', res.data)
+  })
+  return db.get('department_list')
 };
+
 /**
  * 统一跳转
  */

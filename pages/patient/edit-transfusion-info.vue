@@ -29,22 +29,6 @@
             </u--input>
             <u-icon slot="right" name="arrow-right"></u-icon>
           </u-form-item>
-          <view v-for="(drug, index) in transfusion1.drug" :key="drug.seq">
-            <view class="second-title">药物{{ drug.seq }}</view>
-            <u-form-item :prop="'drug.' + index.toString() + '.drug'"
-              @click="drug_picker = true; current_drug = index, hideKeyboard()" borderBottom>
-              <u--input v-model="transfusion1.drug[index].drug" disabled disabledColor="#ffffff" placeholder="药物选择"
-                border="none">
-              </u--input>
-              <u-icon slot="right" name="arrow-right"></u-icon>
-            </u-form-item>
-            <u-form-item label="输液速度" label-width="120" :prop="'drug.' + index.toString() + '.rate'">
-              <u--input v-model="drug.rate" placeholder="输液速度"></u--input>
-            </u-form-item>
-            <u-form-item label="输液量" label-width="120" :prop="'drug.' + index.toString() + '.dose'">
-              <u--input v-model="drug.dose" placeholder="输液量"></u--input>
-            </u-form-item>
-          </view>
         </u--form>
         <u-datetime-picker ref="datetimePicker" :show="time_picker" mode="datetime" v-model="post1.startTime"
           closeOnClickOverlay @close="time_picker = false" @cancel="time_picker = false" @confirm='time_select'
@@ -56,15 +40,7 @@
         <u-action-sheet :show="tool_picker" :actions="tool_list" title="输液工具选择" closeOnClickOverlay
           @close="tool_picker = false" @select='tool_select'>
         </u-action-sheet>
-        <u-action-sheet :show="drug_picker" :actions="drug_list" title="药物选择" closeOnClickOverlay
-          @close="drug_picker = false" @select='drug_select'>
-        </u-action-sheet>
       </view>
-    </view>
-    <view class=drug-button>
-      <u-button id="drug" type="info" shape="circle" text="增加药物" @click="addDrug()"></u-button>
-      <u-button id="drug" type="info" shape="circle" text="减少药物" :disabled="deleteButton()" @click="deleteDrug()">
-      </u-button>
     </view>
     <view class=bottom-button>
       <u-button type="primary" shape="circle" text="提交" customStyle="margin-top: 30px" @click="submit"></u-button>
@@ -79,10 +55,10 @@ import common from "common/js/common.js"
 export default {
   data() {
     return {
+      transfusion_id: '',
       time_picker: false,
       vein_picker: false,
       tool_picker: false,
-      drug_picker: false,
       count: 1,
       current_drug: 0,
       unixtime: '',
@@ -93,7 +69,6 @@ export default {
         startTime_display: '',
         vein: '',
         tool: '',
-        drug: [],
       },
       post1: {
         name: '',
@@ -102,7 +77,6 @@ export default {
         startTime: '',
         vein: '',
         tool: '',
-        drug: [],
       },
       rules: {
         'patientId': {
@@ -136,7 +110,6 @@ export default {
       },
       vein_list: [],
       tool_list: [],
-      drug_list: [],
     }
   },
   onLoad(options) {
@@ -147,8 +120,9 @@ export default {
     this.transfusion1.patientId = options.id
     this.getVein_list()
     this.getTool_list()
-    this.getDrug_list()
-    this.addDrugObject()
+    let transfusion_info = uni.getStorageSync('selected_transfusion')
+    console.log(transfusion_info)
+    this.transfusion_id = transfusion_info.id
   },
   onReady() {
     this.$refs.datetimePicker.setFormatter(this.formatter)
@@ -177,15 +151,16 @@ export default {
       uni.navigateBack()
     },
     submit() {
-      this.$refs.form1.validate().then(res => {
-        this.convertToForm()
-        this.$request.post('/api/transfusion/add', this.post1).then(res => {
+      let that = this
+      that.$refs.form1.validate().then(res => {
+        that.convertToForm()
+        that.$request.editTransfusion(this.transfusion_id, this.post1).then(res => {
           console.log(res)
           if (res.statusCode !== 200) {
             this.$.toast('提交失败');
           } else {
             uni.showToast({
-              title: "添加成功！",
+              title: "修改成功！",
               duration: 1000,
               success: () => {
                 setTimeout(() => {
@@ -222,19 +197,10 @@ export default {
       this.transfusion1.tool = e.name
       this.post1.tool = e.id
     },
-    drug_select(e) {
-      this.transfusion1.drug[this.current_drug].drug = e.name
-      this.post1.drug[this.current_drug].drug = e.id
-    },
     time_select(e) {
       this.transfusion1.startTime_display = common.dateTimeStr(Math.round(e.value / 1000))
       this.post1.startTime = e.value
       this.time_picker = false
-    },
-    seq_picker(e) {
-      this.transfusion1.druq.seq = e
-      this.post1.druq.seq = e
-      this.$refs.form1.validateField('drug.seq')
     },
     getVein_list() {
       this.$request.get('/api/list/vein').then(res => {
@@ -246,12 +212,6 @@ export default {
       this.$request.get('/api/list/tool').then(res => {
         console.log(res)
         this.tool_list = res.data;
-      })
-    },
-    getDrug_list() {
-      this.$request.get('/api/list/drug').then(res => {
-        console.log(res)
-        this.drug_list = res.data;
       })
     },
     deleteButton() {
@@ -272,70 +232,7 @@ export default {
         console.log('false')
         this.post1.name = this.transfusion1.name;
       }
-      for (let i = 0; i < this.count; i++) {
-        this.post1.drug[i].rate = parseInt(this.transfusion1.drug[i].rate, 10)
-        this.post1.drug[i].dose = parseInt(this.transfusion1.drug[i].dose, 10)
-      }
     },
-    addDrugObject() {
-      let newDrug = {
-        rate: '',
-        dose: '',
-        drug: '',
-        seq: this.count,
-      }
-      let newDrug2 = {
-        rate: '',
-        dose: '',
-        drug: '',
-        seq: this.count,
-      }
-      this.transfusion1.drug.push(newDrug2)
-      this.post1.drug.push(newDrug)
-      this.rules['drug.' + (this.count - 1).toString() + '.drug'] = {
-        required: true,
-        message: '请选择药物',
-        trigger: ["change", "blur"]
-      }
-      this.rules['drug.' + (this.count - 1).toString() + '.rate'] = [{
-        required: true,
-        message: '请输入输液速度',
-        trigger: ["change", "blur"]
-      }, {
-        validator: (rule, value, callback) => {
-          return uni.$u.test.number(value);
-        },
-        message: "只能输入数字",
-        trigger: ["change", "blur"],
-      }]
-      this.rules['drug.' + (this.count - 1).toString() + '.dose'] = [{
-        required: true,
-        message: '请输入输液量',
-        trigger: ["change", "blur"]
-      }, {
-        validator: (rule, value, callback) => {
-          return uni.$u.test.number(value);
-        },
-        message: "只能输入数字",
-        trigger: ["change", "blur"],
-      }]
-
-    },
-    deleteDrugObject() {
-      this.transfusion1.drug.pop();
-      this.post1.drug.pop()
-      delete this.rules['drug.' + (this.count - 1).toString() + '.drug']
-      delete this.rules['drug.' + (this.count - 1).toString() + '.dose']
-      delete this.rules['drug.' + (this.count - 1).toString() + '.rate']
-    },
-    addDrug() {
-      this.count++;
-      this.addDrugObject()
-    },
-    deleteDrug() {
-      this.deleteDrugObject()
-      this.count--;
-    }
   },
 }
 </script>

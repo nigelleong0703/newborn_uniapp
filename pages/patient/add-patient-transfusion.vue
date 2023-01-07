@@ -75,310 +75,311 @@
 </template>
 
 <script>
-import common from "common/js/common.js"
-export default {
-  data() {
-    return {
-      time_picker: false,
-      vein_picker: false,
-      tool_picker: false,
-      drug_picker: false,
-      count: 1,
-      current_drug: 0,
-      unixtime: '',
-      transfusion1: {
-        name: '',
-        patientId: '',
-        nurseId: '',
-        startTime_display: '',
-        vein: '',
-        tool: '',
-        drug: [],
-      },
-      post1: {
-        name: '',
-        patientId: '',
-        nurseId: '',
-        startTime: '',
-        vein: '',
-        tool: '',
-        drug: [],
-      },
-      rules: {
-        'patientId': {
-          type: 'string',
-          required: true,
-          message: '请填写患者ID',
-          trigger: ['blur', 'change']
+  import common from "common/js/common.js"
+  export default {
+    data() {
+      return {
+        time_picker: false,
+        vein_picker: false,
+        tool_picker: false,
+        drug_picker: false,
+        count: 1,
+        current_drug: 0,
+        unixtime: '',
+        transfusion1: {
+          name: '',
+          patientId: '',
+          nurseId: '',
+          startTime_display: '',
+          vein: '',
+          tool: '',
+          drug: [],
         },
-        'nurseId': {
-          type: 'string',
-          required: true,
-          message: '请填写护士ID',
-          trigger: ['blur', 'change']
+        post1: {
+          name: '',
+          patientId: '',
+          nurseId: '',
+          startTime: '',
+          vein: '',
+          tool: '',
+          drug: [],
         },
-        'time': {
-          type: 'string',
-          required: true,
-          message: '请填写时间',
-          trigger: ['blur', 'change']
+        rules: {
+          'patientId': {
+            type: 'string',
+            required: true,
+            message: '请填写患者ID',
+            trigger: ['blur', 'change']
+          },
+          'nurseId': {
+            type: 'string',
+            required: true,
+            message: '请填写护士ID',
+            trigger: ['blur', 'change']
+          },
+          'time': {
+            type: 'string',
+            required: true,
+            message: '请填写时间',
+            trigger: ['blur', 'change']
+          },
+          'vein': {
+            required: true,
+            message: '请选择输液工具',
+            trigger: ['blur', 'change']
+          },
+          'tool': {
+            required: true,
+            message: '请选择静脉',
+            trigger: ['blur', 'change']
+          },
         },
-        'vein': {
-          required: true,
-          message: '请选择输液工具',
-          trigger: ['blur', 'change']
-        },
-        'tool': {
-          required: true,
-          message: '请选择静脉',
-          trigger: ['blur', 'change']
-        },
-      },
-      vein_list: [],
-      tool_list: [],
-      drug_list: [],
-    }
-  },
-  onLoad(options) {
-    var time = common.loadSystemTime()
-    this.post1.startTime = time[0]
-    this.transfusion1.startTime_display = time[1]
-    this.transfusion1.nurseId = String(uni.getStorageSync('current_user').id)
-    this.transfusion1.patientId = options.id
-    this.getVein_list()
-    this.getTool_list()
-    this.getDrug_list()
-    this.addDrugObject()
-  },
-  onReady() {
-    this.$refs.datetimePicker.setFormatter(this.formatter)
-    this.$refs.form1.setRules(this.rules)
-  },
-  methods: {
-    formatter(type, value) {
-      if (type == 'year') {
-        return `${value}年`
-      }
-      if (type == 'month') {
-        return `${value}月`
-      }
-      if (type == 'day') {
-        return `${value}日`
-      }
-      if (type == 'hour') {
-        return `${value}时`
-      }
-      if (type == 'minute') {
-        return `${value}分`
-      }
-      return value
-    },
-    navigateBack() {
-      uni.navigateBack()
-    },
-    submit() {
-      this.$refs.form1.validate().then(res => {
-        this.convertToForm()
-        this.$request.post('/api/transfusion/add', this.post1).then(res => {
-          console.log(res)
-          if (res.statusCode !== 200) {
-            this.$.toast('提交失败');
-          } else {
-            uni.showToast({
-              title: "添加成功！",
-              duration: 1000,
-              success: () => {
-                setTimeout(() => {
-                  uni.$emit('refurbish', {})
-                  uni.navigateBack();
-                }, 1000)
-              }
-            })
-          }
-        })
-      }).catch(errors => {
-        uni.$u.toast('校验失败')
-      })
-    },
-    reset() {
-      const validateList = []
-      this.$refs.form1.resetFields()
-      this.$refs.form1.clearValidate()
-      setTimeout(() => {
-        this.$refs.form1.clearValidate(validateList)
-      }, 10)
-    },
-    change(e) {
-      // console.log('change', e)
-    },
-    hideKeyboard() {
-      uni.hideKeyboard()
-    },
-    vein_select(e) {
-      this.transfusion1.vein = e.name
-      this.post1.vein = e.id
-    },
-    tool_select(e) {
-      this.transfusion1.tool = e.name
-      this.post1.tool = e.id
-    },
-    drug_select(e) {
-      this.transfusion1.drug[this.current_drug].drug = e.name
-      this.post1.drug[this.current_drug].drug = e.id
-    },
-    time_select(e) {
-      this.transfusion1.startTime_display = common.dateTimeStr(Math.round(e.value / 1000))
-      this.post1.startTime = e.value
-      this.time_picker = false
-    },
-    seq_picker(e) {
-      this.transfusion1.druq.seq = e
-      this.post1.druq.seq = e
-      this.$refs.form1.validateField('drug.seq')
-    },
-    getVein_list() {
-      this.$request.get('/api/list/vein').then(res => {
-        console.log(res)
-        this.vein_list = res.data;
-      })
-    },
-    getTool_list() {
-      this.$request.get('/api/list/tool').then(res => {
-        console.log(res)
-        this.tool_list = res.data;
-      })
-    },
-    getDrug_list() {
-      this.$request.get('/api/list/drug').then(res => {
-        console.log(res)
-        this.drug_list = res.data;
-      })
-    },
-    deleteButton() {
-      if (this.count < 2) {
-        return true
-      } else return false
-    },
-    convertToForm() {
-      this.post1.nurseId = parseInt(this.transfusion1.nurseId, 10);
-      console.log(this.post1.nurseId)
-      this.post1.patientId = parseInt(this.transfusion1.patientId, 10)
-      this.post1.startTime = Math.round(this.post1.startTime / 1000)
-      if (this.transfusion1.name == '') {
-        console.log('true')
-        this.transfusion1.name = this.transfusion1.drug[0].drug;
-        this.post1.name = this.transfusion1.drug[0].drug;
-      } else {
-        console.log('false')
-        this.post1.name = this.transfusion1.name;
-      }
-      for (let i = 0; i < this.count; i++) {
-        this.post1.drug[i].rate = parseInt(this.transfusion1.drug[i].rate, 10)
-        this.post1.drug[i].dose = parseInt(this.transfusion1.drug[i].dose, 10)
+        vein_list: [],
+        tool_list: [],
+        drug_list: [],
       }
     },
-    addDrugObject() {
-      let newDrug = {
-        rate: '',
-        dose: '',
-        drug: '',
-        seq: this.count,
-      }
-      let newDrug2 = {
-        rate: '',
-        dose: '',
-        drug: '',
-        seq: this.count,
-      }
-      this.transfusion1.drug.push(newDrug2)
-      this.post1.drug.push(newDrug)
-      this.rules['drug.' + (this.count - 1).toString() + '.drug'] = {
-        required: true,
-        message: '请选择药物',
-        trigger: ["change", "blur"]
-      }
-      this.rules['drug.' + (this.count - 1).toString() + '.rate'] = [{
-        required: true,
-        message: '请输入输液速度',
-        trigger: ["change", "blur"]
-      }, {
-        validator: (rule, value, callback) => {
-          return uni.$u.test.number(value);
-        },
-        message: "只能输入数字",
-        trigger: ["change", "blur"],
-      }]
-      this.rules['drug.' + (this.count - 1).toString() + '.dose'] = [{
-        required: true,
-        message: '请输入输液量',
-        trigger: ["change", "blur"]
-      }, {
-        validator: (rule, value, callback) => {
-          return uni.$u.test.number(value);
-        },
-        message: "只能输入数字",
-        trigger: ["change", "blur"],
-      }]
-
-    },
-    deleteDrugObject() {
-      this.transfusion1.drug.pop();
-      this.post1.drug.pop()
-      delete this.rules['drug.' + (this.count - 1).toString() + '.drug']
-      delete this.rules['drug.' + (this.count - 1).toString() + '.dose']
-      delete this.rules['drug.' + (this.count - 1).toString() + '.rate']
-    },
-    addDrug() {
-      this.count++;
+    onLoad(options) {
+      this.$request.checkLogin();
+      var time = common.loadSystemTime()
+      this.post1.startTime = time[0]
+      this.transfusion1.startTime_display = time[1]
+      this.transfusion1.nurseId = String(uni.getStorageSync('current_user').id)
+      this.transfusion1.patientId = options.id
+      this.getVein_list()
+      this.getTool_list()
+      this.getDrug_list()
       this.addDrugObject()
     },
-    deleteDrug() {
-      this.deleteDrugObject()
-      this.count--;
-    }
-  },
-}
+    onReady() {
+      this.$refs.datetimePicker.setFormatter(this.formatter)
+      this.$refs.form1.setRules(this.rules)
+    },
+    methods: {
+      formatter(type, value) {
+        if (type == 'year') {
+          return `${value}年`
+        }
+        if (type == 'month') {
+          return `${value}月`
+        }
+        if (type == 'day') {
+          return `${value}日`
+        }
+        if (type == 'hour') {
+          return `${value}时`
+        }
+        if (type == 'minute') {
+          return `${value}分`
+        }
+        return value
+      },
+      navigateBack() {
+        uni.navigateBack()
+      },
+      submit() {
+        this.$refs.form1.validate().then(res => {
+          this.convertToForm()
+          this.$request.post('/api/transfusion/add', this.post1).then(res => {
+            console.log(res)
+            if (res.statusCode !== 200) {
+              this.$.toast('提交失败');
+            } else {
+              uni.showToast({
+                title: "添加成功！",
+                duration: 1000,
+                success: () => {
+                  setTimeout(() => {
+                    uni.$emit('refurbish', {})
+                    uni.navigateBack();
+                  }, 1000)
+                }
+              })
+            }
+          })
+        }).catch(errors => {
+          uni.$u.toast('校验失败')
+        })
+      },
+      reset() {
+        const validateList = []
+        this.$refs.form1.resetFields()
+        this.$refs.form1.clearValidate()
+        setTimeout(() => {
+          this.$refs.form1.clearValidate(validateList)
+        }, 10)
+      },
+      change(e) {
+        // console.log('change', e)
+      },
+      hideKeyboard() {
+        uni.hideKeyboard()
+      },
+      vein_select(e) {
+        this.transfusion1.vein = e.name
+        this.post1.vein = e.id
+      },
+      tool_select(e) {
+        this.transfusion1.tool = e.name
+        this.post1.tool = e.id
+      },
+      drug_select(e) {
+        this.transfusion1.drug[this.current_drug].drug = e.name
+        this.post1.drug[this.current_drug].drug = e.id
+      },
+      time_select(e) {
+        this.transfusion1.startTime_display = common.dateTimeStr(Math.round(e.value / 1000))
+        this.post1.startTime = e.value
+        this.time_picker = false
+      },
+      seq_picker(e) {
+        this.transfusion1.druq.seq = e
+        this.post1.druq.seq = e
+        this.$refs.form1.validateField('drug.seq')
+      },
+      getVein_list() {
+        this.$request.get('/api/list/vein').then(res => {
+          console.log(res)
+          this.vein_list = res.data;
+        })
+      },
+      getTool_list() {
+        this.$request.get('/api/list/tool').then(res => {
+          console.log(res)
+          this.tool_list = res.data;
+        })
+      },
+      getDrug_list() {
+        this.$request.get('/api/list/drug').then(res => {
+          console.log(res)
+          this.drug_list = res.data;
+        })
+      },
+      deleteButton() {
+        if (this.count < 2) {
+          return true
+        } else return false
+      },
+      convertToForm() {
+        this.post1.nurseId = parseInt(this.transfusion1.nurseId, 10);
+        console.log(this.post1.nurseId)
+        this.post1.patientId = parseInt(this.transfusion1.patientId, 10)
+        this.post1.startTime = Math.round(this.post1.startTime / 1000)
+        if (this.transfusion1.name == '') {
+          console.log('true')
+          this.transfusion1.name = this.transfusion1.drug[0].drug;
+          this.post1.name = this.transfusion1.drug[0].drug;
+        } else {
+          console.log('false')
+          this.post1.name = this.transfusion1.name;
+        }
+        for (let i = 0; i < this.count; i++) {
+          this.post1.drug[i].rate = parseInt(this.transfusion1.drug[i].rate, 10)
+          this.post1.drug[i].dose = parseInt(this.transfusion1.drug[i].dose, 10)
+        }
+      },
+      addDrugObject() {
+        let newDrug = {
+          rate: '',
+          dose: '',
+          drug: '',
+          seq: this.count,
+        }
+        let newDrug2 = {
+          rate: '',
+          dose: '',
+          drug: '',
+          seq: this.count,
+        }
+        this.transfusion1.drug.push(newDrug2)
+        this.post1.drug.push(newDrug)
+        this.rules['drug.' + (this.count - 1).toString() + '.drug'] = {
+          required: true,
+          message: '请选择药物',
+          trigger: ["change", "blur"]
+        }
+        this.rules['drug.' + (this.count - 1).toString() + '.rate'] = [{
+          required: true,
+          message: '请输入输液速度',
+          trigger: ["change", "blur"]
+        }, {
+          validator: (rule, value, callback) => {
+            return uni.$u.test.number(value);
+          },
+          message: "只能输入数字",
+          trigger: ["change", "blur"],
+        }]
+        this.rules['drug.' + (this.count - 1).toString() + '.dose'] = [{
+          required: true,
+          message: '请输入输液量',
+          trigger: ["change", "blur"]
+        }, {
+          validator: (rule, value, callback) => {
+            return uni.$u.test.number(value);
+          },
+          message: "只能输入数字",
+          trigger: ["change", "blur"],
+        }]
+
+      },
+      deleteDrugObject() {
+        this.transfusion1.drug.pop();
+        this.post1.drug.pop()
+        delete this.rules['drug.' + (this.count - 1).toString() + '.drug']
+        delete this.rules['drug.' + (this.count - 1).toString() + '.dose']
+        delete this.rules['drug.' + (this.count - 1).toString() + '.rate']
+      },
+      addDrug() {
+        this.count++;
+        this.addDrugObject()
+      },
+      deleteDrug() {
+        this.deleteDrugObject()
+        this.count--;
+      }
+    },
+  }
 </script>
 
 <style lang="scss">
-.content {
-  min-height: 100%;
-}
+  .content {
+    min-height: 100%;
+  }
 
-.form-content {
-  margin-top: 20px;
-  margin-left: 10%;
-  margin-right: 10%;
-}
+  .form-content {
+    margin-top: 20px;
+    margin-left: 10%;
+    margin-right: 10%;
+  }
 
 
-.drug-button {
-  width: 50%;
-  margin-top: 20px;
-  margin-left: 25%;
-  margin-right: 25%;
-}
+  .drug-button {
+    width: 50%;
+    margin-top: 20px;
+    margin-left: 25%;
+    margin-right: 25%;
+  }
 
-#drug {
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
+  #drug {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
 
-.add-button u-button {
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
+  .add-button u-button {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
 
-.bottom-button {
-  width: 80%;
-  margin-left: 10%;
-  margin-right: 10%;
-  padding-bottom: 10px
-}
+  .bottom-button {
+    width: 80%;
+    margin-left: 10%;
+    margin-right: 10%;
+    padding-bottom: 10px
+  }
 
-.second-title {
-  margin-top: 20px;
-  font-size: 25px;
-  font-weight: bold;
-}
+  .second-title {
+    margin-top: 20px;
+    font-size: 25px;
+    font-weight: bold;
+  }
 </style>

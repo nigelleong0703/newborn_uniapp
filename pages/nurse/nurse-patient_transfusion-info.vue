@@ -52,250 +52,251 @@
 </template>
 
 <script>
-import common from "common/js/common.js"
-export default {
-  data() {
-    return {
-      title: "患者: 王小杨",
-      value6: 1,
-      transfusionInfo: {
-        info: '',
-        name: ''
-      },
-      drug: [],
-      transfusion_startTime: '',
-      transfusion_endTime: '',
-      vein_list: [],
-      tool_list: [],
-      drug_list: [],
-      patientname: '',
-      nursename: '',
-      status_list: [{
-        id: 0,
-        name: '已完成'
-      }, {
-        id: 1,
-        name: '正进行到第 1 个药品'
-      }, {
-        id: 2,
-        name: '正进行到第 2 个药品'
-      }, {
-        id: 3,
-        name: '正进行到第 3 个药品'
-      }, {
-        id: 4,
-        name: '正进行到第 4 个药品'
-      }, {
-        id: 5,
-        name: '正进行到第 5 个药品'
-      }, {
-        id: 6,
-        name: '正进行到第 6 个药品'
-      }],
-      drug_status_list: [{
-        id: 0,
-        name: '已完成'
-      }, {
-        id: 1,
-        name: '进行中'
-      }, {
-        id: 2,
-        name: '未开始'
-      }],
-      vein_name: '',
-      tool_name: '',
-      status_name: '',
-      drug_name: '',
-      drug_status_name: '',
-      transfusion_id: ''
-    }
-  },
+  import common from "common/js/common.js"
+  export default {
+    data() {
+      return {
+        title: "患者: 王小杨",
+        value6: 1,
+        transfusionInfo: {
+          info: '',
+          name: ''
+        },
+        drug: [],
+        transfusion_startTime: '',
+        transfusion_endTime: '',
+        vein_list: [],
+        tool_list: [],
+        drug_list: [],
+        patientname: '',
+        nursename: '',
+        status_list: [{
+          id: 0,
+          name: '已完成'
+        }, {
+          id: 1,
+          name: '正进行到第 1 个药品'
+        }, {
+          id: 2,
+          name: '正进行到第 2 个药品'
+        }, {
+          id: 3,
+          name: '正进行到第 3 个药品'
+        }, {
+          id: 4,
+          name: '正进行到第 4 个药品'
+        }, {
+          id: 5,
+          name: '正进行到第 5 个药品'
+        }, {
+          id: 6,
+          name: '正进行到第 6 个药品'
+        }],
+        drug_status_list: [{
+          id: 0,
+          name: '已完成'
+        }, {
+          id: 1,
+          name: '进行中'
+        }, {
+          id: 2,
+          name: '未开始'
+        }],
+        vein_name: '',
+        tool_name: '',
+        status_name: '',
+        drug_name: '',
+        drug_status_name: '',
+        transfusion_id: ''
+      }
+    },
 
-  onLoad() {
-    let patient_name = uni.getStorageSync('selected_patient')
-    this.patientname = patient_name.name
-    this.patientid = patient_name.id
-    let nurse_name = uni.getStorageSync('current_user')
-    this.nursename = nurse_name.name
-    let transfusion_info = uni.getStorageSync('selected_transfusion')
-    console.log(transfusion_info)
-    this.transfusion_id = transfusion_info.id
-    this.getTransfusion_info()
-  },
+    onLoad() {
+      this.$request.checkLogin();
+      let patient_name = uni.getStorageSync('selected_patient')
+      this.patientname = patient_name.name
+      this.patientid = patient_name.id
+      let nurse_name = uni.getStorageSync('current_user')
+      this.nursename = nurse_name.name
+      let transfusion_info = uni.getStorageSync('selected_transfusion')
+      console.log(transfusion_info)
+      this.transfusion_id = transfusion_info.id
+      this.getTransfusion_info()
+    },
 
-  methods: {
-    patient_info() {
-      uni.navigateTo({
-        url: '/pages/nurse/nurse-patient_info',
-        success(res) {
-          console.log(res);
-        },
-        fail(err) {
-          console.log(err);
-        }
-      })
-    },
-    patient_transfusion() {
-      uni.navigateTo({
-        url: '/pages/nurse/nurse-patient_transfusion',
-        success(res) {
-          console.log(res);
-        },
-        fail(err) {
-          console.log(err);
-        }
-      })
-    },
-    patient_check() {
-      uni.navigateTo({
-        url: '/pages/nurse/nurse-patient_check',
-        success(res) {
-          console.log(res);
-        },
-        fail(err) {
-          console.log(err);
-        }
-      })
-    },
-    open(e) {
-      // console.log('open', e)
-    },
-    close(e) {
-      // console.log('close', e)
-    },
-    change(e) {
-      // console.log('change', e)
-    },
-    transfusion_edit() {
-      uni.navigateTo({
-        url: '/pages/patient/edit-transfusion-info?id=' + this.patientid,
-        success(res) {
-          console.log(res);
-        },
-        fail(err) {
-          console.log(err);
-        }
-      })
-    },
-    transfusion_delete() {
-      uni.showModal({
-        content: '是否要删除该输液记录',
-        success: (res) => {
-          if (res.confirm) {
-            let path = '/api/transfusion/delete/' + this.transfusion_id
-            this.$request.patch(path).then(res => {
-              console.log(res)
-            })
-            uni.showToast({
-              title: "删除输液记录成功",
-              icon: 'none'
-            })
-            uni.reLaunch({
-              url: 'nurse-patient_transfusion'
-            })
+    methods: {
+      patient_info() {
+        uni.navigateTo({
+          url: '/pages/nurse/nurse-patient_info',
+          success(res) {
+            console.log(res);
+          },
+          fail(err) {
+            console.log(err);
           }
-        }
-      })
-    },
-    getTransfusion_info() {
-      //////////////////////////////////
-      this.$request.get('/api/list/vein').then(res => {
-        console.log(res)
-        this.vein_list = res.data;
-      })
-      //////////////////////////////////
-      this.$request.get('/api/list/tool').then(res => {
-        console.log(res)
-        this.tool_list = res.data;
-      })
-      //////////////////////////////////
-      this.$request.get('/api/list/drug').then(res => {
-        console.log(res)
-        this.drug_list = res.data;
-      })
+        })
+      },
+      patient_transfusion() {
+        uni.navigateTo({
+          url: '/pages/nurse/nurse-patient_transfusion',
+          success(res) {
+            console.log(res);
+          },
+          fail(err) {
+            console.log(err);
+          }
+        })
+      },
+      patient_check() {
+        uni.navigateTo({
+          url: '/pages/nurse/nurse-patient_check',
+          success(res) {
+            console.log(res);
+          },
+          fail(err) {
+            console.log(err);
+          }
+        })
+      },
+      open(e) {
+        // console.log('open', e)
+      },
+      close(e) {
+        // console.log('close', e)
+      },
+      change(e) {
+        // console.log('change', e)
+      },
+      transfusion_edit() {
+        uni.navigateTo({
+          url: '/pages/patient/edit-transfusion-info?id=' + this.patientid,
+          success(res) {
+            console.log(res);
+          },
+          fail(err) {
+            console.log(err);
+          }
+        })
+      },
+      transfusion_delete() {
+        uni.showModal({
+          content: '是否要删除该输液记录',
+          success: (res) => {
+            if (res.confirm) {
+              let path = '/api/transfusion/delete/' + this.transfusion_id
+              this.$request.patch(path).then(res => {
+                console.log(res)
+              })
+              uni.showToast({
+                title: "删除输液记录成功",
+                icon: 'none'
+              })
+              uni.reLaunch({
+                url: 'nurse-patient_transfusion'
+              })
+            }
+          }
+        })
+      },
+      getTransfusion_info() {
+        //////////////////////////////////
+        this.$request.get('/api/list/vein').then(res => {
+          console.log(res)
+          this.vein_list = res.data;
+        })
+        //////////////////////////////////
+        this.$request.get('/api/list/tool').then(res => {
+          console.log(res)
+          this.tool_list = res.data;
+        })
+        //////////////////////////////////
+        this.$request.get('/api/list/drug').then(res => {
+          console.log(res)
+          this.drug_list = res.data;
+        })
 
-      let path = '/api/transfusion/' + this.transfusion_id
-      //////////////////////////////////
-      this.$request.get(path).then(res => {
-        this.transfusionInfo = res.data;
-        console.log(res)
-        this.transfusion_startTime = common.dateTimeStr(res.data.startTime);
-        //当后端传回来是null的时候代表还没结束，直到点击结束按钮才更新输液结束时间
-        if (this.transfusion_endTime != "null") {
+        let path = '/api/transfusion/' + this.transfusion_id
+        //////////////////////////////////
+        this.$request.get(path).then(res => {
+          this.transfusionInfo = res.data;
+          console.log(res)
+          this.transfusion_startTime = common.dateTimeStr(res.data.startTime);
+          //当后端传回来是null的时候代表还没结束，直到点击结束按钮才更新输液结束时间
+          if (this.transfusion_endTime != "null") {
+            this.transfusion_endTime = common.dateTimeStr(res.data.finishTime);
+          }
+          this.drug = res.data.drug;
+          this.vein_name = this.vein_list[(res.data.vein) - 1].name;
+          this.tool_name = this.tool_list[(res.data.tool) - 1].name;
+          this.status_name = this.status_list[(res.data.status)].name;
+        })
+      },
+      change_drug() {
+        let path = '/api/transfusion/update/' + this.transfusion_id + '/next'
+        console.log(path)
+        this.$request.patch(path).then(res => {
+          console.log(res)
+          this.status_name = this.status_list[(res.data.status) + 1].name;
+          this.drug_startTime = common.dateTimeStr(res.data.drug.startTime);
+        })
+      },
+      finish() {
+        let path = '/api/transfusion/update/' + this.transfusion_id + '/finish'
+        console.log(path)
+        this.$request.patch(path).then(res => {
+          console.log(res)
+          this.status_name = this.status_list[0].name;
           this.transfusion_endTime = common.dateTimeStr(res.data.finishTime);
-        }
-        this.drug = res.data.drug;
-        this.vein_name = this.vein_list[(res.data.vein) - 1].name;
-        this.tool_name = this.tool_list[(res.data.tool) - 1].name;
-        this.status_name = this.status_list[(res.data.status)].name;
-      })
+        })
+      },
     },
-    change_drug() {
-      let path = '/api/transfusion/update/' + this.transfusion_id + '/next'
-      console.log(path)
-      this.$request.patch(path).then(res => {
-        console.log(res)
-        this.status_name = this.status_list[(res.data.status) + 1].name;
-        this.drug_startTime = common.dateTimeStr(res.data.drug.startTime);
-      })
-    },
-    finish() {
-      let path = '/api/transfusion/update/' + this.transfusion_id + '/finish'
-      console.log(path)
-      this.$request.patch(path).then(res => {
-        console.log(res)
-        this.status_name = this.status_list[0].name;
-        this.transfusion_endTime = common.dateTimeStr(res.data.finishTime);
-      })
-    },
-  },
-}
+  }
 </script>
 
 <style>
-.content {
-  height: 75vh;
-  display: flex;
-  flex-direction: column;
-  align-content: center;
-  justify-content: center;
-}
+  .content {
+    height: 75vh;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+  }
 
-.text-area {
-  display: flex;
-  justify-content: center;
-}
+  .text-area {
+    display: flex;
+    justify-content: center;
+  }
 
-.title {
-  font-size: 50rpx;
-  font-weight: bold;
-  color: #ffaa00;
-}
+  .title {
+    font-size: 50rpx;
+    font-weight: bold;
+    color: #ffaa00;
+  }
 
-.body {
-  height: 70vh;
-  display: flex;
-  flex-direction: column;
-}
+  .body {
+    height: 70vh;
+    display: flex;
+    flex-direction: column;
+  }
 
-.navigate-bar {
-  height: 100vh;
-}
+  .navigate-bar {
+    height: 100vh;
+  }
 
-.second-title {
-  margin-left: 10px;
-  font-size: 25px;
-  font-weight: bold;
-  display: flex;
-  justify-content: left;
-}
+  .second-title {
+    margin-left: 10px;
+    font-size: 25px;
+    font-weight: bold;
+    display: flex;
+    justify-content: left;
+  }
 
-.button {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  margin-top: 20px;
-  margin-left: 10%;
-  margin-right: 10%;
-}
+  .button {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    margin-top: 20px;
+    margin-left: 10%;
+    margin-right: 10%;
+  }
 </style>

@@ -8,6 +8,8 @@
     <view class="card-item-edit">
       <u-button class='button card-button' plain color="orange" @click="editTool" :text="buttonTitle">
       </u-button>
+      <u-button class='button card-button' plain color="red" @click="deleteTool" text="删除">
+      </u-button>
     </view>
     <u-popup :safeAreaInsetBottom="true" :safeAreaInsetTop="true" :show="popup_show" mode="bottom" @close="close"
       @open="open" :closeable="true" :overlay="true">
@@ -72,6 +74,21 @@
       },
       editTool() {
         this.popup_show = true;
+      },
+      deleteTool() {
+        uni.showModal({
+          content: '是否要删除？',
+          success: (res) => {
+            if (res.confirm) {
+              this.$request.deleteTool(this.toolId)
+              uni.showToast({
+                title: "删除成功",
+                icon: 'none'
+              })
+              uni.$emit('changeData', {})
+            }
+          }
+        })
       },
       open() {
         this.$nextTick(() => { //在弹窗加载出来只有 show 才会变成 true

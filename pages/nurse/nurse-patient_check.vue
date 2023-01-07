@@ -27,131 +27,132 @@
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      title: "巡视记录",
-      value5: 2,
-      checkList: [],
-      patient_id: '',
-    }
-  },
+  export default {
+    data() {
+      return {
+        title: "巡视记录",
+        value5: 2,
+        checkList: [],
+        patient_id: '',
+      }
+    },
 
-  onLoad() {
-    let patient_info = uni.getStorageSync('selected_patient')
-    console.log(patient_info)
-    this.patient_id = patient_info.id
-    this.getCheck_list()
-  },
+    onLoad() {
+      this.$request.checkLogin();
+      let patient_info = uni.getStorageSync('selected_patient')
+      console.log(patient_info)
+      this.patient_id = patient_info.id
+      this.getCheck_list()
+    },
 
-  methods: {
-    add_ward() {
-      uni.navigateTo({
-        url: '/pages/patient/add-patient-ward?id=' + this.patient_id,
-        success(res) {
-          console.log(res);
-        },
-        fail(err) {
-          console.log(err);
-        }
-      })
-    },
-    patient_info() {
-      uni.navigateTo({
-        url: '/pages/nurse/nurse-patient_info',
-        success(res) {
-          console.log(res);
-        },
-        fail(err) {
-          console.log(err);
-        }
-      })
-    },
-    patient_transfusion() {
-      uni.navigateTo({
-        url: '/pages/nurse/nurse-patient_transfusion',
-        success(res) {
-          console.log(res);
-        },
-        fail(err) {
-          console.log(err);
-        }
-      })
-    },
-    patient_check() {
-      uni.navigateTo({
-        url: '/pages/nurse/nurse-patient_check',
-        success(res) {
-          console.log(res);
-        },
-        fail(err) {
-          console.log(err);
-        }
-      })
-    },
-    open(e) {
-      // console.log('open', e)
-    },
-    close(e) {
-      // console.log('close', e)
-    },
-    change(e) {
-      // console.log('change', e)
-    },
-    cell_click(check) {
-      uni.setStorageSync('selected_check', check)
-      console.log(uni.getStorageSync('selected_check'))
-      uni.navigateTo({
-        url: "nurse-patient_check-info"
-      })
-    },
-    getCheck_list() {
-      let path = '/api/check?patientId=' + this.patient_id
-      console.log(path)
-      //////////////////////////////////
-      this.$request.get(path).then(res => {
-        console.log(res)
-        this.checkList = res.data.check;
-      })
+    methods: {
+      add_ward() {
+        uni.navigateTo({
+          url: '/pages/patient/add-patient-ward?id=' + this.patient_id,
+          success(res) {
+            console.log(res);
+          },
+          fail(err) {
+            console.log(err);
+          }
+        })
+      },
+      patient_info() {
+        uni.navigateTo({
+          url: '/pages/nurse/nurse-patient_info',
+          success(res) {
+            console.log(res);
+          },
+          fail(err) {
+            console.log(err);
+          }
+        })
+      },
+      patient_transfusion() {
+        uni.navigateTo({
+          url: '/pages/nurse/nurse-patient_transfusion',
+          success(res) {
+            console.log(res);
+          },
+          fail(err) {
+            console.log(err);
+          }
+        })
+      },
+      patient_check() {
+        uni.navigateTo({
+          url: '/pages/nurse/nurse-patient_check',
+          success(res) {
+            console.log(res);
+          },
+          fail(err) {
+            console.log(err);
+          }
+        })
+      },
+      open(e) {
+        // console.log('open', e)
+      },
+      close(e) {
+        // console.log('close', e)
+      },
+      change(e) {
+        // console.log('change', e)
+      },
+      cell_click(check) {
+        uni.setStorageSync('selected_check', check)
+        console.log(uni.getStorageSync('selected_check'))
+        uni.navigateTo({
+          url: "nurse-patient_check-info"
+        })
+      },
+      getCheck_list() {
+        let path = '/api/check?patientId=' + this.patient_id
+        console.log(path)
+        //////////////////////////////////
+        this.$request.get(path).then(res => {
+          console.log(res)
+          this.checkList = res.data.check;
+        })
+      }
     }
   }
-}
 </script>
 
 <style>
-.content {
-  height: 75vh;
-  display: flex;
-  flex-direction: column;
-  align-content: center;
-  justify-content: center;
-}
+  .content {
+    height: 75vh;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+  }
 
-.text-area {
-  display: flex;
-  justify-content: center;
-}
+  .text-area {
+    display: flex;
+    justify-content: center;
+  }
 
-.title {
-  font-size: 50rpx;
-  font-weight: bold;
-  color: #ffaa00;
-}
+  .title {
+    font-size: 50rpx;
+    font-weight: bold;
+    color: #ffaa00;
+  }
 
-.body {
-  height: 70vh;
-  display: flex;
-  flex-direction: column;
-}
+  .body {
+    height: 70vh;
+    display: flex;
+    flex-direction: column;
+  }
 
-.navigate-bar {
-  height: 100vh;
-}
+  .navigate-bar {
+    height: 100vh;
+  }
 
-.button {
-  width: 15%;
-  margin-top: 2%;
-  margin-left: 83%;
-  padding-bottom: 20rpx;
-}
+  .button {
+    width: 15%;
+    margin-top: 2%;
+    margin-left: 83%;
+    padding-bottom: 20rpx;
+  }
 </style>

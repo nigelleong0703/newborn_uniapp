@@ -28,81 +28,92 @@
 </template>
 
 <script>
-  import common from "common/js/common.js"
-  export default {
-    data() {
-      return {
-        title: "护士资料",
-        value2: 1,
-        nurseInfo: {
-          name: '',
-          tel: ''
-        },
-        genderList: [{
-          id: 1,
-          name: '男',
-        }, {
-          id: 2,
-          name: '女',
-        }],
-        departmentList: '',
-        gender_name: '',
-        department_name: ''
+
+import common from "common/js/common.js"
+export default {
+  data() {
+    return {
+      title: "护士资料",
+      value2: 1,
+      nurseInfo: {
+        name: '',
+        tel: ''
+      },
+      genderList: [{
+        id: 1,
+        name: '男',
+      }, {
+        id: 2,
+        name: '女',
+      }],
+      departmentList: '',
+      gender_name: '',
+      department_name: ''
+    }
+  },
+
+  onLoad() {
+    this.$request.checkLogin();
+    this.getNurse_info()
+    this.departmentList = common.getDepartment_list()
+  },
+  
+  mounted() {
+    var backbutton = document.getElementsByClassName('uni-page-head-hd')[0]
+    if (backbutton) backbutton.style.display = 'none';
+  },
+  
+  methods: {
+    change(e) {
+      this.value2 = e
+      console.log('change2', e)
+    },
+    patient_list() {
+      uni.navigateTo({
+        url: '/pages/nurse/nurse-patient_list'
+      })
+    },
+    nurse_info() {
+      uni.navigateTo({
+        url: '/pages/nurse/nurse-info'
+      })
+    },
+    onBackPress(options) {
+      if (options.from == 'backbutton' || 'navigateBack') {
+        return true;
       }
     },
-
-    onLoad() {
-      this.$request.checkLogin();
-      this.getNurse_info()
-      this.departmentList = common.getDepartment_list()
+    getNurse_info() {
+      let nurse_info = uni.getStorageSync('current_user')
+      let path = '/api/nurse/' + nurse_info.id
+      console.log(path)
+      this.$request.get(path).then(res => {
+        this.nurseInfo = res.data;
+        console.log(res)
+        this.gender_name = this.genderList[(res.data.gender) - 1].name;
+        this.department_name = this.departmentList[(res.data.department) - 1].name;
+      })
     },
-
-    methods: {
-      change(e) {
-        this.value2 = e
-        console.log('change2', e)
-      },
-      patient_list() {
-        uni.navigateTo({
-          url: '/pages/nurse/nurse-patient_list'
-        })
-      },
-      nurse_info() {
-        uni.navigateTo({
-          url: '/pages/nurse/nurse-info'
-        })
-      },
-      getNurse_info() {
-        let nurse_info = uni.getStorageSync('current_user')
-        let path = '/api/nurse/' + nurse_info.id
-        console.log(path)
-        this.$request.get(path).then(res => {
-          this.nurseInfo = res.data;
-          console.log(res)
-          this.gender_name = this.genderList[(res.data.gender) - 1].name;
-          this.department_name = this.departmentList[(res.data.department) - 1].name;
-        })
-      },
-      logout() {
-        uni.showModal({
-          content: '是否要退出登录',
-          success: (res) => {
-            if (res.confirm) {
-              this.$db.set('login_status', false)
-              this.$db.clear()
-              uni.showToast({
-                title: "退出登录成功",
-                icon: 'none'
-              })
-              uni.reLaunch({
-                url: '/pages/index/index'
-              })
-            }
+    logout() {
+      uni.showModal({
+        content: '是否要退出登录',
+        success: (res) => {
+          if (res.confirm) {
+            this.$db.set('login_status', false)
+            this.$db.clear()
+            uni.showToast({
+              title: "退出登录成功",
+              icon: 'none'
+            })
+            uni.reLaunch({
+              url: '/pages/index/index'
+            })
           }
-        })
-      }
+        }
+      })
     }
   }
+}
 </script>
 
 <style>

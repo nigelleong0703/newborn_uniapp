@@ -124,6 +124,15 @@
       let transfusion_info = uni.getStorageSync('selected_transfusion')
       console.log(transfusion_info)
       this.transfusion_id = transfusion_info.id
+      this.transfusion1.name=transfusion_info.name
+      this.$request.get('/api/list/vein').then(res => {
+        console.log(res)
+        this.transfusion1.vein = res.data[(transfusion_info.vein)-1].name;
+      })
+      this.$request.get('/api/list/tool').then(res => {
+        console.log(res)
+        this.transfusion1.tool = res.data[(transfusion_info.tool)-1].name;
+      })
     },
     onReady() {
       this.$refs.datetimePicker.setFormatter(this.formatter)

@@ -86,6 +86,7 @@ export default {
         this.editpatrol1.nurseId = String(uni.getStorageSync('current_user').id)
         this.editpatrol1.patientId = options.id
         let check_info = uni.getStorageSync('selected_check')
+        this.editpatrol1.info = check_info.info
         this.check_id = check_info.id
     },
     onReady() {

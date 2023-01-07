@@ -140,6 +140,7 @@ export default {
       })
     },
     patient_edit() {
+	  uni.setStorageSync('selected_patientInfo', this.patientInfo)
       uni.navigateTo({
         url: '/pages/patient/edit-patient-info?id=' + this.patient_id,
         success(res) {

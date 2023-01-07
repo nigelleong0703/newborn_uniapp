@@ -255,15 +255,20 @@ export default {
         }
     },
     onLoad(option) {
-		let patient_info = uni.getStorageSync('selected_patient')
-		console.log(patient_info)
-		this.patient_id = patient_info.id
+        let patient_info = uni.getStorageSync('selected_patientInfo')
+        console.log(patient_info)
+        this.patient_id = patient_info.id
         this.department_list = common.getDepartment_list()
         if (option.department) {
             let passedDepartment = option.department
             this.form1.department = this.department_list[passedDepartment - 1].name
             this.post.department = passedDepartment
         }
+        this.form1 = patient_info
+		this.form1.gender = this.genderlist[(patient_info.gender) - 1].name;
+		this.form1.relation = this.guardian_list[(patient_info.relation) - 1].name;
+		this.form1.department = this.department_list[(patient_info.department) - 1].name;
+		
     },
     onReady() {
         this.$refs.datetimePicker.setFormatter(this.formatter)
@@ -283,7 +288,7 @@ export default {
             // console.log('change', e);
         },
         submit() {
-			let that = this
+            let that = this
             // 如果有错误，会在catch中返回报错信息数组，校验通过则在then中返回true
             that.$refs.form1.validate().then(res => {
                 that.post.name = that.form1.name

@@ -4,7 +4,7 @@
       <view :id="'top' + tabItemIndex" style="width: 100%;height: 180upx;"></view>
       <view class='content'>
         <view v-for="(item, index) in tabItem_list" v-if="tabItem_list.length > 0" :key="index">
-          <profileCard :profile="item" buttonTitle="编辑" type="nurse"></profileCard>
+          <profileCard :profile="item" buttonTitle="编辑" :type=type></profileCard>
         </view>
         <view class='noCard' v-if="tabItem_list.length === 0">
           暂无信息

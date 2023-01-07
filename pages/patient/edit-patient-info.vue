@@ -255,20 +255,33 @@ export default {
         }
     },
     onLoad(option) {
-        let patient_info = uni.getStorageSync('selected_patientInfo')
-        console.log(patient_info)
-        this.patient_id = patient_info.id
+		let patient_info = this.$db.get('selected_patient')
+		console.log(patient_info)
+		this.patient_id = patient_info.id
         this.department_list = common.getDepartment_list()
         if (option.department) {
             let passedDepartment = option.department
             this.form1.department = this.department_list[passedDepartment - 1].name
             this.post.department = passedDepartment
         }
-        this.form1 = patient_info
-		this.form1.gender = this.genderlist[(patient_info.gender) - 1].name;
-		this.form1.relation = this.guardian_list[(patient_info.relation) - 1].name;
-		this.form1.department = this.department_list[(patient_info.department) - 1].name;
-		
+		let patient_detail = this.$db.get('selected_patientInfo')
+		console.log(patient_detail)
+		// this.form1 = patient_detail
+		this.form1.name = patient_detail.name
+		this.form1.guardian = patient_detail.guardian
+		this.form1.guardianId = patient_detail.guardianId
+		this.form1.allergy = patient_detail.allergy
+        this.form1.birthdate = common.dateTimeStr(patient_detail.birthdate);
+		this.post.birthdate = patient_detail.birthdate;
+		this.post.department = patient_detail.department;
+		this.post.relation = patient_detail.relation;
+        this.form1.gender = this.genderlist[(patient_detail.gender) - 1].name;
+        this.form1.relation = this.guardian_list[(patient_detail.relation) - 1].name;
+		this.form1.tel=patient_detail.tel.toString();
+        this.form1.department = this.department_list[(patient_detail.department) - 1].name;
+		this.form1.room=patient_detail.room.toString();
+		this.form1.bed=patient_detail.bed.toString();
+		console.log(this.form1)
     },
     onReady() {
         this.$refs.datetimePicker.setFormatter(this.formatter)
@@ -288,17 +301,22 @@ export default {
             // console.log('change', e);
         },
         submit() {
-            let that = this
+			let that = this
+			console.log(that.form1)
             // 如果有错误，会在catch中返回报错信息数组，校验通过则在then中返回true
             that.$refs.form1.validate().then(res => {
-                that.post.name = that.form1.name
-                that.post.guardian = that.form1.guardian
-                that.post.guardianId = that.form1.guardianId
-                that.post.tel = that.form1.tel
-                that.post.room = that.form1.room
-                that.post.bed = that.form1.bed
-                that.post.allergy = that.form1.allergy
-                console.log(that.post)
+                this.post.name = this.form1.name
+                this.post.guardian = this.form1.guardian
+                this.post.guardianId = this.form1.guardianId
+                this.post.tel = parseInt(this.form1.tel,10)
+                this.post.room = parseInt(this.form1.room,10)
+                this.post.bed = parseInt(this.form1.bed,10)
+                this.post.allergy = this.form1.allergy
+				if (that.form1.gender == "男"){
+					this.post.gender = 1
+				}
+				else this.post.gender = 2
+                console.log(this.post)
                 that.$request.editPatient(this.patient_id, this.post).then(res => {
                     console.log(res)
                     if (res.statusCode !== 200) {
@@ -311,7 +329,7 @@ export default {
                                 setTimeout(() => {
                                     uni.$emit('refurbish', {})
                                     uni.$emit('addNewPatient', {
-                                        department: that.post.department
+                                        department: this.post.department
                                     })
                                     uni.navigateBack();
                                 }, 1000)

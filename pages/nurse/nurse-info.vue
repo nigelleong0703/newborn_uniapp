@@ -55,6 +55,11 @@ export default {
     this.getNurse_info()
     this.departmentList = common.getDepartment_list()
   },
+  
+  mounted() {
+    var backbutton = document.getElementsByClassName('uni-page-head-hd')[0]
+    if (backbutton) backbutton.style.display = 'none';
+  },
 
   methods: {
     change(e) {
@@ -82,6 +87,11 @@ export default {
         this.department_name = this.departmentList[(res.data.department) - 1].name;
       })
     },
+	onBackPress(options) {
+	  if (options.from == 'backbutton' || 'navigateBack') {
+	    return true;
+	  }
+	},
     logout() {
       uni.showModal({
         content: '是否要退出登录',

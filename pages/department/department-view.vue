@@ -83,13 +83,17 @@
     onReady() {},
 
     async onLoad() {
+      this.$request.checkLogin();
       this.windowHeight = uni.getSystemInfoSync().windowHeight;
       console.log(this.windowHeight)
       this.initData();
+      uni.$on('changeData', (res) => {
+        this.initData()
+      })
     },
 
     onUnload() {
-      uni.$off('addNewNurse');
+      uni.$off('changeData');
     },
 
     methods: {
@@ -98,7 +102,7 @@
           title: '加载中...',
           mask: true
         })
-        this.$request.get('/api/list/department').then(res => {
+        this.$request.getDepartmentList().then(res => {
           uni.hideLoading();
           console.log(res)
           this.department_list = res.data
@@ -138,7 +142,7 @@
                   }, 1000)
                 }
               })
-              that.initData();
+              uni.$emit('changeData', {})
             }
           })
 
@@ -149,7 +153,7 @@
       },
       editSuccess() {
         console.log("hihi")
-        this.initData();
+        uni.$emit('changeData', {})
       },
     }
   }

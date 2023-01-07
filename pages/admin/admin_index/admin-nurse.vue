@@ -146,8 +146,6 @@
         //获取可滑动总宽度
         for (let i = 0; i <= index; i++) {
           let result = await this.getElSize('tab' + i);
-          console.log(i)
-          console.log(result)
           width += result.width;
           if (i === index) {
             nowWidth = result.width;

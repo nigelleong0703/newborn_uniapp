@@ -74,326 +74,327 @@
 </template>
 
 <script>
-import common from "common/js/common.js"
-export default {
-  data() {
-    return {
-      formatter(type, value) {
-        if (type == 'year') {
-          return `${value}年`
-        }
-        if (type == 'month') {
-          return `${value}月`
-        }
-        if (type == 'day') {
-          return `${value}日`
-        }
-        if (type == 'hour') {
-          return `${value}时`
-        }
-        if (type == 'minute') {
-          return `${value}分`
-        }
-        return value
-      },
-      guardian_picker: false,
-      department_picker: false,
-      time_picker: false,
-      showSex: false,
-      form1: {
-        name: '',
-        gender: '',
-        birthdate: '',
-
-        guardian: '',
-        guardianId: '',
-        relation: '',
-        tel: '',
-
-        department: '',
-        room: '',
-        bed: '',
-        allergy: ''
-      },
-      post: {
-        name: '',
-        gender: '',
-        birthdate: '',
-
-        guardian: '',
-        guardianId: '',
-        relation: '',
-        tel: '',
-
-        department: '',
-        room: '',
-        bed: '',
-        allergy: ''
-      },
-      birthday: Number(new Date()),
-      guardian_list: [{
-        id: 1,
-        name: '父亲',
-      }, {
-        id: 2,
-        name: '母亲',
-      }, {
-        id: 3,
-        name: '爷爷',
-      }, {
-        id: 4,
-        name: '奶奶',
-      }, {
-        id: 5,
-        name: '亲戚',
-      }, {
-        id: 6,
-        name: '其他',
-      }],
-      department_list: [],
-      rules: {
-        'name': [{
-          type: 'string',
-          required: true,
-          message: '请填写姓名',
-          trigger: ['blur', 'change']
-        }, {
-          validator: (rule, value, callback) => {
-            return uni.$u.test.chinese(value);
-          },
-          message: "姓名必须为中文",
-          trigger: ["change", "blur"],
-        }],
-        'gender': {
-          type: 'string',
-          min: 1,
-          max: 2,
-          required: true,
-          message: '请选择男或女',
-          trigger: ['blur', 'change']
-        },
-        'birthdate': {
-          type: 'string',
-          required: true,
-          message: '请输入患者生日日期',
-          trigger: ['blur', 'change']
-        },
-        'guardian': [{
-          type: 'string',
-          required: true,
-          message: '请填写姓名',
-          trigger: ['blur', 'change']
-        }, {
-          validator: (rule, value, callback) => {
-            return uni.$u.test.chinese(value);
-          },
-          message: "姓名必须为中文",
-          trigger: ["change", "blur"],
-        }],
-        'guardianId': [{
-          type: 'string',
-          required: true,
-          message: '身份证号码不能为空',
-          trigger: ['blur', 'change']
-        }, {
-          validator: (rule, value, callback) => {
-            return uni.$u.test.idCard(value);
-          },
-          message: "请输入有效身份证号码",
-          trigger: ["change", "blur"],
-        }],
-        'relation': {
-          type: 'string',
-          required: true,
-          message: '请选择监护人关系',
-          trigger: ['blur', 'change']
-        },
-        'tel': [{
-          type: 'string',
-          required: true,
-          message: '请输入联系电话号码',
-          trigger: ['blur', 'change']
-        }, {
-          validator: (rule, value, callback) => {
-            return uni.$u.test.mobile(value);
-          },
-          message: "请输入有效的联系电话号码",
-          trigger: ["change", "blur"],
-        }],
-        'department': [{
-          type: 'string',
-          required: true,
-          message: '请选择科室',
-          trigger: ['blur', 'change']
-        }],
-        'room': [{
-          type: 'string',
-          required: true,
-          message: '请输入房号',
-          trigger: ['blur', 'change']
-        }],
-        'bed': [{
-          type: 'string',
-          required: true,
-          message: '请输入床号',
-          trigger: ['blur', 'change']
-        }],
-      },
-      genderlist: [{
-        id: 1,
-        name: '男',
-        disabled: false
-      },
-      {
-        id: 2,
-        name: '女',
-        disabled: false
-      }
-      ],
-    }
-  },
-  onLoad(option) {
-    this.department_list = common.getDepartment_list()
-    if (option.department) {
-      let passedDepartment = option.department
-      this.form1.department = this.department_list[passedDepartment - 1].name
-      this.post.department = passedDepartment
-    }
-  },
-  onReady() {
-    this.$refs.datetimePicker.setFormatter(this.formatter)
-    this.$refs.form1.setRules(this.rules)
-  },
-  methods: {
-    navigateBack() {
-      uni.navigateBack()
-    },
-    sexSelect(e) {
-      console.log(e)
-      this.form1.gender = e
-      this.post.gender = e
-      this.$refs.form1.validateField('gender')
-    },
-    change(e) {
-      // console.log('change', e);
-    },
-    submit() {
-      // 如果有错误，会在catch中返回报错信息数组，校验通过则在then中返回true
-      this.$refs.form1.validate().then(res => {
-        this.post.name = this.form1.name
-        this.post.guardian = this.form1.guardian
-        this.post.guardianId = this.form1.guardianId
-        this.post.tel = this.form1.tel
-        this.post.room = this.form1.room
-        this.post.bed = this.form1.bed
-        this.post.allergy = this.form1.allergy
-        console.log(this.post)
-        this.$request.post('/api/patient/add', this.post).then(res => {
-          console.log(res)
-          if (res.statusCode !== 200) {
-            this.$.toast('提交失败');
-          } else {
-            uni.showToast({
-              title: "添加成功！",
-              duration: 1000,
-              success: () => {
-                setTimeout(() => {
-                  uni.$emit('refurbish', {})
-                  uni.$emit('addNewPatient', {
-                    department: this.post.department
-                  })
-                  uni.navigateBack();
-                }, 1000)
-              }
-            })
+  import common from "common/js/common.js"
+  export default {
+    data() {
+      return {
+        formatter(type, value) {
+          if (type == 'year') {
+            return `${value}年`
           }
+          if (type == 'month') {
+            return `${value}月`
+          }
+          if (type == 'day') {
+            return `${value}日`
+          }
+          if (type == 'hour') {
+            return `${value}时`
+          }
+          if (type == 'minute') {
+            return `${value}分`
+          }
+          return value
+        },
+        guardian_picker: false,
+        department_picker: false,
+        time_picker: false,
+        showSex: false,
+        form1: {
+          name: '',
+          gender: '',
+          birthdate: '',
+
+          guardian: '',
+          guardianId: '',
+          relation: '',
+          tel: '',
+
+          department: '',
+          room: '',
+          bed: '',
+          allergy: ''
+        },
+        post: {
+          name: '',
+          gender: '',
+          birthdate: '',
+
+          guardian: '',
+          guardianId: '',
+          relation: '',
+          tel: '',
+
+          department: '',
+          room: '',
+          bed: '',
+          allergy: ''
+        },
+        birthday: Number(new Date()),
+        guardian_list: [{
+          id: 1,
+          name: '父亲',
+        }, {
+          id: 2,
+          name: '母亲',
+        }, {
+          id: 3,
+          name: '爷爷',
+        }, {
+          id: 4,
+          name: '奶奶',
+        }, {
+          id: 5,
+          name: '亲戚',
+        }, {
+          id: 6,
+          name: '其他',
+        }],
+        department_list: [],
+        rules: {
+          'name': [{
+            type: 'string',
+            required: true,
+            message: '请填写姓名',
+            trigger: ['blur', 'change']
+          }, {
+            validator: (rule, value, callback) => {
+              return uni.$u.test.chinese(value);
+            },
+            message: "姓名必须为中文",
+            trigger: ["change", "blur"],
+          }],
+          'gender': {
+            type: 'string',
+            min: 1,
+            max: 2,
+            required: true,
+            message: '请选择男或女',
+            trigger: ['blur', 'change']
+          },
+          'birthdate': {
+            type: 'string',
+            required: true,
+            message: '请输入患者生日日期',
+            trigger: ['blur', 'change']
+          },
+          'guardian': [{
+            type: 'string',
+            required: true,
+            message: '请填写姓名',
+            trigger: ['blur', 'change']
+          }, {
+            validator: (rule, value, callback) => {
+              return uni.$u.test.chinese(value);
+            },
+            message: "姓名必须为中文",
+            trigger: ["change", "blur"],
+          }],
+          'guardianId': [{
+            type: 'string',
+            required: true,
+            message: '身份证号码不能为空',
+            trigger: ['blur', 'change']
+          }, {
+            validator: (rule, value, callback) => {
+              return uni.$u.test.idCard(value);
+            },
+            message: "请输入有效身份证号码",
+            trigger: ["change", "blur"],
+          }],
+          'relation': {
+            type: 'string',
+            required: true,
+            message: '请选择监护人关系',
+            trigger: ['blur', 'change']
+          },
+          'tel': [{
+            type: 'string',
+            required: true,
+            message: '请输入联系电话号码',
+            trigger: ['blur', 'change']
+          }, {
+            validator: (rule, value, callback) => {
+              return uni.$u.test.mobile(value);
+            },
+            message: "请输入有效的联系电话号码",
+            trigger: ["change", "blur"],
+          }],
+          'department': [{
+            type: 'string',
+            required: true,
+            message: '请选择科室',
+            trigger: ['blur', 'change']
+          }],
+          'room': [{
+            type: 'string',
+            required: true,
+            message: '请输入房号',
+            trigger: ['blur', 'change']
+          }],
+          'bed': [{
+            type: 'string',
+            required: true,
+            message: '请输入床号',
+            trigger: ['blur', 'change']
+          }],
+        },
+        genderlist: [{
+            id: 1,
+            name: '男',
+            disabled: false
+          },
+          {
+            id: 2,
+            name: '女',
+            disabled: false
+          }
+        ],
+      }
+    },
+    onLoad(option) {
+      this.$request.checkLogin();
+      this.department_list = common.getDepartment_list()
+      if (option.department) {
+        let passedDepartment = option.department
+        this.form1.department = this.department_list[passedDepartment - 1].name
+        this.post.department = passedDepartment
+      }
+    },
+    onReady() {
+      this.$refs.datetimePicker.setFormatter(this.formatter)
+      this.$refs.form1.setRules(this.rules)
+    },
+    methods: {
+      navigateBack() {
+        uni.navigateBack()
+      },
+      sexSelect(e) {
+        console.log(e)
+        this.form1.gender = e
+        this.post.gender = e
+        this.$refs.form1.validateField('gender')
+      },
+      change(e) {
+        // console.log('change', e);
+      },
+      submit() {
+        // 如果有错误，会在catch中返回报错信息数组，校验通过则在then中返回true
+        this.$refs.form1.validate().then(res => {
+          this.post.name = this.form1.name
+          this.post.guardian = this.form1.guardian
+          this.post.guardianId = this.form1.guardianId
+          this.post.tel = this.form1.tel
+          this.post.room = this.form1.room
+          this.post.bed = this.form1.bed
+          this.post.allergy = this.form1.allergy
+          console.log(this.post)
+          this.$request.post('/api/patient/add', this.post).then(res => {
+            console.log(res)
+            if (res.statusCode !== 200) {
+              this.$.toast('提交失败');
+            } else {
+              uni.showToast({
+                title: "添加成功！",
+                duration: 1000,
+                success: () => {
+                  setTimeout(() => {
+                    uni.$emit('refurbish', {})
+                    uni.$emit('addNewPatient', {
+                      department: this.post.department
+                    })
+                    uni.navigateBack();
+                  }, 1000)
+                }
+              })
+            }
+          })
+
+
+
+        }).catch(errors => {
+          uni.$u.toast('信息有误')
+          console.log(errors)
         })
 
 
-
-      }).catch(errors => {
-        uni.$u.toast('信息有误')
-        console.log(errors)
-      })
-
-
-    },
-    reset() {
-      const validateList = ['form1.name', 'form1.gender', 'form1.birthdate',
-        'form1.guardian', 'form1.guardianId', 'form1.relation', 'form1.tel', 'form1.department', 'form1.allergy',
-      ]
-      this.$refs.form1.resetFields()
-      this.form1.department = ''
-      this.$refs.form1.clearValidate()
-      this.$refs.form1.clearValidate(validateList)
-      setTimeout(() => {
+      },
+      reset() {
+        const validateList = ['form1.name', 'form1.gender', 'form1.birthdate',
+          'form1.guardian', 'form1.guardianId', 'form1.relation', 'form1.tel', 'form1.department', 'form1.allergy',
+        ]
+        this.$refs.form1.resetFields()
+        this.form1.department = ''
+        this.$refs.form1.clearValidate()
         this.$refs.form1.clearValidate(validateList)
-      }, 10)
+        setTimeout(() => {
+          this.$refs.form1.clearValidate(validateList)
+        }, 10)
+      },
+      hideKeyboard() {
+        uni.hideKeyboard()
+      },
+      relation_select(e) {
+        this.post.relation = e.id
+        this.form1.relation = e.name
+      },
+      department_select(e) {
+        this.form1.department = e.name
+        this.post.department = e.id
+      },
+      time_select(e) {
+        var bd = Math.round(e.value / 1000)
+        this.form1.birthdate = uni.$u.timeFormat(bd, 'yyyy-mm-dd')
+        this.post.birthdate = bd
+        this.time_picker = false
+      }
     },
-    hideKeyboard() {
-      uni.hideKeyboard()
-    },
-    relation_select(e) {
-      this.post.relation = e.id
-      this.form1.relation = e.name
-    },
-    department_select(e) {
-      this.form1.department = e.name
-      this.post.department = e.id
-    },
-    time_select(e) {
-      var bd = Math.round(e.value / 1000)
-      this.form1.birthdate = uni.$u.timeFormat(bd, 'yyyy-mm-dd')
-      this.post.birthdate = bd
-      this.time_picker = false
-    }
-  },
-}
+  }
 </script>
 
 <style lang="scss">
-.content {
-  min-height: 100%;
-}
-
-.form-content {
-  margin-top: 20px;
-  margin-left: 5%;
-  margin-right: 5%;
-}
-
-.bottom-button {
-  width: 80%;
-  margin-top: 20px;
-  margin-left: 10%;
-  margin-right: 10%;
-  padding-bottom: 10px
-}
-
-/deep/ .u-form-item {
-  padding: 0 0 5rpx;
-
-  .u-form-item--left_content_label {
-    font-size: 32rpx;
-    line-height: 94rpx;
+  .content {
+    min-height: 100%;
   }
-}
 
-.u-form-item_body {
-  align-items: flex-start;
-}
+  .form-content {
+    margin-top: 20px;
+    margin-left: 5%;
+    margin-right: 5%;
+  }
 
-.u-input {
-  box-sizing: border-box;
-  padding: 26rpx 30rpx;
-  border-radius: 16rpx;
-  font-size: 30rpx;
-  color: #333;
-}
+  .bottom-button {
+    width: 80%;
+    margin-top: 20px;
+    margin-left: 10%;
+    margin-right: 10%;
+    padding-bottom: 10px
+  }
 
-.second-title {
-  margin-top: 20px;
-  font-size: 25px;
-  font-weight: bold;
-}
+  /deep/ .u-form-item {
+    padding: 0 0 5rpx;
+
+    .u-form-item--left_content_label {
+      font-size: 32rpx;
+      line-height: 94rpx;
+    }
+  }
+
+  .u-form-item_body {
+    align-items: flex-start;
+  }
+
+  .u-input {
+    box-sizing: border-box;
+    padding: 26rpx 30rpx;
+    border-radius: 16rpx;
+    font-size: 30rpx;
+    color: #333;
+  }
+
+  .second-title {
+    margin-top: 20px;
+    font-size: 25px;
+    font-weight: bold;
+  }
 </style>

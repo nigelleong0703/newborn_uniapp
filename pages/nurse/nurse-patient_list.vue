@@ -26,110 +26,112 @@
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      title: "患者列表",
-      value1: 0,
-      patientList: [{
-        gender: '',
-        id: '',
-        name: '',
-        seq: ''
-      }],
-    }
-  },
+  export default {
+    data() {
+      return {
+        title: "患者列表",
+        value1: 0,
+        patientList: [{
+          gender: '',
+          id: '',
+          name: '',
+          seq: ''
+        }],
+      }
+    },
 
-  onLoad() {
-    this.getPatient_list()
-  },
+    onLoad() {
+      this.$request.checkLogin();
+      s
+      this.getPatient_list()
+    },
 
-  mounted() {
-    var backbutton = document.getElementsByClassName('uni-page-head-hd')[0]
-    if (backbutton) backbutton.style.display = 'none';
-  },
+    mounted() {
+      var backbutton = document.getElementsByClassName('uni-page-head-hd')[0]
+      if (backbutton) backbutton.style.display = 'none';
+    },
 
-  methods: {
-    add_patient() {
-      uni.navigateTo({
-        url: '/pages/patient/add-patient',
-        success(res) {
-          console.log(res);
-        },
-        fail(err) {
-          console.log(err);
+    methods: {
+      add_patient() {
+        uni.navigateTo({
+          url: '/pages/patient/add-patient',
+          success(res) {
+            console.log(res);
+          },
+          fail(err) {
+            console.log(err);
+          }
+        })
+      },
+      change(e) {
+        this.value1 = e
+        console.log('change1', e);
+      },
+      patient_list(e) {
+        uni.navigateTo({
+          url: '/pages/nurse/nurse-patient_list'
+        })
+      },
+      nurse_info(e) {
+        uni.navigateTo({
+          url: '/pages/nurse/nurse-info'
+        })
+      },
+      getPatient_list() {
+        let nurse_info = uni.getStorageSync('current_user')
+        let path = '/api/patient?department=' + nurse_info.department
+        //////////////////////////////////
+        this.$request.get(path).then(res => {
+          console.log(res)
+          this.patientList = res.data.patient;
+        })
+      },
+      cell_click(patient) {
+        uni.setStorageSync('selected_patient', patient)
+        console.log(uni.getStorageSync('selected_patient'))
+        uni.navigateTo({
+          url: "nurse-patient_info"
+        })
+      },
+      onBackPress(options) {
+        if (options.from == 'backbutton' || 'navigateBack') {
+          return true;
         }
-      })
-    },
-    change(e) {
-      this.value1 = e
-      console.log('change1', e);
-    },
-    patient_list(e) {
-      uni.navigateTo({
-        url: '/pages/nurse/nurse-patient_list'
-      })
-    },
-    nurse_info(e) {
-      uni.navigateTo({
-        url: '/pages/nurse/nurse-info'
-      })
-    },
-    getPatient_list() {
-      let nurse_info = uni.getStorageSync('current_user')
-      let path = '/api/patient?department=' + nurse_info.department
-      //////////////////////////////////
-      this.$request.get(path).then(res => {
-        console.log(res)
-        this.patientList = res.data.patient;
-      })
-    },
-    cell_click(patient) {
-      uni.setStorageSync('selected_patient', patient)
-      console.log(uni.getStorageSync('selected_patient'))
-      uni.navigateTo({
-        url: "nurse-patient_info"
-      })
-    },
-    onBackPress(options) {
-      if (options.from == 'backbutton' || 'navigateBack') {
-        return true;
       }
     }
   }
-}
 </script>
 
 <style>
-.content {
-  height: 75vh;
-  display: flex;
-  flex-direction: column;
-  align-content: center;
-  justify-content: center;
-}
+  .content {
+    height: 75vh;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+  }
 
-.text-area {
-  display: flex;
-  justify-content: center;
-}
+  .text-area {
+    display: flex;
+    justify-content: center;
+  }
 
-.title {
-  font-size: 50rpx;
-  font-weight: bold;
-  color: #ffaa00;
-}
+  .title {
+    font-size: 50rpx;
+    font-weight: bold;
+    color: #ffaa00;
+  }
 
-.body {
-  height: 70vh;
-  display: flex;
-  flex-direction: column;
-}
+  .body {
+    height: 70vh;
+    display: flex;
+    flex-direction: column;
+  }
 
-.button {
-  width: 15%;
-  margin-top: 2%;
-  margin-left: 83%;
-  padding-bottom: 20rpx;
-}
+  .button {
+    width: 15%;
+    margin-top: 2%;
+    margin-left: 83%;
+    padding-bottom: 20rpx;
+  }
 </style>

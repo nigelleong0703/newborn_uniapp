@@ -11,7 +11,7 @@
     <view class="card-item-edit">
       <u-button class='button card-button' plain color="orange" @click="editInfo" :text="buttonTitle">
       </u-button>
-      <u-button class='button card-button' plain color="red" @click="deleteInfo" :text="buttonTitle">
+      <u-button class='button card-button' plain color="red" @click="deleteInfo" text="删除">
       </u-button>
     </view>
   </view>

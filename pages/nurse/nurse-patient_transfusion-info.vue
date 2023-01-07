@@ -96,6 +96,7 @@ export default {
     },
 
     onLoad() {
+        this.$request.checkLogin();
         let patient_name = uni.getStorageSync('selected_patient')
         this.patientname = patient_name.name
         this.patientid = patient_name.id
@@ -238,49 +239,50 @@ export default {
 </script>
 
 <style>
-.content {
+  .content {
     height: 75vh;
     display: flex;
     flex-direction: column;
     align-content: center;
     justify-content: center;
-}
+  }
 
-.text-area {
+  .text-area {
     display: flex;
     justify-content: center;
-}
+  }
 
-.title {
+  .title {
     font-size: 50rpx;
     font-weight: bold;
     color: #ffaa00;
-}
+  }
 
-.body {
+  .body {
     height: 70vh;
     display: flex;
     flex-direction: column;
-}
+  }
 
-.navigate-bar {
+  .navigate-bar {
     height: 100vh;
-}
+  }
 
-.second-title {
+  .second-title {
     margin-left: 10px;
     font-size: 25px;
     font-weight: bold;
     display: flex;
     justify-content: left;
-}
 
-.button {
+  }
+
+  .button {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     margin-top: 20px;
     margin-left: 10%;
     margin-right: 10%;
-}
+  }
 </style>

@@ -248,6 +248,7 @@
       }
     },
     onLoad(option) {
+      this.$request.checkLogin()
       this.department_list = common.getDepartment_list()
       var time = common.loadSystemTime()
       this.post.registerdate = time[0]

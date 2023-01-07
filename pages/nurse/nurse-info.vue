@@ -28,6 +28,7 @@
 </template>
 
 <script>
+
 import common from "common/js/common.js"
 export default {
   data() {
@@ -52,6 +53,7 @@ export default {
   },
 
   onLoad() {
+    this.$request.checkLogin();
     this.getNurse_info()
     this.departmentList = common.getDepartment_list()
   },
@@ -60,7 +62,7 @@ export default {
     var backbutton = document.getElementsByClassName('uni-page-head-hd')[0]
     if (backbutton) backbutton.style.display = 'none';
   },
-
+  
   methods: {
     change(e) {
       this.value2 = e
@@ -76,6 +78,11 @@ export default {
         url: '/pages/nurse/nurse-info'
       })
     },
+    onBackPress(options) {
+      if (options.from == 'backbutton' || 'navigateBack') {
+        return true;
+      }
+    },
     getNurse_info() {
       let nurse_info = uni.getStorageSync('current_user')
       let path = '/api/nurse/' + nurse_info.id
@@ -87,11 +94,6 @@ export default {
         this.department_name = this.departmentList[(res.data.department) - 1].name;
       })
     },
-	onBackPress(options) {
-	  if (options.from == 'backbutton' || 'navigateBack') {
-	    return true;
-	  }
-	},
     logout() {
       uni.showModal({
         content: '是否要退出登录',
@@ -115,35 +117,35 @@ export default {
 </script>
 
 <style>
-.content {
-  height: 75vh;
-  display: flex;
-  flex-direction: column;
-  align-content: center;
-  justify-content: center;
-}
+  .content {
+    height: 75vh;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+  }
 
-.text-area {
-  display: flex;
-  justify-content: center;
-}
+  .text-area {
+    display: flex;
+    justify-content: center;
+  }
 
-.title {
-  font-size: 50rpx;
-  font-weight: bold;
-  color: #ffaa00;
-}
+  .title {
+    font-size: 50rpx;
+    font-weight: bold;
+    color: #ffaa00;
+  }
 
-.body {
-  height: 70vh;
-  display: flex;
-  flex-direction: column;
-}
+  .body {
+    height: 70vh;
+    display: flex;
+    flex-direction: column;
+  }
 
-.button {
-  margin-top: 20px;
-  margin-bottom: 20px;
-  margin-right: 20%;
-  margin-left: 20%;
-}
+  .button {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-right: 20%;
+    margin-left: 20%;
+  }
 </style>

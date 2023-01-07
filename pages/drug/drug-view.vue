@@ -79,9 +79,17 @@
     onReady() {},
 
     async onLoad() {
+      this.$request.checkLogin();
       this.windowHeight = uni.getSystemInfoSync().windowHeight;
       console.log(this.windowHeight)
       this.initData();
+      uni.$on('changeData', (res) => {
+        this.initData()
+      })
+    },
+
+    onUnload() {
+      uni.$off('changeData');
     },
 
     methods: {
@@ -130,7 +138,7 @@
                   }, 1000)
                 }
               })
-              that.initData();
+              uni.$emit('changeData', {})
             }
           })
 
@@ -141,7 +149,7 @@
       },
       editSuccess() {
         console.log("hihi")
-        this.initData();
+        uni.$emit('changeData', {})
       },
     }
   }

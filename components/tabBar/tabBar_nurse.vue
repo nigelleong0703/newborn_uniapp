@@ -64,7 +64,8 @@
 
 <style>
   .u-page__item__slot-icon {
-    width: 40rpx;
-    height: 40rpx;
+    width: 50rpx;
+    height: 50rpx;
+    padding: 6rpx;
   }
 </style>

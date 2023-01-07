@@ -13,12 +13,6 @@
       <u-button class='button' shape='circle' type='default' size='large' color='orange' @click="navigateNurse"
         text="护士 Nurse">
       </u-button>
-      <u-button class='button' shape='circle' type='default' size='large' color='orange' :disabled="true"
-        @click="navigateDoctor" text="医生 Doctor">
-      </u-button>
-      <u-button class='button' shape='circle' type='default' size='large' color='orange' :disabled="true"
-        @click="navigatePatient" text="患者 Patient">
-      </u-button>
     </view>
   </view>
   </view>
@@ -88,11 +82,12 @@
   }
 
   .btn-area {
-    height: 70vh;
+    height: 90vh;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
-    padding: 15vw;
+    padding-left: 15vw;
+    padding-right: 15vw;
     font-weight: bold;
   }
 </style>

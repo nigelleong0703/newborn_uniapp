@@ -31,147 +31,145 @@
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      title: "欢迎护士",
-      form: {
-        username: '',
-        password: ''
-      },
-      rules: {
-        username: {
-          rules: [{
-            required: true,
-            errorMessage: '请输入用户名'
-          }],
-          validateTrigger: 'submit'
+  export default {
+    data() {
+      return {
+        title: "欢迎护士",
+        form: {
+          username: '',
+          password: ''
         },
-        password: {
-          rules: [{
-            required: true,
-            errorMessage: '请输入密码'
-          }],
-          validateTrigger: 'submit'
-        },
+        rules: {
+          username: {
+            rules: [{
+              required: true,
+              errorMessage: '请输入用户名'
+            }],
+            validateTrigger: 'submit'
+          },
+          password: {
+            rules: [{
+              required: true,
+              errorMessage: '请输入密码'
+            }],
+            validateTrigger: 'submit'
+          },
+        }
       }
-    }
-  },
-  onLoad() {
-
-  },
-  methods: {
-    login() {
-      this.$refs.form.validate().then(res => {
-        console.log(this.form)
-        uni.showLoading({
-          title: '加载中...',
-          mask: true
-        });
-        this.$request.post('/api/nurse/login', this.form).then(res => {
-          console.log(res);
-          uni.hideLoading();
-          if (res.statusCode !== 200) {
-            this.$.toast('用户名或密码不正确');
-          } else {
-            uni.showToast({
-              title: "登录成功",
-              duration: 1000,
-              success: () => {
-                setTimeout(() => {
-                  uni.$emit('refurbish', {})
-                  uni.navigateTo({
-                    url: "nurse-patient_list",
-                    success(res) {
-                      console.log(res);
-                    },
-                    fail(err) {
-                      console.log(err);
-                    }
-                  });
-                }, 1000)
-              }
-            })
-            uni.setStorageSync('token', res.data.jwt)
-            uni.setStorageSync('current_user', res.data)
-            uni.setStorageSync('login_status', true)
-          }
-        })
-      }).catch(err => {
-        console.log('表单错误信息：', err);
-      })
     },
-    navadmin() {
-      uni.navigateTo({
-        url: "pages/contact-admin/contact-admin",
-      })
-    }
+    onLoad() {},
+    methods: {
+      login() {
+        this.$refs.form.validate().then(res => {
+          console.log(this.form)
+          uni.showLoading({
+            title: '加载中...',
+            mask: true
+          });
+          this.$request.post('/api/nurse/login', this.form).then(res => {
+            console.log(res);
+            uni.hideLoading();
+            if (res.statusCode !== 200) {
+              this.$.toast('用户名或密码不正确');
+            } else {
+              uni.showToast({
+                title: "登录成功",
+                duration: 1000,
+                success: () => {
+                  setTimeout(() => {
+                    uni.$emit('refurbish', {})
+                    uni.navigateTo({
+                      url: "nurse-patient_list",
+                      success(res) {
+                        console.log(res);
+                      },
+                      fail(err) {
+                        console.log(err);
+                      }
+                    });
+                  }, 1000)
+                }
+              })
+              uni.setStorageSync('token', res.data.jwt)
+              uni.setStorageSync('current_user', res.data)
+              uni.setStorageSync('login_status', true)
+            }
+          })
+        }).catch(err => {
+          console.log('表单错误信息：', err);
+        })
+      },
+      navadmin() {
+        uni.navigateTo({
+          url: "pages/contact-admin/contact-admin",
+        })
+      }
 
+    }
   }
-}
 </script>
 
 <style>
-.content {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-content: center;
-  justify-content: center;
-}
+  .content {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+  }
 
-.header {
-  height: 30vh;
-  display: flex;
-  justify-content: center;
-  flex: 1;
-}
+  .header {
+    height: 30vh;
+    display: flex;
+    justify-content: center;
+    flex: 1;
+  }
 
-.logo {
-  margin-top: 200rpx;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 50rpx;
-}
+  .logo {
+    margin-top: 200rpx;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 50rpx;
+  }
 
-.text-area {
-  display: flex;
-  justify-content: center;
-}
+  .text-area {
+    display: flex;
+    justify-content: center;
+  }
 
-.title {
-  font-size: 50rpx;
-  font-weight: bold;
-  color: #ffaa00;
-}
+  .title {
+    font-size: 50rpx;
+    font-weight: bold;
+    color: #ffaa00;
+  }
 
-.body {
-  height: 70vh;
-  display: flex;
-  flex-direction: column;
-}
+  .body {
+    height: 70vh;
+    display: flex;
+    flex-direction: column;
+  }
 
-.login-form {
-  justify-content: flex-start;
-  padding-left: 15vw;
-  padding-right: 15vw;
-  font-weight: bold;
-}
+  .login-form {
+    justify-content: flex-start;
+    padding-left: 15vw;
+    padding-right: 15vw;
+    font-weight: bold;
+  }
 
-.form-element {
-  margin-top: 30px;
-}
+  .form-element {
+    margin-top: 30px;
+  }
 
-.login-bottom {
-  margin-top: auto;
-  display: flex;
-  justify-content: center;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 8vh;
-}
+  .login-bottom {
+    margin-top: auto;
+    display: flex;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 8vh;
+  }
 
-navigator {
-  color: gray;
-}
+  navigator {
+    color: gray;
+  }
 </style>

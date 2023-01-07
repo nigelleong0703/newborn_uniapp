@@ -46,194 +46,195 @@
 </template>
 
 <script>
-import common from "common/js/common.js"
-export default {
-  data() {
-    return {
-      title: "基本信息",
-      value3: 0,
-      patientInfo: {
-        name: '',
-        guardianId: '',
-        guardian: '',
-        tel: '',
-        room: '',
-        bed: '',
-        allergy: ''
-      },
-      birthdate: '',
-      inDate: '',
-      outDate: '',
-      relationList: [{
-        id: 1,
-        name: '父亲'
-      }, {
-        id: 2,
-        name: '母亲'
-      }, {
-        id: 3,
-        name: '爷爷'
-      }, {
-        id: 4,
-        name: '奶奶'
-      }, {
-        id: 5,
-        name: '亲戚'
-      }, {
-        id: 6,
-        name: '其他'
-      }],
-      departmentList: [],
-      genderList: [{
-        id: 1,
-        name: '男',
-      }, {
-        id: 2,
-        name: '女',
-      }],
-      gender_name: '',
-      relation_name: '',
-      department_name: ''
-    }
-  },
+  import common from "common/js/common.js"
+  export default {
+    data() {
+      return {
+        title: "基本信息",
+        value3: 0,
+        patientInfo: {
+          name: '',
+          guardianId: '',
+          guardian: '',
+          tel: '',
+          room: '',
+          bed: '',
+          allergy: ''
+        },
+        birthdate: '',
+        inDate: '',
+        outDate: '',
+        relationList: [{
+          id: 1,
+          name: '父亲'
+        }, {
+          id: 2,
+          name: '母亲'
+        }, {
+          id: 3,
+          name: '爷爷'
+        }, {
+          id: 4,
+          name: '奶奶'
+        }, {
+          id: 5,
+          name: '亲戚'
+        }, {
+          id: 6,
+          name: '其他'
+        }],
+        departmentList: [],
+        genderList: [{
+          id: 1,
+          name: '男',
+        }, {
+          id: 2,
+          name: '女',
+        }],
+        gender_name: '',
+        relation_name: '',
+        department_name: ''
+      }
+    },
 
-  onLoad() {
-    let patient_info = uni.getStorageSync('selected_patient')
-    console.log(patient_info)
-    this.patient_id = patient_info.id
-    this.getPatient_info()
-    this.departmentList = common.getDepartment_list()
-  },
+    onLoad() {
+      this.$request.checkLogin();
+      let patient_info = uni.getStorageSync('selected_patient')
+      console.log(patient_info)
+      this.patient_id = patient_info.id
+      this.getPatient_info()
+      this.departmentList = common.getDepartment_list()
+    },
 
-  methods: {
-    patient_info() {
-      uni.navigateTo({
-        url: '/pages/nurse/nurse-patient_info',
-        success(res) {
-          console.log(res);
-        },
-        fail(err) {
-          console.log(err);
-        }
-      })
-    },
-    patient_transfusion() {
-      uni.navigateTo({
-        url: '/pages/nurse/nurse-patient_transfusion',
-        success(res) {
-          console.log(res);
-        },
-        fail(err) {
-          console.log(err);
-        }
-      })
-    },
-    patient_check() {
-      uni.navigateTo({
-        url: '/pages/nurse/nurse-patient_check',
-        success(res) {
-          console.log(res);
-        },
-        fail(err) {
-          console.log(err);
-        }
-      })
-    },
-    patient_edit() {
-      uni.navigateTo({
-        url: '/pages/patient/edit-patient-info?id=' + this.patient_id,
-        success(res) {
-          console.log(res);
-        },
-        fail(err) {
-          console.log(err);
-        }
-      })
-    },
-    patient_delete() {
-      uni.showModal({
-        content: '是否要删除该患者',
-        success: (res) => {
-          if (res.confirm) {
-            let path = '/api/patient/delete/' + this.patient_id
-            this.$request.patch(path).then(res => {
-              console.log(res)
-            })
-            uni.showToast({
-              title: "删除患者成功",
-              icon: 'none'
-            })
-            uni.reLaunch({
-              url: 'nurse-patient_list'
-            })
+    methods: {
+      patient_info() {
+        uni.navigateTo({
+          url: '/pages/nurse/nurse-patient_info',
+          success(res) {
+            console.log(res);
+          },
+          fail(err) {
+            console.log(err);
           }
-        }
-      })
-    },
-    getPatient_info() {
-      let path = '/api/patient/' + this.patient_id
-      //////////////////////////////////
-      this.$request.get(path).then(res => {
-        console.log(res)
-        this.patientInfo = res.data;
-        this.birthdate = common.dateTimeStr(res.data.birthdate);
-        this.inDate = common.dateTimeStr(res.data.inDate);
-        this.outDate = common.dateTimeStr(res.data.outDate);
-        this.gender_name = this.genderList[(res.data.gender) - 1].name;
-        this.relation_name = this.relationList[(res.data.relation) - 1].name;
-        this.department_name = this.departmentList[(res.data.department) - 1].name;
-      })
+        })
+      },
+      patient_transfusion() {
+        uni.navigateTo({
+          url: '/pages/nurse/nurse-patient_transfusion',
+          success(res) {
+            console.log(res);
+          },
+          fail(err) {
+            console.log(err);
+          }
+        })
+      },
+      patient_check() {
+        uni.navigateTo({
+          url: '/pages/nurse/nurse-patient_check',
+          success(res) {
+            console.log(res);
+          },
+          fail(err) {
+            console.log(err);
+          }
+        })
+      },
+      patient_edit() {
+        uni.navigateTo({
+          url: '/pages/patient/edit-patient-info?id=' + this.patient_id,
+          success(res) {
+            console.log(res);
+          },
+          fail(err) {
+            console.log(err);
+          }
+        })
+      },
+      patient_delete() {
+        uni.showModal({
+          content: '是否要删除该患者',
+          success: (res) => {
+            if (res.confirm) {
+              let path = '/api/patient/delete/' + this.patient_id
+              this.$request.patch(path).then(res => {
+                console.log(res)
+              })
+              uni.showToast({
+                title: "删除患者成功",
+                icon: 'none'
+              })
+              uni.reLaunch({
+                url: 'nurse-patient_list'
+              })
+            }
+          }
+        })
+      },
+      getPatient_info() {
+        let path = '/api/patient/' + this.patient_id
+        //////////////////////////////////
+        this.$request.get(path).then(res => {
+          console.log(res)
+          this.patientInfo = res.data;
+          this.birthdate = common.dateTimeStr(res.data.birthdate);
+          this.inDate = common.dateTimeStr(res.data.inDate);
+          this.outDate = common.dateTimeStr(res.data.outDate);
+          this.gender_name = this.genderList[(res.data.gender) - 1].name;
+          this.relation_name = this.relationList[(res.data.relation) - 1].name;
+          this.department_name = this.departmentList[(res.data.department) - 1].name;
+        })
+      }
     }
   }
-}
 </script>
 
 <style>
-.content {
-  height: 75vh;
-  display: flex;
-  flex-direction: column;
-  align-content: center;
-  justify-content: center;
-}
+  .content {
+    height: 75vh;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+  }
 
-.text-area {
-  display: flex;
-  justify-content: center;
-}
+  .text-area {
+    display: flex;
+    justify-content: center;
+  }
 
-.title {
-  font-size: 50rpx;
-  font-weight: bold;
-  color: #ffaa00;
-  margin-top: -10px;
-  margin-bottom: 10px;
-}
+  .title {
+    font-size: 50rpx;
+    font-weight: bold;
+    color: #ffaa00;
+    margin-top: -10px;
+    margin-bottom: 10px;
+  }
 
-.body {
-  height: 70vh;
-  display: flex;
-  flex-direction: column;
-}
+  .body {
+    height: 70vh;
+    display: flex;
+    flex-direction: column;
+  }
 
-.navigate-bar {
-  height: 100vh;
-}
+  .navigate-bar {
+    height: 100vh;
+  }
 
-.second-title {
-  margin-left: 10px;
-  font-size: 25px;
-  font-weight: bold;
-  display: flex;
-  justify-content: left;
-}
+  .second-title {
+    margin-left: 10px;
+    font-size: 25px;
+    font-weight: bold;
+    display: flex;
+    justify-content: left;
+  }
 
-.bottom-button {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  margin-top: 20px;
-  margin-left: 10%;
-  margin-right: 10%;
-}
+  .bottom-button {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    margin-top: 20px;
+    margin-left: 10%;
+    margin-right: 10%;
+  }
 </style>

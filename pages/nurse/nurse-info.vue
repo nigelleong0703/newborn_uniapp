@@ -28,112 +28,113 @@
 </template>
 
 <script>
-import common from "common/js/common.js"
-export default {
-  data() {
-    return {
-      title: "护士资料",
-      value2: 1,
-      nurseInfo: {
-        name: '',
-        tel: ''
+  import common from "common/js/common.js"
+  export default {
+    data() {
+      return {
+        title: "护士资料",
+        value2: 1,
+        nurseInfo: {
+          name: '',
+          tel: ''
+        },
+        genderList: [{
+          id: 1,
+          name: '男',
+        }, {
+          id: 2,
+          name: '女',
+        }],
+        departmentList: '',
+        gender_name: '',
+        department_name: ''
+      }
+    },
+
+    onLoad() {
+      this.$request.checkLogin();
+      this.getNurse_info()
+      this.departmentList = common.getDepartment_list()
+    },
+
+    methods: {
+      change(e) {
+        this.value2 = e
+        console.log('change2', e)
       },
-      genderList: [{
-        id: 1,
-        name: '男',
-      }, {
-        id: 2,
-        name: '女',
-      }],
-      departmentList: '',
-      gender_name: '',
-      department_name: ''
-    }
-  },
-
-  onLoad() {
-    this.getNurse_info()
-    this.departmentList = common.getDepartment_list()
-  },
-
-  methods: {
-    change(e) {
-      this.value2 = e
-      console.log('change2', e)
-    },
-    patient_list() {
-      uni.navigateTo({
-        url: '/pages/nurse/nurse-patient_list'
-      })
-    },
-    nurse_info() {
-      uni.navigateTo({
-        url: '/pages/nurse/nurse-info'
-      })
-    },
-    getNurse_info() {
-      let nurse_info = uni.getStorageSync('current_user')
-      let path = '/api/nurse/' + nurse_info.id
-      console.log(path)
-      this.$request.get(path).then(res => {
-        this.nurseInfo = res.data;
-        console.log(res)
-        this.gender_name = this.genderList[(res.data.gender) - 1].name;
-        this.department_name = this.departmentList[(res.data.department) - 1].name;
-      })
-    },
-    logout() {
-      uni.showModal({
-        content: '是否要退出登录',
-        success: (res) => {
-          if (res.confirm) {
-            this.$db.set('login_status', false)
-            this.$db.clear()
-            uni.showToast({
-              title: "退出登录成功",
-              icon: 'none'
-            })
-            uni.reLaunch({
-              url: '/pages/index/index'
-            })
+      patient_list() {
+        uni.navigateTo({
+          url: '/pages/nurse/nurse-patient_list'
+        })
+      },
+      nurse_info() {
+        uni.navigateTo({
+          url: '/pages/nurse/nurse-info'
+        })
+      },
+      getNurse_info() {
+        let nurse_info = uni.getStorageSync('current_user')
+        let path = '/api/nurse/' + nurse_info.id
+        console.log(path)
+        this.$request.get(path).then(res => {
+          this.nurseInfo = res.data;
+          console.log(res)
+          this.gender_name = this.genderList[(res.data.gender) - 1].name;
+          this.department_name = this.departmentList[(res.data.department) - 1].name;
+        })
+      },
+      logout() {
+        uni.showModal({
+          content: '是否要退出登录',
+          success: (res) => {
+            if (res.confirm) {
+              this.$db.set('login_status', false)
+              this.$db.clear()
+              uni.showToast({
+                title: "退出登录成功",
+                icon: 'none'
+              })
+              uni.reLaunch({
+                url: '/pages/index/index'
+              })
+            }
           }
-        }
-      })
+        })
+      }
     }
   }
-}
 </script>
 
 <style>
-.content {
-  height: 75vh;
-  display: flex;
-  flex-direction: column;
-  align-content: center;
-  justify-content: center;
-}
+  .content {
+    height: 75vh;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+  }
 
-.text-area {
-  display: flex;
-  justify-content: center;
-}
+  .text-area {
+    display: flex;
+    justify-content: center;
+  }
 
-.title {
-  font-size: 50rpx;
-  font-weight: bold;
-  color: #ffaa00;
-}
+  .title {
+    font-size: 50rpx;
+    font-weight: bold;
+    color: #ffaa00;
+  }
 
-.body {
-  height: 70vh;
-  display: flex;
-  flex-direction: column;
-}
+  .body {
+    height: 70vh;
+    display: flex;
+    flex-direction: column;
+  }
 
-.button {
-  margin-top: 20px;
-  margin-bottom: 20px;
-  margin-right: 20%;
-  margin-left: 20%;
-}
+  .button {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-right: 20%;
+    margin-left: 20%;
+  }
 </style>

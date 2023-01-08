@@ -122,15 +122,12 @@
       this.getVein_list()
       this.getTool_list()
       let transfusion_info = uni.getStorageSync('selected_transfusion')
-      console.log(transfusion_info)
       this.transfusion_id = transfusion_info.id
       this.transfusion1.name=transfusion_info.name
       this.$request.get('/api/list/vein').then(res => {
-        console.log(res)
         this.transfusion1.vein = res.data[(transfusion_info.vein)-1].name;
       })
       this.$request.get('/api/list/tool').then(res => {
-        console.log(res)
         this.transfusion1.tool = res.data[(transfusion_info.tool)-1].name;
       })
     },
@@ -165,7 +162,6 @@
         that.$refs.form1.validate().then(res => {
           that.convertToForm()
           that.$request.editTransfusion(this.transfusion_id, this.post1).then(res => {
-            console.log(res)
             if (res.statusCode !== 200) {
               this.$.toast('提交失败');
             } else {
@@ -214,13 +210,11 @@
       },
       getVein_list() {
         this.$request.get('/api/list/vein').then(res => {
-          console.log(res)
           this.vein_list = res.data;
         })
       },
       getTool_list() {
         this.$request.get('/api/list/tool').then(res => {
-          console.log(res)
           this.tool_list = res.data;
         })
       },
@@ -231,15 +225,12 @@
       },
       convertToForm() {
         this.post1.nurseId = parseInt(this.transfusion1.nurseId, 10);
-        console.log(this.post1.nurseId)
         this.post1.patientId = parseInt(this.transfusion1.patientId, 10)
         this.post1.startTime = Math.round(this.post1.startTime / 1000)
         if (this.transfusion1.name == '') {
-          console.log('true')
           this.transfusion1.name = this.transfusion1.drug[0].drug;
           this.post1.name = this.transfusion1.drug[0].drug;
         } else {
-          console.log('false')
           this.post1.name = this.transfusion1.name;
         }
       },

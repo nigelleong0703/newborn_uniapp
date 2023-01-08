@@ -31,8 +31,6 @@
   export default {
     computed: {
       scrollerHeight: function() {
-        console.log(uni.getSystemInfoSync())
-        console.log(uni.getSystemInfoSync().windowHeight - 50)
         return (uni.getSystemInfoSync().windowHeight - 50).toString() + 'px';
       },
     },
@@ -78,6 +76,7 @@
               this.$db.set('token', res.data.jwt)
               this.$db.set('current_user', res.data)
               this.$db.set('login_status', true)
+              this.$common.getDepartment_list();
               this.redirectHandler()
             } else {
               this.$common.errorToShow(res.data.message + '(' + res.statusCode + ')')

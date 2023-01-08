@@ -78,7 +78,6 @@
     methods: {
       loadTabbars() {
         this.department_list = common.getDepartment_list();
-        console.log(common.getDepartment_list());
         let tabList = this.department_list;
         var index = 0;
         tabList.forEach(item => {
@@ -97,7 +96,6 @@
       },
 
       selectKehuFun: function(tabItem) {
-        console.log(tabItem)
         if (!tabItem.isMore) {
           return
         }

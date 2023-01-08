@@ -81,7 +81,6 @@
     async onLoad() {
       this.$request.checkLogin();
       this.windowHeight = uni.getSystemInfoSync().windowHeight;
-      console.log(this.windowHeight)
       this.initData();
       uni.$on('changeData', (res) => {
         this.initData()
@@ -100,7 +99,6 @@
         })
         this.$request.getToolList().then(res => {
           uni.hideLoading();
-          console.log(res)
           this.tool_list = res.data
         })
       },
@@ -119,13 +117,11 @@
       addTool() {
         let that = this
         that.$refs.newToolForm.validate().then(res => {
-          console.log(that.newToolForm)
           uni.showLoading({
             title: '加载中'
           });
           that.$request.addTool(that.newToolForm).then(res => {
             uni.hideLoading()
-            console.log(res)
             if (res.statusCode !== 200) {
               this.$.toast('提交失败');
             } else {
@@ -148,7 +144,6 @@
         })
       },
       editSuccess() {
-        console.log("hihi")
         uni.$emit('changeData', {})
       },
     }

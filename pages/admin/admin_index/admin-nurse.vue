@@ -37,8 +37,6 @@
     },
     computed: {
       scrollerHeight: function() {
-        console.log(uni.getSystemInfoSync())
-        console.log(uni.getSystemInfoSync().windowHeight - 50)
         return (uni.getSystemInfoSync().windowHeight - 50).toString() + 'px';
       },
       windowWidth: function() {
@@ -88,14 +86,13 @@
       loadTabbars() {
         let that = this
         that.department_list = that.$common.getDepartment_list();
-        let tabList = that.department_list;
+        that.tabBars = that.department_list;
         var index = 0;
-        tabList.forEach(item => {
+        that.tabBars.forEach(item => {
           item.list = [];
           item.index = index
           index++;
         })
-        that.tabBars = tabList;
       },
 
       selectKehuFun: function(tabItem) {
@@ -151,7 +148,6 @@
             nowWidth = result.width;
           }
         }
-        console.log(width)
         if (typeof e === 'number') {
           //点击切换时先切换再滚动tabbar，避免同时切换视觉错位
           this.tabCurrentIndex = index;
@@ -198,7 +194,6 @@
       tabBars(val, old) {
         if (val != []) {
           this.tabBars = val;
-          console.log(this.tabBars)
         }
       }
     },

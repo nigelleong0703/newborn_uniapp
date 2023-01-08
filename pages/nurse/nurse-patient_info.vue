@@ -162,7 +162,7 @@ export default {
                 this.inDate = common.dateTimeStr(res.data.inDate);
                 this.gender_name = this.genderList[(res.data.gender) - 1].name;
                 this.relation_name = this.relationList[(res.data.relation) - 1].name;
-                while(this.departmentList == []){}
+                while (this.departmentList == []) { }
                 this.department_name = this.departmentList[(res.data.department) - 1].name;
             })
         }

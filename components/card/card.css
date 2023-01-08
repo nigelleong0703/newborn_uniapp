@@ -3,8 +3,8 @@
   max-width: 500px;
   background-color: white;
   margin: 0 auto 42upx auto;
-  background: #FFFFFF;
-  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.10);
+  background: #ffffff;
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
   border-radius: 5px;
   position: relative;
   display: flex;
@@ -43,13 +43,13 @@
 .first-title {
   font-size: 23px;
   font-weight: bold;
-  color: #000000
+  color: #000000;
 }
 
 .first-title-smaller {
   font-size: 18px;
   font-weight: bold;
-  color: #000000
+  color: #000000;
 }
 
 .second-title {

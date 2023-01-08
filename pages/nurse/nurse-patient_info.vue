@@ -88,7 +88,7 @@ export default {
     },
     onLoad() {
         this.$request.checkLogin();
-        let patient_info = uni.getStorageSync('selected_patient')
+        let patient_info = this.$db.get('selected_patient')
         this.patient_id = patient_info.id
         this.departmentList = this.$common.getDepartment_list()
         this.getPatient_info()
@@ -125,7 +125,7 @@ export default {
             })
         },
         patient_edit() {
-            uni.setStorageSync('selected_patientInfo', this.patientInfo)
+            this.$db.set('selected_patientInfo', this.patientInfo)
             uni.navigateTo({
                 url: '/pages/patient/edit-patient-info?id=' + this.patient_id,
                 success(res) {
@@ -140,8 +140,7 @@ export default {
                 content: '是否要删除该患者',
                 success: (res) => {
                     if (res.confirm) {
-                        let path = '/api/patient/delete/' + this.patient_id
-                        this.$request.patch(path).then(res => {
+                        this.$request.deletePatient(this.patient_id).then(res => {
                         })
                         uni.showToast({
                             title: "删除患者成功",
@@ -155,14 +154,13 @@ export default {
             })
         },
         getPatient_info() {
-            let path = '/api/patient/' + this.patient_id
-            this.$request.get(path).then(res => {
+            this.$request.patientDetail(this.patient_id).then(res => {
                 this.patientInfo = res.data;
                 this.birthdate = this.$common.dateStr(res.data.birthdate);
                 this.inDate = common.dateTimeStr(res.data.inDate);
                 this.gender_name = this.genderList[(res.data.gender) - 1].name;
                 this.relation_name = this.relationList[(res.data.relation) - 1].name;
-                while(this.departmentList == []){}
+                while (this.departmentList == []) { }
                 this.department_name = this.departmentList[(res.data.department) - 1].name;
             })
         }

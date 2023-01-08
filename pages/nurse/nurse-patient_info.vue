@@ -98,7 +98,7 @@ export default {
     },
     onLoad() {
         this.$request.checkLogin();
-        let patient_info = uni.getStorageSync('selected_patient')
+        let patient_info = this.$db.get('selected_patient')
         console.log(patient_info)
         this.patient_id = patient_info.id
         this.getPatient_info()
@@ -139,7 +139,7 @@ export default {
             })
         },
         patient_edit() {
-            uni.setStorageSync('selected_patientInfo', this.patientInfo)
+            this.$db.set('selected_patientInfo', this.patientInfo)
             uni.navigateTo({
                 url: '/pages/patient/edit-patient-info?id=' + this.patient_id,
                 success(res) {

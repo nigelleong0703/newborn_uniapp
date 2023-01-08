@@ -39,7 +39,7 @@ export default {
 
     onLoad() {
         this.$request.checkLogin();
-        let patient_info = uni.getStorageSync('selected_patient')
+        let patient_info = this.$db.get('selected_patient')
         console.log(patient_info)
         this.patient_id = patient_info.id
         this.getCheck_list()
@@ -100,8 +100,8 @@ export default {
             // console.log('change', e)
         },
         cell_click(check) {
-            uni.setStorageSync('selected_check', check)
-            console.log(uni.getStorageSync('selected_check'))
+            this.$db.set('selected_check', check)
+            console.log(this.$db.get('selected_check'))
             uni.navigateTo({
                 url: "nurse-patient_check-info"
             })

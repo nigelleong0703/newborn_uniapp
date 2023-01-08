@@ -39,7 +39,7 @@ export default {
 
     onLoad() {
         this.$request.checkLogin();
-        let patient_info = uni.getStorageSync('selected_patient')
+        let patient_info = this.$db.get('selected_patient')
         console.log(patient_info)
         this.patient_id = patient_info.id
         this.getTransfusion_list()
@@ -100,8 +100,7 @@ export default {
             // console.log('change', e)
         },
         cell_click(transfusion) {
-            uni.setStorageSync('selected_transfusion', transfusion)
-            console.log(uni.getStorageSync('selected_transfusion'))
+            this.$db.set('selected_transfusion', transfusion)
             uni.navigateTo({
                 url: "nurse-patient_transfusion-info"
             })

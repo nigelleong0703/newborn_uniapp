@@ -2,7 +2,7 @@
     "easycom": {
         "^u-(.*)": "@/uni_modules/uview-ui/components/u-$1/u-$1.vue"
     },
-    "pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+    "pages": [ 
         {
             "path": "pages/index/index",
             "style": {
@@ -136,12 +136,6 @@
                 "navigationBarBackgroundColor": "#ffaa00"
             }
         },
-        // {
-        //   "path": "pages/admin/admin-info",
-        //   "style": {
-        //     "navigationBarTitleText": "管理员信息"
-        //   }
-        // },
         {
             "path": "pages/admin/admin_index/admin-nurse",
             "style": {

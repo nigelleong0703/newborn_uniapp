@@ -97,12 +97,12 @@ export default {
 
     onLoad() {
         this.$request.checkLogin();
-        let patient_name = uni.getStorageSync('selected_patient')
+        let patient_name = this.$db.get('selected_patient')
         this.patientname = patient_name.name
         this.patientid = patient_name.id
-        let nurse_name = uni.getStorageSync('current_user')
+        let nurse_name = this.$db.get('current_user')
         this.nursename = nurse_name.name
-        let transfusion_info = uni.getStorageSync('selected_transfusion')
+        let transfusion_info = this.$db.get('selected_transfusion')
         console.log(transfusion_info)
         this.transfusion_id = transfusion_info.id
         this.getTransfusion_info()

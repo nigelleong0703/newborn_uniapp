@@ -83,7 +83,7 @@ export default {
         var time = common.loadSystemTime()
         this.post.time = time[0]
         this.patrol1.time = time[1]
-        this.patrol1.nurseId = String(uni.getStorageSync('current_user').id)
+        this.patrol1.nurseId = String(this.$db.get('current_user').id)
         this.patrol1.patientId = options.id
     },
     onReady() {

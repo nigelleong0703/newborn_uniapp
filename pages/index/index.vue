@@ -35,7 +35,7 @@ export default {
     onLoad() {
         this.$request.get('/api/list/department').then(res => {
             console.log(res)
-            uni.setStorageSync('department_list', res.data)
+            this.$db.set('department_list', res.data)
         })
     },
     methods: {

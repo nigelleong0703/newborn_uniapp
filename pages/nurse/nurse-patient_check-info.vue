@@ -50,12 +50,12 @@ export default {
 
     onLoad() {
         this.$request.checkLogin();
-        let patient_name = uni.getStorageSync('selected_patient')
+        let patient_name = this.$db.set('selected_patient')
         this.patientname = patient_name.name
         this.patientid = patient_name.id
-        let nurse_name = uni.getStorageSync('current_user')
+        let nurse_name = this.$db.set('current_user')
         this.nursename = nurse_name.name
-        let check_info = uni.getStorageSync('selected_check')
+        let check_info = this.$db.set('selected_check')
         console.log(check_info)
         this.check_id = check_info.id
         this.getCheck_info()

@@ -77,7 +77,7 @@ export default {
             })
         },
         getPatient_list() {
-            let nurse_info = uni.getStorageSync('current_user')
+            let nurse_info = this.$db.get('current_user')
             let path = '/api/patient?department=' + nurse_info.department
             //////////////////////////////////
             this.$request.get(path).then(res => {
@@ -86,8 +86,8 @@ export default {
             })
         },
         cell_click(patient) {
-            uni.setStorageSync('selected_patient', patient)
-            console.log(uni.getStorageSync('selected_patient'))
+            this.$db.set('selected_patient', patient)
+            console.log(this.$db.get('selected_patient'))
             uni.navigateTo({
                 url: "nurse-patient_info"
             })

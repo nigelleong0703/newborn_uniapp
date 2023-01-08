@@ -113,10 +113,6 @@ export default {
             console.log(this.department_list)
             this.getAdminInfo()
         })
-        // this.department_list.unshift({
-        //   id: 0,
-        //   name: '全部'
-        // })
     },
 
     methods: {

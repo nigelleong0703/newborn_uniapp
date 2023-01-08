@@ -3,8 +3,7 @@ import * as db from 'common/db';
 const baseUrl = 'http://43.138.3.76:8000'
 
 function checkLogin() {
-  // console.log(uni.getStorageSync('token'))
-  if (!uni.getStorageSync('token')) {
+  if (!db.get('token')) {
     console.log('Token expired')
     uni.showModal({
       content: '令牌失效，请重新登录',
@@ -29,11 +28,12 @@ const request = (options = {}) => {
       url: baseUrl + options.url || '',
       method: options.type || 'GET',
       data: options.data || {},
-      header: options.header || {}
+      header: {Authorization: db.get('token')}
     }).then(data => {
       let [err, res] = data;
       resolve(res);
     }).catch(error => {
+      console.log(err)
       reject(error)
     })
   });

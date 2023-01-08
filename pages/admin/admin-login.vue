@@ -76,6 +76,7 @@
               this.$db.set('token', res.data.jwt)
               this.$db.set('current_user', res.data)
               this.$db.set('login_status', true)
+              this.$common.getDepartment_list();
               this.redirectHandler()
             } else {
               this.$common.errorToShow(res.data.message + '(' + res.statusCode + ')')

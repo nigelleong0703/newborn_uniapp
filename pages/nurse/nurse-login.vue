@@ -70,6 +70,7 @@
             if (res.statusCode !== 200) {
               this.$.toast('用户名或密码不正确');
             } else {
+              this.$common.getDepartment_list();
               uni.showToast({
                 title: "登录成功",
                 duration: 1000,

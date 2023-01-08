@@ -1,9 +1,6 @@
 <template>
     <view class="content">
         <view class="body">
-            <!-- <view class="text-area">
-			    <text class="title">{{ title }}</text>
-			</view> -->
             <view class="patient-transfusion-info">
                 <view class="second-title">基本信息</view>
                 <u-cell-group :border='false'>
@@ -22,7 +19,7 @@
                 <view v-for="(drug, index) in drug" :key="drug.seq">
                     <view class="second-title">药物{{ drug.seq }}</view>
                     <u-cell-group :border='false'>
-                        <u-cell title="药品" :value="drug_list[(drug.drug) - 1].name" :border='false'></u-cell>
+                        <u-cell title="药品" :value="drug_name_list[index]" :border='false'></u-cell>
                         <u-cell title="药物剂量（ml）" :value="drug.dose + '	ml'" :border='false'></u-cell>
                         <u-cell title="输液速度（滴/分钟）" :value="drug.rate + '	滴/分钟'" :border='false'></u-cell>
                         <u-cell title="开始时间" :value="drug.startTime" :border='false'></u-cell>
@@ -37,14 +34,6 @@
                     <u-button type="primary" shape="circle" text="编辑" @click="transfusion_edit"></u-button>
                     <u-button type="error" shape="circle" text="删除" @click="transfusion_delete"></u-button>
                 </view>
-                <!--                <view class="navigate-bar">
-                    <u-tabbar :value="value6" @change="name => value6 = name" :fixed="true" :border="false"
-                        :placeholder="true" :safeAreaInsetBottom="true">
-                        <u-tabbar-item text="基本信息" icon="account" @click="patient_info"></u-tabbar-item>
-                        <u-tabbar-item text="输液记录" icon="pushpin-fill" @click="patient_transfusion"></u-tabbar-item>
-                        <u-tabbar-item text="巡视记录" icon="eye-fill" @click="patient_check"></u-tabbar-item>
-                    </u-tabbar>
-                </view> -->
                 <tabBar-nurse :currentPage="1"></tabBar-nurse>
             </view>
         </view>
@@ -79,11 +68,11 @@ export default {
                 name: '未开始'
             }],
             vein_list: [{
-				id:'',
+                id: '',
                 name: '',
             }],
             tool_list: [{
-				id:'',
+                id: '',
                 name: '',
             }],
             vein_name: '',
@@ -91,18 +80,20 @@ export default {
             status_name: '',
             drug_name: '',
             drug_status_name: '',
-            transfusion_id: ''
+            transfusion_id: '',
+            drug_name_list: [],
+            drug_status_name_list: [],
         }
     },
 
     onLoad() {
         this.$request.checkLogin();
-        let patient_name = uni.getStorageSync('selected_patient')
+        let patient_name = this.$db.get('selected_patient')
         this.patientname = patient_name.name
         this.patientid = patient_name.id
-        let nurse_name = uni.getStorageSync('current_user')
+        let nurse_name = this.$db.get('current_user')
         this.nursename = nurse_name.name
-        let transfusion_info = uni.getStorageSync('selected_transfusion')
+        let transfusion_info = this.$db.get('selected_transfusion')
         this.transfusion_id = transfusion_info.id
         this.getTransfusion_info()
     },
@@ -178,38 +169,44 @@ export default {
         },
         getTransfusion_info() {
             //////////////////////////////////
-            this.$request.get('/api/list/drug').then(res => {
-                this.drug_list = res.data;
-            })
 
+            let that = this
             let path = '/api/transfusion/' + this.transfusion_id
             //////////////////////////////////
-            this.$request.get(path).then(res => {
-                this.transfusionInfo = res.data;
-                this.transfusion_startTime = common.dateTimeStr(res.data.startTime);
+            that.$request.get(path).then(res => {
+                that.transfusionInfo = res.data;
+                that.transfusion_startTime = common.dateTimeStr(res.data.startTime);
                 //当后端传回来是null的时候代表还没结束，直到点击结束按钮才更新输液结束时间
                 if (res.data.finishTime == null) {
-                    this.transfusion_endTime = "进行中"
+                    that.transfusion_endTime = "进行中"
                 } else {
-                    this.transfusion_endTime = common.dateTimeStr(res.data.finishTime);
+                    that.transfusion_endTime = common.dateTimeStr(res.data.finishTime);
                 }
-                this.drug = res.data.drug;
+                that.drug = res.data.drug;
+                that.$request.get('/api/list/drug').then(res => {
+                    that.drug_list = res.data;
+                    that.drug.forEach(function (item, index) {
+                        that.drug_name_list.push(that.drug_list[item.drug - 1].name)
+                        that.drug_status_name_list.push()
+                    });
+                })
+
                 if (res.data.status == 0) {
-                    this.status_name = "已完成";
+                    that.status_name = "已完成";
                 }
                 else {
-                    this.status_name = "正在进行第" + res.data.status + "个药品";
+                    that.status_name = "正在进行第" + res.data.status + "个药品";
                 }
-            })
-            //////////////////////////////////
-            this.$request.get('/api/list/vein').then(res => {
-                this.vein_list = res.data
-                this.vein_name = this.vein_list[(this.transfusionInfo.vein) - 1].name;
-            })
-            //////////////////////////////////
-            this.$request.get('/api/list/tool').then(res => {
-                this.tool_list = res.data
-                this.tool_name = this.tool_list[(this.transfusionInfo.tool) - 1].name;
+                //////////////////////////////////
+                that.$request.get('/api/list/vein').then(res => {
+                    that.vein_list = res.data
+                    that.vein_name = that.vein_list[(that.transfusionInfo.vein) - 1].name;
+                })
+                //////////////////////////////////
+                that.$request.get('/api/list/tool').then(res => {
+                    that.tool_list = res.data
+                    that.tool_name = that.tool_list[(that.transfusionInfo.tool) - 1].name;
+                })
             })
         },
         change_drug() {
@@ -229,50 +226,50 @@ export default {
 </script>
 
 <style>
-  .content {
+.content {
     height: 75vh;
     display: flex;
     flex-direction: column;
     align-content: center;
     justify-content: center;
-  }
+}
 
-  .text-area {
+.text-area {
     display: flex;
     justify-content: center;
-  }
+}
 
-  .title {
+.title {
     font-size: 50rpx;
     font-weight: bold;
     color: #ffaa00;
-  }
+}
 
-  .body {
+.body {
     height: 70vh;
     display: flex;
     flex-direction: column;
-  }
+}
 
-  .navigate-bar {
+.navigate-bar {
     height: 100vh;
-  }
+}
 
-  .second-title {
+.second-title {
     margin-left: 10px;
     font-size: 25px;
     font-weight: bold;
     display: flex;
     justify-content: left;
 
-  }
+}
 
-  .button {
+.button {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     margin-top: 20px;
     margin-left: 10%;
     margin-right: 10%;
-  }
+}
 </style>

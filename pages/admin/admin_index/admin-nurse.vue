@@ -86,14 +86,13 @@
       loadTabbars() {
         let that = this
         that.department_list = that.$common.getDepartment_list();
-        let tabList = that.department_list;
+        that.tabBars = that.department_list;
         var index = 0;
-        tabList.forEach(item => {
+        that.tabBars.forEach(item => {
           item.list = [];
           item.index = index
           index++;
         })
-        that.tabBars = tabList;
       },
 
       selectKehuFun: function(tabItem) {

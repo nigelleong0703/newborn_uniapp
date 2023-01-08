@@ -72,8 +72,6 @@ export default {
     },
 
     onLoad(option) {
-        // let patient_info = uni.getStorageSync('selected_patient')
-        // console.log(patient_info)
         this.$request.checkLogin();
         if (option.id) {
             this.patient_id = option.id

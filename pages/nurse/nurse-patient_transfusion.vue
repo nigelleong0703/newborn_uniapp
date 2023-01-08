@@ -39,7 +39,7 @@ export default {
 
     onLoad() {
         this.$request.checkLogin();
-        let patient_info = uni.getStorageSync('selected_patient')
+        let patient_info = this.$db.get('selected_patient')
         this.patient_id = patient_info.id
         this.getTransfusion_list()
     },

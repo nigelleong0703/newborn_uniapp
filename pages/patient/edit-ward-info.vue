@@ -84,9 +84,9 @@ export default {
         var time = common.loadSystemTime()
         this.post.time = time[0]
         this.editpatrol1.time = time[1]
-        this.editpatrol1.nurseId = String(uni.getStorageSync('current_user').id)
+        this.editpatrol1.nurseId = String(this.$db.get('current_user').id)
         this.editpatrol1.patientId = options.id
-        let check_info = uni.getStorageSync('selected_check')
+        let check_info = this.$db.get('selected_check')
         this.editpatrol1.info = check_info.info
         this.check_id = check_info.id
     },

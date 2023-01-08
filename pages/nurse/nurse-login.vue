@@ -88,9 +88,9 @@ export default {
                                 }, 1000)
                             }
                         })
-                        uni.setStorageSync('token', res.data.jwt)
-                        uni.setStorageSync('current_user', res.data)
-                        uni.setStorageSync('login_status', true)
+                        this.$db.set('token', res.data.jwt)
+                        this.$db.set('current_user', res.data)
+                        this.$db.set('login_status', true)
                     }
                 })
             }).catch(err => {

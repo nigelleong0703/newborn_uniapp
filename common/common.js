@@ -6,11 +6,28 @@ function dateTimeStr(timestamp) {
   return timeFormat(timestamp, 'yyyy-mm-dd hh:MM');
 };
 
+function dateStr(timestamp) {
+  const timeFormat = uni.$u.timeFormat;
+  return timeFormat(timestamp, 'yyyy-mm-dd');
+}
+
 function loadSystemTime() {
   var date = Number(new Date())
   var time = date
   var time_display = dateTimeStr(date)
   return [time, time_display]
+};
+
+function deductYear(year) {
+  var date = new Date();
+  console.log(date)
+  date.setFullYear(date.getFullYear() - year);
+  date.setMonth(0);
+  date.setDate(1);
+  console.log(date)
+  date = Number(date)
+  console.log(date)
+  return date;
 };
 
 function time_select1(model, model1, value) {
@@ -54,16 +71,14 @@ function redirectTo(url) {
 }
 
 //操作成功后，的提示信息
-function successToShow(msg = '保存成功', callback = function() {}) {
-
-
-  setTimeout(function() {
+function successToShow(msg = '保存成功', callback = function () { }) {
+  setTimeout(function () {
     uni.showToast({
       title: msg,
       icon: 'success',
       duration: 1000,
       success() {
-        setTimeout(function() {
+        setTimeout(function () {
           callback()
         }, 500)
       }
@@ -77,14 +92,14 @@ function successToShow(msg = '保存成功', callback = function() {}) {
 }
 
 //操作失败的提示信息
-function errorToShow(msg = '操作失败', callback = function() {}) {
-  setTimeout(function() {
+function errorToShow(msg = '操作失败', callback = function () { }) {
+  setTimeout(function () {
     uni.showToast({
       title: msg,
       icon: 'none',
       duration: 1500,
       success() {
-        setTimeout(function() {
+        setTimeout(function () {
           callback()
         }, 1500)
       }
@@ -138,6 +153,22 @@ var validatePassword = (rule, value, callback) => {
   }
 }
 
+var validatePassword_notRequired = (rule, value, callback) => {
+  if (value === '') {
+    callback()
+  } else {
+    let passwordLength = /^[a-zA-Z0-9]{8,15}$/
+    let passwordPattern = /(?=(?:.*[A-Z]){1,})(?=(?:.*[a-z]){1,})(?=(?:.*\d){1,})([A-Za-z0-9]{8,15})$/
+    if (passwordLength.test(value) === false) {
+      callback(new Error('密码长度必须在8-15之间'));
+    } else if (passwordPattern.test(value) === false) {
+      callback(new Error('密码必须且只可以有大字母，小字母和数字'));
+    } else {
+      callback();
+    }
+  }
+}
+
 var validateOldPassword = (rule, value, callback) => {
   if (value === '') {
     callback(new Error('请再次输入密码'));
@@ -172,7 +203,9 @@ function valSamePassword(value2) {
 
 module.exports = {
   dateTimeStr,
+  dateStr,
   loadSystemTime,
+  deductYear,
   time_select1,
   submit_form,
   getDepartment_list,
@@ -186,5 +219,6 @@ module.exports = {
   validatePassword,
   validateOldPassword,
   validateSamePassword,
-  valSamePassword
+  valSamePassword,
+  validatePassword_notRequired
 }

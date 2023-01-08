@@ -87,7 +87,7 @@ const nurseList = (departmentNo) => {
 }
 
 const nurseDetail = (id) => {
-  return get('/api/nurse/${id}')
+  return get('/api/nurse/' + id)
 }
 
 const patientList = (departmentNo) => {
@@ -97,7 +97,7 @@ const patientList = (departmentNo) => {
 }
 
 const patientDetail = (id) => {
-  return get('/api/patient/${id}')
+  return get('/api/patient/' + id)
 }
 
 const editDepartment = (id, data) => {
@@ -155,6 +155,11 @@ const editPatient = (id, data) => {
     bed: data.bed,
     allergy: data.allergy
   })
+}
+
+const editNurse = (id, data) => {
+  let newUrl = '/api/nurse/update/' + id
+  return patch(newUrl, data)
 }
 
 const editTransfusion = (id, data) => {
@@ -232,6 +237,16 @@ const deleteDrug = (id) => {
   return patch(newUrl)
 }
 
+const getPatientInfo = (id) => {
+  let newUrl = '/api/patient/' + id
+  return get(newUrl)
+}
+
+const getNurseInfo = (id) => {
+  let newUrl = '/api/nurse/' + id
+  return get(newUrl)
+}
+
 
 export default {
   get,
@@ -252,6 +267,7 @@ export default {
   editTool,
   editVein,
   editPatient,
+  editNurse,
   editTransfusion,
   editWard,
   addDepartment,
@@ -265,4 +281,6 @@ export default {
   deleteDrug,
   deleteTool,
   deleteVein,
+  getPatientInfo,
+  getNurseInfo,
 }

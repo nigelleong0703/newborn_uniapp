@@ -42,7 +42,6 @@
 
     onLoad() {
       this.$request.checkLogin();
-      s
       this.getPatient_list()
     },
 
@@ -56,7 +55,6 @@
         uni.navigateTo({
           url: '/pages/patient/add-patient',
           success(res) {
-            console.log(res);
           },
           fail(err) {
             console.log(err);
@@ -65,7 +63,6 @@
       },
       change(e) {
         this.value1 = e
-        console.log('change1', e);
       },
       patient_list(e) {
         uni.navigateTo({
@@ -82,13 +79,11 @@
         let path = '/api/patient?department=' + nurse_info.department
         //////////////////////////////////
         this.$request.get(path).then(res => {
-          console.log(res)
           this.patientList = res.data.patient;
         })
       },
       cell_click(patient) {
-        uni.setStorageSync('selected_patient', patient)
-        console.log(uni.getStorageSync('selected_patient'))
+        this.$db.set('selected_patient', patient)
         uni.navigateTo({
           url: "nurse-patient_info"
         })

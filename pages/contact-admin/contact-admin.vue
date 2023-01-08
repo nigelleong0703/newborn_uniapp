@@ -19,7 +19,6 @@
             </view>
         </view>
     </view>
-    </view>
 </template>
 
 <script>
@@ -42,7 +41,7 @@ export default {
                     password: this.password
                 },
                 success: res => {
-                    console.log(res.data);
+
                 },
                 fail: () => { },
                 complete: () => { }

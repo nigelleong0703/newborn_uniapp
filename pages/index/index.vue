@@ -1,5 +1,5 @@
 <template>
-  <view class="content" :style="{height: scrollerHeight}">
+  <view class="content" :style="{ height: scrollerHeight }">
     <view class="header">
       <image mode="aspectFit" src="/static/logo.jpg"></image>
     </view>
@@ -15,79 +15,75 @@
       </u-button>
     </view>
   </view>
-  </view>
 </template>
 
 
 <script>
-  export default {
-    data() {
-      return {
-        title: "欢迎来到NewBorn系统"
-      }
+export default {
+  data() {
+    return {
+      title: "欢迎来到NewBorn系统"
+    }
+  },
+  computed: {
+    scrollerHeight: function () {
+      return (uni.getSystemInfoSync().windowHeight - 50).toString() + 'px';
     },
-    computed: {
-      scrollerHeight: function() {
-        console.log(uni.getSystemInfoSync())
-        console.log(uni.getSystemInfoSync().windowHeight - 50)
-        return (uni.getSystemInfoSync().windowHeight - 50).toString() + 'px';
-      },
-    },
-    onLoad() {
-      this.$request.get('/api/list/department').then(res => {
-        console.log(res)
-        uni.setStorageSync('department_list', res.data)
+  },
+  onLoad() {
+    // this.$request.get('/api/list/department').then(res => {
+    //   uni.setStorageSync('department_list', res.data)
+    // })
+  },
+  methods: {
+    navigateAdmin() {
+      uni.navigateTo({
+        url: '/pages/admin/admin-login'
       })
     },
-    methods: {
-      navigateAdmin() {
-        uni.navigateTo({
-          url: '/pages/admin/admin-login'
-        })
-      },
-      navigateNurse() {
-        uni.navigateTo({
-          url: '/pages/nurse/nurse-login'
-        })
-      },
+    navigateNurse() {
+      uni.navigateTo({
+        url: '/pages/nurse/nurse-login'
+      })
+    },
 
-    }
   }
+}
 </script>
 
 <style>
-  .content {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-content: center;
-    justify-content: center;
-  }
+.content {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+}
 
-  .header {
-    height: 30vh;
-    display: flex;
-    justify-content: center;
-  }
+.header {
+  height: 30vh;
+  display: flex;
+  justify-content: center;
+}
 
-  .text-area {
-    display: flex;
-    justify-content: center;
-  }
+.text-area {
+  display: flex;
+  justify-content: center;
+}
 
-  .title {
-    font-size: 50rpx;
-    font-weight: bold;
-    color: #ffaa00;
-  }
+.title {
+  font-size: 50rpx;
+  font-weight: bold;
+  color: #ffaa00;
+}
 
-  .btn-area {
-    height: 90vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    padding-left: 15vw;
-    padding-right: 15vw;
-    font-weight: bold;
-  }
+.btn-area {
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  padding-left: 15vw;
+  padding-right: 15vw;
+  font-weight: bold;
+}
 </style>

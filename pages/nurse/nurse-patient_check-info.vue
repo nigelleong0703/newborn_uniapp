@@ -31,158 +31,149 @@
 </template>
 
 <script>
-  import common from "common/js/common.js"
-  export default {
-    data() {
-      return {
-        title: "患者: 王小杨",
-        value7: 2,
-        checkInfo: {
-          info: ''
-        },
-        time: '',
-        patientid: '',
-        patientname: '',
-        nursename: '',
-        check_id: ''
-      }
-    },
+import common from "common/js/common.js"
+export default {
+  data() {
+    return {
+      title: "患者: 王小杨",
+      value7: 2,
+      checkInfo: {
+        info: ''
+      },
+      time: '',
+      patientid: '',
+      patientname: '',
+      nursename: '',
+      check_id: ''
+    }
+  },
 
-    onLoad() {
-      this.$request.checkLogin();
+  onLoad() {
+    this.$request.checkLogin();
+    this.getCheck_info()
+  },
+
+  methods: {
+    patient_info() {
+      uni.navigateTo({
+        url: '/pages/nurse/nurse-patient_info',
+        success(res) {
+        },
+        fail(err) {
+          console.log(err);
+        }
+      })
+    },
+    patient_transfusion() {
+      uni.navigateTo({
+        url: '/pages/nurse/nurse-patient_transfusion',
+        success(res) {
+        },
+        fail(err) {
+          console.log(err);
+        }
+      })
+    },
+    patient_check() {
+      uni.navigateTo({
+        url: '/pages/nurse/nurse-patient_check',
+        success(res) {
+        },
+        fail(err) {
+          console.log(err);
+        }
+      })
+    },
+    check_edit() {
+      uni.navigateTo({
+        url: '/pages/patient/edit-ward-info?id=' + this.patientid,
+        success(res) {
+        },
+        fail(err) {
+          console.log(err);
+        }
+      })
+    },
+    check_delete() {
+      uni.showModal({
+        content: '是否要删除该巡视记录',
+        success: (res) => {
+          if (res.confirm) {
+            let path = '/api/check/delete/' + this.check_id
+            this.$request.patch(path).then(res => {
+            })
+            uni.showToast({
+              title: "删除巡视记录成功",
+              icon: 'none'
+            })
+            uni.reLaunch({
+              url: 'nurse-patient_check'
+            })
+          }
+        }
+      })
+    },
+    getCheck_info() {
       let patient_name = uni.getStorageSync('selected_patient')
+      let that = this
       this.patientname = patient_name.name
       this.patientid = patient_name.id
-      let nurse_name = uni.getStorageSync('current_user')
-      this.nursename = nurse_name.name
       let check_info = uni.getStorageSync('selected_check')
-      console.log(check_info)
       this.check_id = check_info.id
-      this.getCheck_info()
-    },
-
-    methods: {
-      patient_info() {
-        uni.navigateTo({
-          url: '/pages/nurse/nurse-patient_info',
-          success(res) {
-            console.log(res);
-          },
-          fail(err) {
-            console.log(err);
-          }
-        })
-      },
-      patient_transfusion() {
-        uni.navigateTo({
-          url: '/pages/nurse/nurse-patient_transfusion',
-          success(res) {
-            console.log(res);
-          },
-          fail(err) {
-            console.log(err);
-          }
-        })
-      },
-      patient_check() {
-        uni.navigateTo({
-          url: '/pages/nurse/nurse-patient_check',
-          success(res) {
-            console.log(res);
-          },
-          fail(err) {
-            console.log(err);
-          }
-        })
-      },
-      check_edit() {
-        uni.navigateTo({
-          url: '/pages/patient/edit-ward-info?id=' + this.patientid,
-          success(res) {
-            console.log(res);
-          },
-          fail(err) {
-            console.log(err);
-          }
-        })
-      },
-      check_delete() {
-        uni.showModal({
-          content: '是否要删除该巡视记录',
-          success: (res) => {
-            if (res.confirm) {
-              let path = '/api/check/delete/' + this.check_id
-              this.$request.patch(path).then(res => {
-                console.log(res)
-              })
-              uni.showToast({
-                title: "删除巡视记录成功",
-                icon: 'none'
-              })
-              uni.reLaunch({
-                url: 'nurse-patient_check'
-              })
-            }
-          }
-        })
-      },
-      getCheck_info() {
-        let path = '/api/check/' + this.check_id
-        //////////////////////////////////
-        this.$request.get(path).then(res => {
-          console.log(res)
-          this.checkInfo = res.data;
-          this.time = common.dateTimeStr(res.data.time);
-        })
-      }
+      this.time = common.dateTimeStr(check_info.time);
+      this.$request.nurseDetail(check_info.nurseId).then(res => {
+        that.nursename = res.data.name
+      })
+      this.checkInfo.info = check_info.info
     }
   }
+}
 </script>
 
 <style>
-  .content {
-    height: 75vh;
-    display: flex;
-    flex-direction: column;
-    align-content: center;
-    justify-content: center;
-  }
+.content {
+  height: 75vh;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+}
 
-  .text-area {
-    display: flex;
-    justify-content: center;
-  }
+.text-area {
+  display: flex;
+  justify-content: center;
+}
 
-  .title {
-    font-size: 50rpx;
-    font-weight: bold;
-    color: #ffaa00;
-  }
+.title {
+  font-size: 50rpx;
+  font-weight: bold;
+  color: #ffaa00;
+}
 
-  .body {
-    height: 70vh;
-    display: flex;
-    flex-direction: column;
-  }
+.body {
+  height: 70vh;
+  display: flex;
+  flex-direction: column;
+}
 
-  .navigate-bar {
-    height: 100vh;
-  }
+.navigate-bar {
+  height: 100vh;
+}
 
-  .second-title {
-    margin-left: 10px;
-    font-size: 25px;
-    font-weight: bold;
-    display: flex;
-    justify-content: left;
-  }
+.second-title {
+  margin-left: 10px;
+  font-size: 25px;
+  font-weight: bold;
+  display: flex;
+  justify-content: left;
+}
 
-  .button {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    margin-top: 20px;
-    margin-left: 10%;
-    margin-right: 10%;
-  }
+.button {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  margin-top: 20px;
+  margin-left: 10%;
+  margin-right: 10%;
+}
 </style>

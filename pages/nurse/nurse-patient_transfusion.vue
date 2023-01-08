@@ -40,7 +40,6 @@
     onLoad() {
       this.$request.checkLogin();
       let patient_info = uni.getStorageSync('selected_patient')
-      console.log(patient_info)
       this.patient_id = patient_info.id
       this.getTransfusion_list()
     },
@@ -50,7 +49,6 @@
         uni.navigateTo({
           url: '/pages/patient/add-patient-transfusion?id=' + this.patient_id,
           success(res) {
-            console.log(res);
           },
           fail(err) {
             console.log(err);
@@ -61,7 +59,6 @@
         uni.navigateTo({
           url: '/pages/nurse/nurse-patient_info',
           success(res) {
-            console.log(res);
           },
           fail(err) {
             console.log(err);
@@ -72,7 +69,6 @@
         uni.navigateTo({
           url: '/pages/nurse/nurse-patient_transfusion',
           success(res) {
-            console.log(res);
           },
           fail(err) {
             console.log(err);
@@ -83,7 +79,6 @@
         uni.navigateTo({
           url: '/pages/nurse/nurse-patient_check',
           success(res) {
-            console.log(res);
           },
           fail(err) {
             console.log(err);
@@ -100,18 +95,15 @@
         // console.log('change', e)
       },
       cell_click(transfusion) {
-        uni.setStorageSync('selected_transfusion', transfusion)
-        console.log(uni.getStorageSync('selected_transfusion'))
+        this.$db.set('selected_transfusion', transfusion)
         uni.navigateTo({
           url: "nurse-patient_transfusion-info"
         })
       },
       getTransfusion_list() {
         let path = '/api/transfusion?patientId=' + this.patient_id
-        console.log(path)
         //////////////////////////////////
         this.$request.get(path).then(res => {
-          console.log(res)
           this.transfusionList = res.data.transfusion;
         })
       }

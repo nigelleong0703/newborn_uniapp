@@ -1,250 +1,251 @@
 {
-    "easycom": {
-        "^u-(.*)": "@/uni_modules/uview-ui/components/u-$1/u-$1.vue"
+  "easycom": {
+    "^u-(.*)": "@/uni_modules/uview-ui/components/u-$1/u-$1.vue"
+  },
+  "pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": "",
+        "disableScroll": true
+      }
     },
-    "pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-        {
-            "path": "pages/index/index",
-            "style": {
-                "navigationBarTitleText": "",
-                "disableScroll": true
-            }
-        },
-        {
-            "path": "pages/nurse/nurse-login",
-            "style": {
-                "navigationBarTitleText": "护士登录",
-                "disableScroll": true
-            }
-        },
-        {
-            "path": "pages/admin/admin-login",
-            "style": {
-                "navigationBarTitleText": "管理员登录",
-                "disableScroll": true
-            }
-        },
-        {
-            "path": "pages/contact-admin/contact-admin",
-            "style": {
-                "navigationBarTitleText": "联系管理员",
-                "enablePullDownRefresh": false,
-                "navigationBarBackgroundColor": "#ffaa00"
-            }
-        },
-        {
-            "path": "pages/patient/add-patient",
-            "style": {
-                "navigationBarTitleText": "患者添加",
-                "enablePullDownRefresh": false,
-                "navigationBarBackgroundColor": "#ffaa00"
-            }
-        },
-        {
-            "path": "pages/patient/edit-patient-info",
-            "style": {
-                "navigationBarTitleText": "患者编辑",
-                "enablePullDownRefresh": false,
-                "navigationBarBackgroundColor": "#ffaa00"
-            }
-        },
-        {
-            "path": "pages/patient/add-patient-ward",
-            "style": {
-                "navigationBarTitleText": "巡视添加",
-                "enablePullDownRefresh": false,
-                "navigationBarBackgroundColor": "#ffaa00"
-            }
-        },
-        {
-            "path": "pages/patient/edit-ward-info",
-            "style": {
-                "navigationBarTitleText": "巡视编辑",
-                "enablePullDownRefresh": false,
-                "navigationBarBackgroundColor": "#ffaa00"
-            }
-        },
-        {
-            "path": "pages/patient/add-patient-transfusion",
-            "style": {
-                "navigationBarTitleText": "输液添加",
-                "enablePullDownRefresh": false,
-                "navigationBarBackgroundColor": "#ffaa00"
-            }
-        },
-        {
-            "path": "pages/patient/edit-transfusion-info",
-            "style": {
-                "navigationBarTitleText": "输液编辑",
-                "enablePullDownRefresh": false,
-                "navigationBarBackgroundColor": "#ffaa00"
-            }
-        },
-        {
-            "path": "pages/nurse/nurse-patient_list",
-            "style": {
-                "navigationBarTitleText": "护士",
-                "navigationBarBackgroundColor": "#ffaa00"
-            }
-        },
-        {
-            "path": "pages/nurse/nurse-info",
-            "style": {
-                "navigationBarTitleText": "护士基本信息",
-                "navigationBarBackgroundColor": "#ffaa00"
-            }
-        },
-        {
-            "path": "pages/nurse/nurse-patient_info",
-            "style": {
-                "navigationBarTitleText": "患者基本信息",
-                "navigationBarBackgroundColor": "#ffaa00"
-            }
-        },
-        {
-            "path": "pages/nurse/nurse-patient_transfusion",
-            "style": {
-                "navigationBarTitleText": "输液记录列表",
-                "navigationBarBackgroundColor": "#ffaa00"
-            }
-        },
-        {
-            "path": "pages/nurse/nurse-patient_check",
-            "style": {
-                "navigationBarTitleText": "巡视记录列表",
-                "navigationBarBackgroundColor": "#ffaa00"
-            }
-        },
-        {
-            "path": "pages/nurse/nurse-patient_transfusion-info",
-            "style": {
-                "navigationBarTitleText": "输液信息",
-                "navigationBarBackgroundColor": "#ffaa00"
-            }
-        },
-        {
-            "path": "pages/nurse/nurse-patient_check-info",
-            "style": {
-                "navigationBarTitleText": "巡视信息",
-                "navigationBarBackgroundColor": "#ffaa00"
-            }
-        },
-        {
-            "path": "pages/admin/admin_index/admin-info",
-            "style": {
-                "navigationBarTitleText": "管理员",
-                "navigationBarBackgroundColor": "#ffaa00"
-            }
-        },
-        // {
-        //   "path": "pages/admin/admin-info",
-        //   "style": {
-        //     "navigationBarTitleText": "管理员信息"
-        //   }
-        // },
-        {
-            "path": "pages/admin/admin_index/admin-nurse",
-            "style": {
-                "navigationBarTitleText": "管理员",
-                "navigationBarBackgroundColor": "#ffaa00",
-                "disableScroll": true
-            }
-
-        },
-        {
-            "path": "pages/admin/admin_index/admin-patient",
-            "style": {
-                "navigationBarTitleText": "管理员",
-                "navigationBarBackgroundColor": "#ffaa00",
-                "disableScroll": true
-            }
-        },
-        {
-            "path": "pages/nurse/add-nurse",
-            "style": {
-                "navigationBarTitleText": "护士添加",
-                "enablePullDownRefresh": false
-            }
-        }, 
-		{
-            "path": "pages/admin/admin_menu/add-admin",
-            "style": {
-                "navigationBarTitleText": "管理员添加",
-                "enablePullDownRefresh": false
-            }
-
-        }, {
-            "path": "pages/department/department-view",
-            "style": {
-                "navigationBarTitleText": "科室",
-                "enablePullDownRefresh": false,
-                "navigationBarBackgroundColor": "#ffaa00"
-            }
-
-        }, {
-            "path": "pages/admin/admin_menu/view",
-            "style": {
-                "navigationBarTitleText": "管理员基本信息",
-                "enablePullDownRefresh": false,
-                "disableScroll": true,
-                "navigationBarBackgroundColor": "#ffaa00"
-            }
-        }, {
-            "path": "pages/admin/admin_menu/editlogin",
-            "style": {
-                "navigationBarTitleText": "管理员修改登陆记录",
-                "enablePullDownRefresh": false,
-                "navigationBarBackgroundColor": "#ffaa00"
-            }
-        }, {
-            "path": "pages/admin/admin-nurse/admin-nurse-info",
-            "style": {
-                "navigationBarTitleText": "管理员护士",
-                "enablePullDownRefresh": false,
-                "navigationBarBackgroundColor": "#ffaa00"
-            }
-
-        }, {
-            "path": "pages/admin/admin-patient/admin-patient-info",
-            "style": {
-                "navigationBarTitleText": "管理员患者",
-                "enablePullDownRefresh": false,
-                "navigationBarBackgroundColor": "#ffaa00"
-            }
-
-        }, {
-            "path": "pages/drug/drug-view",
-            "style": {
-                "navigationBarTitleText": "药品",
-                "enablePullDownRefresh": false,
-                "navigationBarBackgroundColor": "#ffaa00"
-            }
-
-        }, {
-            "path": "pages/vein/vein-view",
-            "style": {
-                "navigationBarTitleText": "静脉",
-                "enablePullDownRefresh": false,
-                "navigationBarBackgroundColor": "#ffaa00"
-            }
-
-        }, {
-            "path": "pages/tool/tool-view",
-            "style": {
-                "navigationBarTitleText": "工具",
-                "enablePullDownRefresh": false,
-                "navigationBarBackgroundColor": "#ffaa00"
-            }
-
-        }
-
-    ],
-        "globalStyle": {
-        "navigationBarTextStyle": "black",
-            "navigationBarTitleText": "uni-app",
-                "navigationBarBackgroundColor": "#ffffff",
-                    "backgroundColor": "#ffffff"
+    {
+      "path": "pages/nurse/nurse-login",
+      "style": {
+        "navigationBarTitleText": "护士登录",
+        "disableScroll": true
+      }
     },
-    "uniIdRouter": { }
+    {
+      "path": "pages/admin/admin-login",
+      "style": {
+        "navigationBarTitleText": "管理员登录",
+        "disableScroll": true
+      }
+    },
+    {
+      "path": "pages/contact-admin/contact-admin",
+      "style": {
+        "navigationBarTitleText": "联系管理员",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#ffaa00"
+      }
+    },
+    {
+      "path": "pages/patient/add-patient",
+      "style": {
+        "navigationBarTitleText": "患者添加",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#ffaa00"
+      }
+    },
+    {
+      "path": "pages/patient/edit-patient-info",
+      "style": {
+        "navigationBarTitleText": "患者编辑",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#ffaa00"
+      }
+    },
+    {
+      "path": "pages/patient/add-patient-ward",
+      "style": {
+        "navigationBarTitleText": "巡视添加",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#ffaa00"
+      }
+    },
+    {
+      "path": "pages/patient/edit-ward-info",
+      "style": {
+        "navigationBarTitleText": "巡视编辑",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#ffaa00"
+      }
+    },
+    {
+      "path": "pages/patient/add-patient-transfusion",
+      "style": {
+        "navigationBarTitleText": "输液添加",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#ffaa00"
+      }
+    },
+    {
+      "path": "pages/patient/edit-transfusion-info",
+      "style": {
+        "navigationBarTitleText": "输液编辑",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#ffaa00"
+      }
+    },
+    {
+      "path": "pages/nurse/nurse-patient_list",
+      "style": {
+        "navigationBarTitleText": "护士",
+        "navigationBarBackgroundColor": "#ffaa00"
+      }
+    },
+    {
+      "path": "pages/nurse/nurse-info",
+      "style": {
+        "navigationBarTitleText": "护士基本信息",
+        "navigationBarBackgroundColor": "#ffaa00"
+      }
+    },
+    {
+      "path": "pages/nurse/nurse-patient_info",
+      "style": {
+        "navigationBarTitleText": "患者基本信息",
+        "navigationBarBackgroundColor": "#ffaa00"
+      }
+    },
+    {
+      "path": "pages/nurse/nurse-patient_transfusion",
+      "style": {
+        "navigationBarTitleText": "输液记录列表",
+        "navigationBarBackgroundColor": "#ffaa00"
+      }
+    },
+    {
+      "path": "pages/nurse/nurse-patient_check",
+      "style": {
+        "navigationBarTitleText": "巡视记录列表",
+        "navigationBarBackgroundColor": "#ffaa00"
+      }
+    },
+    {
+      "path": "pages/nurse/nurse-patient_transfusion-info",
+      "style": {
+        "navigationBarTitleText": "输液信息",
+        "navigationBarBackgroundColor": "#ffaa00"
+      }
+    },
+    {
+      "path": "pages/nurse/nurse-patient_check-info",
+      "style": {
+        "navigationBarTitleText": "巡视信息",
+        "navigationBarBackgroundColor": "#ffaa00"
+      }
+    },
+    {
+      "path": "pages/admin/admin_index/admin-info",
+      "style": {
+        "navigationBarTitleText": "管理员",
+        "navigationBarBackgroundColor": "#ffaa00"
+      }
+    },
+    {
+      "path": "pages/admin/admin_index/admin-nurse",
+      "style": {
+        "navigationBarTitleText": "管理员",
+        "navigationBarBackgroundColor": "#ffaa00",
+        "disableScroll": true
+      }
+
+    },
+    {
+      "path": "pages/admin/admin_index/admin-patient",
+      "style": {
+        "navigationBarTitleText": "管理员",
+        "navigationBarBackgroundColor": "#ffaa00",
+        "disableScroll": true
+      }
+    },
+    {
+      "path": "pages/nurse/add-nurse",
+      "style": {
+        "navigationBarTitleText": "护士添加",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/admin/admin_menu/add-admin",
+      "style": {
+        "navigationBarTitleText": "管理员添加",
+        "enablePullDownRefresh": false
+      }
+
+    }, {
+      "path": "pages/department/department-view",
+      "style": {
+        "navigationBarTitleText": "科室",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#ffaa00"
+      }
+
+    }, {
+      "path": "pages/admin/admin_menu/view",
+      "style": {
+        "navigationBarTitleText": "管理员基本信息",
+        "enablePullDownRefresh": false,
+        "disableScroll": true,
+        "navigationBarBackgroundColor": "#ffaa00"
+      }
+    }, {
+      "path": "pages/admin/admin_menu/editlogin",
+      "style": {
+        "navigationBarTitleText": "管理员修改登陆记录",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#ffaa00"
+      }
+    }, {
+      "path": "pages/admin/admin-nurse/admin-nurse-info",
+      "style": {
+        "navigationBarTitleText": "管理员护士",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#ffaa00"
+      }
+
+    }, {
+      "path": "pages/admin/admin-patient/admin-patient-info",
+      "style": {
+        "navigationBarTitleText": "管理员患者",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#ffaa00"
+      }
+
+    }, {
+      "path": "pages/drug/drug-view",
+      "style": {
+        "navigationBarTitleText": "药品",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#ffaa00"
+      }
+
+    }, {
+      "path": "pages/vein/vein-view",
+      "style": {
+        "navigationBarTitleText": "静脉",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#ffaa00"
+      }
+
+    }, {
+      "path": "pages/tool/tool-view",
+      "style": {
+        "navigationBarTitleText": "工具",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#ffaa00"
+      }
+
+    }, {
+      "path": "pages/nurse/edit-nurse-info",
+      "style": {
+        "navigationBarTitleText": "护士编辑",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#ffaa00"
+      }
+    }
+
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#ffffff",
+    "backgroundColor": "#ffffff"
+  },
+  "uniIdRouter": {}
 
 }

@@ -23,8 +23,8 @@
                     <view class="second-title">药物{{ drug.seq }}</view>
                     <u-cell-group :border='false'>
                         <u-cell title="药品" :value="drug_list[(drug.drug) - 1].name" :border='false'></u-cell>
-                        <u-cell title="药物剂量" :value="drug.dose + '	ml'" :border='false'></u-cell>
-                        <u-cell title="输液速度" :value="drug.rate + '	滴/分钟'" :border='false'></u-cell>
+                        <u-cell title="药物剂量（ml）" :value="drug.dose + '	ml'" :border='false'></u-cell>
+                        <u-cell title="输液速度（滴/分钟）" :value="drug.rate + '	滴/分钟'" :border='false'></u-cell>
                         <u-cell title="开始时间" :value="drug.startTime" :border='false'></u-cell>
                         <u-cell title="状态" :value="drug_status_list[drug.status].name" :border='false'></u-cell>
                     </u-cell-group>
@@ -103,7 +103,6 @@ export default {
         let nurse_name = uni.getStorageSync('current_user')
         this.nursename = nurse_name.name
         let transfusion_info = uni.getStorageSync('selected_transfusion')
-        console.log(transfusion_info)
         this.transfusion_id = transfusion_info.id
         this.getTransfusion_info()
     },
@@ -113,7 +112,6 @@ export default {
             uni.navigateTo({
                 url: '/pages/nurse/nurse-patient_info',
                 success(res) {
-                    console.log(res);
                 },
                 fail(err) {
                     console.log(err);
@@ -124,7 +122,6 @@ export default {
             uni.navigateTo({
                 url: '/pages/nurse/nurse-patient_transfusion',
                 success(res) {
-                    console.log(res);
                 },
                 fail(err) {
                     console.log(err);
@@ -135,7 +132,6 @@ export default {
             uni.navigateTo({
                 url: '/pages/nurse/nurse-patient_check',
                 success(res) {
-                    console.log(res);
                 },
                 fail(err) {
                     console.log(err);
@@ -155,7 +151,6 @@ export default {
             uni.navigateTo({
                 url: '/pages/patient/edit-transfusion-info?id=' + this.patientid,
                 success(res) {
-                    console.log(res);
                 },
                 fail(err) {
                     console.log(err);
@@ -169,7 +164,6 @@ export default {
                     if (res.confirm) {
                         let path = '/api/transfusion/delete/' + this.transfusion_id
                         this.$request.patch(path).then(res => {
-                            console.log(res)
                         })
                         uni.showToast({
                             title: "删除输液记录成功",
@@ -185,7 +179,6 @@ export default {
         getTransfusion_info() {
             //////////////////////////////////
             this.$request.get('/api/list/drug').then(res => {
-                console.log(res)
                 this.drug_list = res.data;
             })
 
@@ -193,10 +186,11 @@ export default {
             //////////////////////////////////
             this.$request.get(path).then(res => {
                 this.transfusionInfo = res.data;
-                console.log(res)
                 this.transfusion_startTime = common.dateTimeStr(res.data.startTime);
                 //当后端传回来是null的时候代表还没结束，直到点击结束按钮才更新输液结束时间
-                if (this.transfusion_endTime != "null") {
+                if (res.data.finishTime == null) {
+                    this.transfusion_endTime = "进行中"
+                } else {
                     this.transfusion_endTime = common.dateTimeStr(res.data.finishTime);
                 }
                 this.drug = res.data.drug;
@@ -209,27 +203,23 @@ export default {
             })
             //////////////////////////////////
             this.$request.get('/api/list/vein').then(res => {
-                console.log(res)
                 this.vein_list = res.data
                 this.vein_name = this.vein_list[(this.transfusionInfo.vein) - 1].name;
             })
             //////////////////////////////////
             this.$request.get('/api/list/tool').then(res => {
-                console.log(res)
                 this.tool_list = res.data
                 this.tool_name = this.tool_list[(this.transfusionInfo.tool) - 1].name;
             })
         },
         change_drug() {
             let path = '/api/transfusion/update/' + this.transfusion_id + '/next'
-            console.log(path)
             this.$request.patch(path).then(res => {
                 console.log(res)
             })
         },
         finish() {
             let path = '/api/transfusion/update/' + this.transfusion_id + '/finish'
-            console.log(path)
             this.$request.patch(path).then(res => {
                 console.log(res)
             })

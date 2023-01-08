@@ -9,7 +9,7 @@
       </view>
       <view v-for="(check, index) in checkList" :key="check.seq">
         <u-cell-group>
-          <u-cell :title="'巡视记录' + '	' + (index + 1)" @click="cell_click(check)" :border='false' :isLink='true'
+          <u-cell :title="'巡视记录' + '	' + (index + 1) + ' - ' + timelist[index]" @click="cell_click(check)" :border='false' :isLink='true'
             customStyle="margin-bottom: 5px"></u-cell>
         </u-cell-group>
       </view>
@@ -34,13 +34,13 @@
         value5: 2,
         checkList: [],
         patient_id: '',
+        timelist: [],
       }
     },
 
     onLoad() {
       this.$request.checkLogin();
       let patient_info = uni.getStorageSync('selected_patient')
-      console.log(patient_info)
       this.patient_id = patient_info.id
       this.getCheck_list()
     },
@@ -50,7 +50,6 @@
         uni.navigateTo({
           url: '/pages/patient/add-patient-ward?id=' + this.patient_id,
           success(res) {
-            console.log(res);
           },
           fail(err) {
             console.log(err);
@@ -61,7 +60,6 @@
         uni.navigateTo({
           url: '/pages/nurse/nurse-patient_info',
           success(res) {
-            console.log(res);
           },
           fail(err) {
             console.log(err);
@@ -72,7 +70,6 @@
         uni.navigateTo({
           url: '/pages/nurse/nurse-patient_transfusion',
           success(res) {
-            console.log(res);
           },
           fail(err) {
             console.log(err);
@@ -83,7 +80,6 @@
         uni.navigateTo({
           url: '/pages/nurse/nurse-patient_check',
           success(res) {
-            console.log(res);
           },
           fail(err) {
             console.log(err);
@@ -100,19 +96,20 @@
         // console.log('change', e)
       },
       cell_click(check) {
-        uni.setStorageSync('selected_check', check)
-        console.log(uni.getStorageSync('selected_check'))
+        this.$db.set('selected_check', check)
         uni.navigateTo({
           url: "nurse-patient_check-info"
         })
       },
       getCheck_list() {
+        let that = this
         let path = '/api/check?patientId=' + this.patient_id
-        console.log(path)
         //////////////////////////////////
         this.$request.get(path).then(res => {
-          console.log(res)
           this.checkList = res.data.check;
+          this.checkList.forEach(function(item, index){
+            that.timelist.push(that.$common.dateTimeStr(item.time))
+          })
         })
       }
     }

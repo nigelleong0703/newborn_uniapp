@@ -31,8 +31,6 @@
   export default {
     computed: {
       scrollerHeight: function() {
-        console.log(uni.getSystemInfoSync())
-        console.log(uni.getSystemInfoSync().windowHeight - 50)
         return (uni.getSystemInfoSync().windowHeight - 50).toString() + 'px';
       },
     },

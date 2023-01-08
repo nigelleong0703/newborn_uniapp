@@ -93,6 +93,7 @@ export default {
         this.departmentList = this.$common.getDepartment_list()
         this.getPatient_info()
     },
+
     methods: {
         patient_info() {
             uni.navigateTo({

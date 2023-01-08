@@ -83,18 +83,12 @@ export default {
             transfusion_id: '',
             drug_name_list: [],
             drug_status_name_list: [],
+            transfusion_startTime_unix: Number(),
         }
     },
 
     onLoad() {
         this.$request.checkLogin();
-        let patient_name = this.$db.get('selected_patient')
-        this.patientname = patient_name.name
-        this.patientid = patient_name.id
-        let nurse_name = this.$db.get('current_user')
-        this.nursename = nurse_name.name
-        let transfusion_info = this.$db.get('selected_transfusion')
-        this.transfusion_id = transfusion_info.id
         this.getTransfusion_info()
     },
 
@@ -139,6 +133,13 @@ export default {
             // console.log('change', e)
         },
         transfusion_edit() {
+            let editTransfusion = {
+                nursename: this.nursename,
+                patientname: this.patientname,
+                nurseId: this.$db.get('selected_transfusion').nurseId,
+                time: this.transfusion_startTime_unix
+            }
+            this.$db.set('edit_transfusion', editTransfusion)
             uni.navigateTo({
                 url: '/pages/patient/edit-transfusion-info?id=' + this.patientid,
                 success(res) {
@@ -168,8 +169,18 @@ export default {
         },
         getTransfusion_info() {
             let that = this
+            let patient_name = that.$db.get('selected_patient')
+            that.patientname = patient_name.name
+            that.patientid = patient_name.id
+            let transfusion_info = that.$db.get('selected_transfusion')
+            that.transfusion_startTime_unix = transfusion_info.startTime
+            that.transfusion_id = transfusion_info.id
+            this.$request.nurseDetail(transfusion_info.nurseId).then(res => {
+                that.nursename = res.data.name
+            })
             that.$request.getTransfusionInfo(this.transfusion_id).then(res => {
                 that.transfusionInfo = res.data;
+                that.startTime
                 that.transfusion_startTime = common.dateTimeStr(res.data.startTime);
                 //当后端传回来是null的时候代表还没结束，直到点击结束按钮才更新输液结束时间
                 if (res.data.finishTime == null) {
@@ -181,8 +192,8 @@ export default {
                 that.$request.getDrugList().then(res => {
                     that.drug_list = res.data;
                     that.drug.forEach(function (item, index) {
+                        item.startTime = that.$common.dateTimeStr(item.startTime)
                         that.drug_name_list.push(that.drug_list[item.drug - 1].name)
-                        that.drug_status_name_list.push()
                     });
                 })
 
@@ -206,12 +217,36 @@ export default {
         },
         change_drug() {
             this.$request.changeDrug(this.transfusion_id).then(res => {
-                console.log(res)
+                if (res.statusCode !== 200) {
+                    this.$.toast(res.data.message);
+                } else {
+                    uni.showToast({
+                        title: '换药成功！',
+                        duration: 1000,
+                        success: () => {
+                            setTimeout(() => {
+                                uni.$emit('refurbish', {})
+                            }, 1000)
+                        }
+                    })
+                }
             })
         },
         finish() {
             this.$request.finishDrug(this.transfusion_id).then(res => {
-                console.log(res)
+                if (res.statusCode !== 200) {
+                    this.$.toast(res.data.message);
+                } else {
+                    uni.showToast({
+                        title: '结束成功！',
+                        duration: 1000,
+                        success: () => {
+                            setTimeout(() => {
+                                uni.$emit('refurbish', {})
+                            }, 1000)
+                        }
+                    })
+                }
             })
         },
     },

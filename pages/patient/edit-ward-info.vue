@@ -81,11 +81,17 @@ export default {
     },
     onLoad(options) {
         this.$request.checkLogin()
-        var time = common.loadSystemTime()
-        this.post.time = time[0]
-        this.editpatrol1.time = time[1]
-        this.editpatrol1.nurseId = String(this.$db.get('current_user').id)
-        this.editpatrol1.patientId = options.id
+        let editCheck = this.$db.get('edit_check')
+
+        this.post.time = editCheck.time * 1000
+        this.editpatrol1.time = this.$common.dateTimeStr(this.post.time)
+
+        this.editpatrol1.nurseId = editCheck.nursename
+        this.post.nurseId = editCheck.nurseId
+
+        this.editpatrol1.patientId = editCheck.patientname
+        this.post.patientId = parseInt(options.id, 10)
+
         let check_info = this.$db.get('selected_check')
         this.editpatrol1.info = check_info.info
         this.check_id = check_info.id
@@ -93,6 +99,9 @@ export default {
     onReady() {
         this.$refs.datetimePicker.setFormatter(this.formatter)
         this.$refs.form1.setRules(this.rules)
+    },
+    onUnload() {
+        this.$db.del('edit_check')
     },
     methods: {
         formatter(type, value) {
@@ -162,8 +171,8 @@ export default {
             this.time_picker = false
         },
         convertToForm() {
-            this.post.nurseId = parseInt(this.editpatrol1.nurseId, 10)
-            this.post.patientId = parseInt(this.editpatrol1.patientId, 10)
+            // this.post.nurseId = parseInt(this.editpatrol1.nurseId, 10)
+            // this.post.patientId = parseInt(this.editpatrol1.patientId, 10)
             this.post.info = this.editpatrol1.info
             this.post.time = Math.round(this.post.time / 1000)
         },

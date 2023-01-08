@@ -44,7 +44,8 @@ export default {
             patientid: '',
             patientname: '',
             nursename: '',
-            check_id: ''
+            check_id: '',
+            time_unix: Number()
         }
     },
 
@@ -85,6 +86,13 @@ export default {
             })
         },
         check_edit() {
+            let editCheck = {
+                nursename: this.nursename,
+                patientname: this.patientname,
+                nurseId: this.$db.get('selected_check').nurseId,
+                time: this.time_unix
+            }
+            this.$db.set('edit_check', editCheck)
             uni.navigateTo({
                 url: '/pages/patient/edit-ward-info?id=' + this.patientid,
                 success(res) {
@@ -119,6 +127,7 @@ export default {
             this.patientid = patient_name.id
             let check_info = this.$db.get('selected_check')
             this.check_id = check_info.id
+            this.time_unix = check_info.time
             this.time = common.dateTimeStr(check_info.time);
             this.$request.nurseDetail(check_info.nurseId).then(res => {
                 that.nursename = res.data.name

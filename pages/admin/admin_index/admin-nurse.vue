@@ -64,6 +64,11 @@ export default {
         this._touchTabIndex = 0;
     },
 
+    onShow(){
+        this.loadTabbars();
+        this.selectKehuFun(this.tabBars[this.tabCurrentIndex])
+    },
+
     async onLoad() {
         this.$request.checkLogin();
         windowWidth = uni.getSystemInfoSync().windowWidth;

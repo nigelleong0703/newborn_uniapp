@@ -21,10 +21,6 @@ import profileCard from 'components/card/profileCard'
 export default {
     name: 'ListViewPeople',
     props: {
-        // tabItem_list: {
-        //   type: Array,
-        //   default: []
-        // },
         tabItemIndex: {
             type: Number,
             default: '',
@@ -41,8 +37,6 @@ export default {
     },
     computed: {
         scrollerHeight: function () {
-            // console.log(uni.getSystemInfoSync())
-            // console.log(uni.getSystemInfoSync().windowHeight - 50)
             return (uni.getSystemInfoSync().windowHeight - 50).toString() + 'px';
         }
     },
@@ -53,17 +47,21 @@ export default {
         };
     },
     mounted() {
-        // console.log('hi')
+        uni.$on('refreshData_' + this.type + '_' + this.tabItemIndex.toString(), (res) => {
+            this.refresh()
+        })
+    },
+    onLoad() {
         if (this.type == 'nurse') {
             this.tabItem_list = this.$db.get('nurseList_' + this.tabItemIndex)
         } else {
             this.tabItem_list = this.$db.get('patientList_' + this.tabItemIndex)
         }
-        // console.log(this.tabItem_list)
-        uni.$on('refreshData_' + this.type + '_' + this.tabItemIndex.toString(), (res) => {
-            this.refresh()
-        })
     },
+    onShow() {
+        this.refresh()
+    },
+
     watch: {
         tabItem_list(val, old) {
             if (val != []) {
@@ -79,7 +77,13 @@ export default {
             } else {
                 this.tabItem_list = this.$db.get('patientList_' + this.tabItemIndex)
             }
+            if (this.tabItem_list != []) {
+                this.tabItem_list.sort(function (x, y) {
+                    return (x.name).localeCompare(y.name, "zh");
+                })
+            }
             uni.hideLoading();
+
             if (this.tabItem_list != []) {
                 // console.log("refresh done on " + this.tabItemIndex.toString())
                 // console.log(this.tabItem_list)
@@ -89,6 +93,14 @@ export default {
             // }
 
         }
+    },
+    watch: {
+        tabItem_list: {
+            handler(newName, oldName) {
+            },
+            immediate: true,
+            deep: true,
+        },
     }
 }
 </script>

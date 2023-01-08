@@ -43,6 +43,11 @@ export default {
     onLoad() {
         this.$request.checkLogin();
         this.getPatient_list()
+        this.$db.del('selected_patient')
+    },
+
+    onShow() {
+        this.getPatient_list()
     },
 
     mounted() {

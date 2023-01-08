@@ -44,21 +44,27 @@ export default {
         }
     },
     mounted() {
-        let gender = ''
-        if (this.profile.gender == 1) {
-            gender = '男';
-        } else {
-            gender = '女';
-        }
-        if (this.type == 'nurse') {
-            this.firstLine = this.profile.name;
-            this.secondLine = gender + ' ' + this.profile.tel
-        } else {
-            this.firstLine = this.profile.name;
-            this.secondLine = gender + ' ' + uni.$u.timeFormat(this.profile.birthdate)
-        }
+        this.initData();
+    },
+    onshow() {
+        this.initData();
     },
     methods: {
+        initData() {
+            let gender = ''
+            if (this.profile.gender == 1) {
+                gender = '男';
+            } else {
+                gender = '女';
+            }
+            if (this.type == 'nurse') {
+                this.firstLine = this.profile.name;
+                this.secondLine = gender + ' ' + this.profile.tel
+            } else {
+                this.firstLine = this.profile.name;
+                this.secondLine = gender + ' ' + uni.$u.timeFormat(this.profile.birthdate)
+            }
+        },
         viewInfo() {
             let viewUrl = '';
             if (this.type == 'nurse') {
@@ -114,6 +120,20 @@ export default {
                     })
                 })
             }
+        }
+    },
+    watch: {
+        firstLine: {
+            handler(newName, oldName) {
+                console.log(newName)
+            },
+            immediate: true,
+        },
+        secondLine: {
+            handler(newName, oldName) {
+                console.log(newName)
+            },
+            immediate: true,
         }
     }
 }

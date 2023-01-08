@@ -119,26 +119,37 @@ export default {
     },
     onLoad(options) {
         this.$request.checkLogin()
-        var time = common.loadSystemTime()
-        this.post1.startTime = time[0]
-        this.transfusion1.startTime_display = time[1]
-        this.transfusion1.nurseId = String(this.$db.get('current_user').id)
-        this.transfusion1.patientId = options.id
+        let editTransfusion = this.$db.get('edit_transfusion')
+        this.post1.startTime = editTransfusion.time * 1000
+        this.transfusion1.startTime_display = this.$common.dateTimeStr(this.post1.startTime)
+
+        this.transfusion1.nurseId = editTransfusion.nursename
+        this.post1.nurseId = editTransfusion.nurseId
+
+        this.transfusion1.patientId = editTransfusion.patientname
+        this.post1.patientId = parseInt(options.id, 10)
+
         this.getVein_list()
         this.getTool_list()
         let transfusion_info = this.$db.get('selected_transfusion')
         this.transfusion_id = transfusion_info.id
         this.transfusion1.name = transfusion_info.name
+        this.post1.name = transfusion_info.name
         this.$request.getVeinList().then(res => {
             this.transfusion1.vein = res.data[(transfusion_info.vein) - 1].name;
         })
+        this.post1.vein = transfusion_info.vein
         this.$request.getToolList().then(res => {
             this.transfusion1.tool = res.data[(transfusion_info.tool) - 1].name;
         })
+        this.post1.tool = transfusion_info.tool
     },
     onReady() {
         this.$refs.datetimePicker.setFormatter(this.formatter)
         this.$refs.form1.setRules(this.rules)
+    },
+    onUnload() {
+        this.$db.del('edit_transfusion')
     },
     methods: {
         formatter(type, value) {
@@ -210,7 +221,7 @@ export default {
         },
         time_select(e) {
             this.transfusion1.startTime_display = common.dateTimeStr(Math.round(e.value / 1000))
-            this.post1.startTime = e.value
+            this.post1.startTime = Math.round(e.value)
             this.time_picker = false
         },
         getVein_list() {
@@ -229,8 +240,6 @@ export default {
             } else return false
         },
         convertToForm() {
-            this.post1.nurseId = parseInt(this.transfusion1.nurseId, 10);
-            this.post1.patientId = parseInt(this.transfusion1.patientId, 10)
             this.post1.startTime = Math.round(this.post1.startTime / 1000)
             if (this.transfusion1.name == '') {
                 this.transfusion1.name = this.transfusion1.drug[0].drug;

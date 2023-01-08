@@ -52,12 +52,18 @@ export default {
             _freshing: false,
         }
     },
+    
     onReady() {
         this._lastTabIndex = 0;
         this.swiperWidth = 0;
         this.tabbarWidth = 0;
         this.tabListSize = {};
         this._touchTabIndex = 0;
+    },
+
+    onShow(){
+        this.loadTabbars();
+        this.selectKehuFun(this.tabBars[this.tabCurrentIndex])
     },
 
     async onLoad() {

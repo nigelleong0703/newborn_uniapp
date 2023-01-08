@@ -29,7 +29,7 @@
             </view>
             <view class=bottom-button>
                 <u-button type="primary" shape="circle" text="编辑" @click="patient_edit"></u-button>
-                <u-button type="error" shape="circle" text="删除" @click="patient_delete"></u-button>
+                <u-button type="error" shape="circle" text="出院" @click="patient_delete"></u-button>
             </view>
             <tabBar-nurse :currentPage="0"></tabBar-nurse>
         </view>
@@ -93,6 +93,11 @@ export default {
         this.departmentList = this.$common.getDepartment_list()
         this.getPatient_info()
     },
+
+    onShow() {
+        this.getPatient_info()
+    },
+
     methods: {
         patient_info() {
             uni.navigateTo({

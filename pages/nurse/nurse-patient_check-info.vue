@@ -54,6 +54,10 @@ export default {
         this.getCheck_info()
     },
 
+    onShow() {
+        this.getCheck_info()
+    },
+
     methods: {
         patient_info() {
             uni.navigateTo({

@@ -58,6 +58,10 @@ export default {
             this.tabItem_list = this.$db.get('patientList_' + this.tabItemIndex)
         }
     },
+    onShow() {
+        this.refresh()
+    },
+
     watch: {
         tabItem_list(val, old) {
             if (val != []) {
@@ -89,6 +93,14 @@ export default {
             // }
 
         }
+    },
+    watch: {
+        tabItem_list: {
+            handler(newName, oldName) {
+            },
+            immediate: true,
+            deep: true,
+        },
     }
 }
 </script>

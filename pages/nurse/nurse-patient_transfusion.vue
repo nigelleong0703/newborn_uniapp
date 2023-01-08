@@ -44,6 +44,10 @@ export default {
         this.getTransfusion_list()
     },
 
+    onShow() {
+        this.getTransfusion_list()
+    },
+
     methods: {
         add_transfusion() {
             uni.navigateTo({

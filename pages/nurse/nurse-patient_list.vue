@@ -46,6 +46,10 @@ export default {
         this.$db.del('selected_patient')
     },
 
+    onShow() {
+        this.getPatient_list()
+    },
+
     mounted() {
         var backbutton = document.getElementsByClassName('uni-page-head-hd')[0]
         if (backbutton) backbutton.style.display = 'none';

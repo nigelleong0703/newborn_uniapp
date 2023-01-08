@@ -94,6 +94,10 @@ export default {
         this.getPatient_info()
     },
 
+    onShow() {
+        this.getPatient_info()
+    },
+
     methods: {
         patient_info() {
             uni.navigateTo({

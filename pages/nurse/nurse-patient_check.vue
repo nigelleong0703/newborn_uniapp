@@ -45,6 +45,10 @@ export default {
         this.getCheck_list()
     },
 
+    onShow() {
+        this.getCheck_list()
+    },
+
     methods: {
         add_ward() {
             uni.navigateTo({

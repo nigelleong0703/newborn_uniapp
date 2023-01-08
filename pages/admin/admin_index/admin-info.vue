@@ -134,6 +134,10 @@ export default {
         });
     },
 
+    onShow(){
+        this.initData();
+    },
+
     onUnload() {
         uni.$off('editAdmin');
         uni.$off('editAdminLogin');

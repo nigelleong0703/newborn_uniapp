@@ -92,6 +92,10 @@ export default {
         this.getTransfusion_info()
     },
 
+    onShow() {
+        this.getTransfusion_info()
+    },
+
     methods: {
         patient_info() {
             uni.navigateTo({

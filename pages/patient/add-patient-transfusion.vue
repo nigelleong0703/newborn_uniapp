@@ -149,7 +149,7 @@ export default {
         var time = common.loadSystemTime()
         this.post1.startTime = time[0]
         this.transfusion1.startTime_display = time[1]
-        this.transfusion1.nurseId = String(uni.getStorageSync('current_user').id)
+        this.transfusion1.nurseId = String(this.$db.get('current_user').id)
         this.transfusion1.patientId = options.id
         this.getVein_list()
         this.getTool_list()
@@ -185,7 +185,7 @@ export default {
         submit() {
             this.$refs.form1.validate().then(res => {
                 this.convertToForm()
-                this.$request.post('/api/transfusion/add', this.post1).then(res => {
+                this.$request.addTransfusion(this.post1).then(res => {
                     if (res.statusCode !== 200) {
                         this.$.toast('提交失败');
                     } else {
@@ -242,17 +242,17 @@ export default {
             this.$refs.form1.validateField('drug.seq')
         },
         getVein_list() {
-            this.$request.get('/api/list/vein').then(res => {
+            this.$request.getVeinList().then(res => {
                 this.vein_list = res.data;
             })
         },
         getTool_list() {
-            this.$request.get('/api/list/tool').then(res => {
+            this.$request.getToolList().then(res => {
                 this.tool_list = res.data;
             })
         },
         getDrug_list() {
-            this.$request.get('/api/list/drug').then(res => {
+            this.$request.getDrugList().then(res => {
                 this.drug_list = res.data;
             })
         },

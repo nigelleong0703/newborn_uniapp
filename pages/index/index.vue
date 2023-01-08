@@ -31,9 +31,6 @@ export default {
         },
     },
     onLoad() {
-        // this.$request.get('/api/list/department').then(res => {
-        //   uni.setStorageSync('department_list', res.data)
-        // })
     },
     methods: {
         navigateAdmin() {

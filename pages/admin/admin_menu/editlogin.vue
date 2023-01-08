@@ -78,7 +78,7 @@ export default {
                     trigger: ['blur', 'change']
                 }, {
                     validator: this.validateOldPassword,
-                    validateTrigger: 'submit',
+                    trigger: ['blur'],
                     required: true
                 }],
             },
@@ -109,8 +109,7 @@ export default {
                 uni.showLoading({
                     title: '加载中'
                 });
-                var patchUrl = '/api/admin/update/' + this.adminId
-                this.$request.patch(patchUrl, this.post1).then(res => {
+                this.$request.editAdmin(this.adminId, this.post1).then(res => {
                     uni.hideLoading();
                     if (res.statusCode !== 200) {
                         this.$.toast('提交失败(' + res.statusCode + ')');
@@ -121,7 +120,7 @@ export default {
                             success: () => {
                                 setTimeout(() => {
                                     let currentInfo = this.$db.get('current_user');
-                                    currentInfo.username = this.psot1.username;
+                                    currentInfo.username = this.post1.username;
                                     this.$db.set('current_user', currentInfo)
                                     uni.$emit('refurbish', {})
                                     uni.$emit('editAdminLogin', {})
@@ -158,11 +157,10 @@ export default {
             if (value === '') {
                 callback(new Error('请再次输入密码'));
             } else {
-                this.$request.post('/api/admin/login', {
+                this.$request.adminLogin({
                     username: this.oldusername,
                     password: value
                 }).then(res => {
-                    console.log(res)
                     if (res.statusCode == 200) {
                         callback()
                     } else {

@@ -122,17 +122,17 @@ export default {
         var time = common.loadSystemTime()
         this.post1.startTime = time[0]
         this.transfusion1.startTime_display = time[1]
-        this.transfusion1.nurseId = String(uni.getStorageSync('current_user').id)
+        this.transfusion1.nurseId = String(this.$db.get('current_user').id)
         this.transfusion1.patientId = options.id
         this.getVein_list()
         this.getTool_list()
-        let transfusion_info = uni.getStorageSync('selected_transfusion')
+        let transfusion_info = this.$db.get('selected_transfusion')
         this.transfusion_id = transfusion_info.id
         this.transfusion1.name = transfusion_info.name
-        this.$request.get('/api/list/vein').then(res => {
+        this.$request.getVeinList().then(res => {
             this.transfusion1.vein = res.data[(transfusion_info.vein) - 1].name;
         })
-        this.$request.get('/api/list/tool').then(res => {
+        this.$request.getToolList().then(res => {
             this.transfusion1.tool = res.data[(transfusion_info.tool) - 1].name;
         })
     },
@@ -214,12 +214,12 @@ export default {
             this.time_picker = false
         },
         getVein_list() {
-            this.$request.get('/api/list/vein').then(res => {
+            this.$request.getVeinList().then(res => {
                 this.vein_list = res.data;
             })
         },
         getTool_list() {
-            this.$request.get('/api/list/tool').then(res => {
+            this.$request.getToolList().then(res => {
                 this.tool_list = res.data;
             })
         },

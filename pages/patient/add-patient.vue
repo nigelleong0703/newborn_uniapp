@@ -314,7 +314,7 @@ export default {
                 this.post.room = this.form1.room
                 this.post.bed = this.form1.bed
                 this.post.allergy = this.form1.allergy
-                this.$request.post('/api/patient/add', this.post).then(res => {
+                this.$request.addPatient(this.post).then(res => {
                     if (res.statusCode !== 200) {
                         this.$.toast('提交失败');
                     } else {

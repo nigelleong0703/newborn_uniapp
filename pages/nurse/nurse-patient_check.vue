@@ -103,9 +103,7 @@ export default {
         },
         getCheck_list() {
             let that = this
-            let path = '/api/check?patientId=' + this.patient_id
-            //////////////////////////////////
-            this.$request.get(path).then(res => {
+            this.$request.getCheckList(this.patient_id).then(res => {
                 this.checkList = res.data.check;
                 this.checkList.forEach(function (item, index) {
                     that.timelist.push(that.$common.dateTimeStr(item.time))

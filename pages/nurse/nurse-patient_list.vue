@@ -76,9 +76,7 @@ export default {
         },
         getPatient_list() {
             let nurse_info = this.$db.get('current_user')
-            let path = '/api/patient?department=' + nurse_info.department
-            //////////////////////////////////
-            this.$request.get(path).then(res => {
+            this.$request.getPatientList(nurse_info.department).then(res => {
                 this.patientList = res.data.patient;
             })
         },

@@ -69,7 +69,7 @@ export default {
                 uni.showLoading({
                     title: '加载中'
                 });
-                this.$request.post('/api/admin/login', this.form).then(res => {
+                this.$request.adminLogin(this.form).then(res => {
                     console.log(res)
                     uni.hideLoading();
                     if (res.statusCode == 200) {

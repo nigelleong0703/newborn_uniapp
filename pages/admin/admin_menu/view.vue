@@ -103,7 +103,7 @@ export default {
     async onLoad() {
         this.$request.checkLogin();
         this.windowHeight = uni.getSystemInfoSync().windowHeight;
-        this.$request.get('/api/list/department').then(res => {
+        this.$request.getDepartmentList().then(res => {
             this.department_list = res.data
             this.department_list.unshift({
                 id: 0,
@@ -111,10 +111,6 @@ export default {
             })
             this.getAdminInfo()
         })
-        // this.department_list.unshift({
-        //   id: 0,
-        //   name: '全部'
-        // })
     },
 
     methods: {
@@ -157,8 +153,7 @@ export default {
                 uni.showLoading({
                     title: '加载中'
                 });
-                var patchUrl = '/api/admin/update/' + this.adminInfo.id
-                this.$request.patch(patchUrl, submitform).then(res => {
+                this.$request.editAdmin(this.adminInfo.id, submitform).then(res => {
                     uni.hideLoading();
                     if (res.statusCode !== 200) {
                         this.$.toast('提交失败(' + res.statusCode + ')');

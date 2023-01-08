@@ -153,8 +153,7 @@ export default {
                 content: '是否要删除该输液记录',
                 success: (res) => {
                     if (res.confirm) {
-                        let path = '/api/transfusion/delete/' + this.transfusion_id
-                        this.$request.patch(path).then(res => {
+                        this.$request.deleteTransfusion(this.transfusion_id).then(res => {
                         })
                         uni.showToast({
                             title: "删除输液记录成功",
@@ -168,12 +167,8 @@ export default {
             })
         },
         getTransfusion_info() {
-            //////////////////////////////////
-
             let that = this
-            let path = '/api/transfusion/' + this.transfusion_id
-            //////////////////////////////////
-            that.$request.get(path).then(res => {
+            that.$request.getTransfusionInfo(this.transfusion_id).then(res => {
                 that.transfusionInfo = res.data;
                 that.transfusion_startTime = common.dateTimeStr(res.data.startTime);
                 //当后端传回来是null的时候代表还没结束，直到点击结束按钮才更新输液结束时间
@@ -183,7 +178,7 @@ export default {
                     that.transfusion_endTime = common.dateTimeStr(res.data.finishTime);
                 }
                 that.drug = res.data.drug;
-                that.$request.get('/api/list/drug').then(res => {
+                that.$request.getDrugList().then(res => {
                     that.drug_list = res.data;
                     that.drug.forEach(function (item, index) {
                         that.drug_name_list.push(that.drug_list[item.drug - 1].name)
@@ -198,26 +193,24 @@ export default {
                     that.status_name = "正在进行第" + res.data.status + "个药品";
                 }
                 //////////////////////////////////
-                that.$request.get('/api/list/vein').then(res => {
+                that.$request.getVeinList().then(res => {
                     that.vein_list = res.data
                     that.vein_name = that.vein_list[(that.transfusionInfo.vein) - 1].name;
                 })
                 //////////////////////////////////
-                that.$request.get('/api/list/tool').then(res => {
+                that.$request.getToolList().then(res => {
                     that.tool_list = res.data
                     that.tool_name = that.tool_list[(that.transfusionInfo.tool) - 1].name;
                 })
             })
         },
         change_drug() {
-            let path = '/api/transfusion/update/' + this.transfusion_id + '/next'
-            this.$request.patch(path).then(res => {
+            this.$request.changeDrug(this.transfusion_id).then(res => {
                 console.log(res)
             })
         },
         finish() {
-            let path = '/api/transfusion/update/' + this.transfusion_id + '/finish'
-            this.$request.patch(path).then(res => {
+            this.$request.finishDrug(this.transfusion_id).then(res => {
                 console.log(res)
             })
         },

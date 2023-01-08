@@ -99,8 +99,7 @@ export default {
                 content: '是否要删除该巡视记录',
                 success: (res) => {
                     if (res.confirm) {
-                        let path = '/api/check/delete/' + this.check_id
-                        this.$request.patch(path).then(res => {
+                        this.$request.deleteCheck(this.check_id).then(res => {
                         })
                         uni.showToast({
                             title: "删除巡视记录成功",
@@ -114,11 +113,11 @@ export default {
             })
         },
         getCheck_info() {
-            let patient_name = uni.getStorageSync('selected_patient')
+            let patient_name = this.$db.get('selected_patient')
             let that = this
             this.patientname = patient_name.name
             this.patientid = patient_name.id
-            let check_info = uni.getStorageSync('selected_check')
+            let check_info = this.$db.get('selected_check')
             this.check_id = check_info.id
             this.time = common.dateTimeStr(check_info.time);
             this.$request.nurseDetail(check_info.nurseId).then(res => {

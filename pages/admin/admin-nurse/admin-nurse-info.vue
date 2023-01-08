@@ -55,8 +55,7 @@ export default {
             this.value2 = e
         },
         getNurse_info(passedID) {
-            let path = '/api/nurse/' + passedID
-            this.$request.get(path).then(res => {
+            this.$request.nurseDetail(passedID).then(res => {
                 this.nurseInfo = res.data;
                 this.gender_name = this.gender_list[(res.data.gender) - 1].name;
                 this.department_name = this.department_list[(res.data.department) - 1].name;

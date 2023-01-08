@@ -5,7 +5,7 @@
                 <u--form labelPosition="left" :model="form1" ref="form1">
                     <view class="second-title">管理员基本信息</view>
                     <u-form-item label="姓名" label-width="120" prop="name" ref="item1">
-                        <u--input v-model="form1.name" placeholder="请输入护士姓名"></u--input>
+                        <u--input v-model="form1.name" placeholder="请输入管理员姓名"></u--input>
                     </u-form-item>
                     <u-form-item label="科室" label-width="120" prop="department" ref="item2"
                         @click="department_picker = true; hideKeyboard()">
@@ -42,7 +42,6 @@
 </template>
 
 <script>
-import common from "common/js/common.js"
 export default {
     data() {
         var validatePass2 = (rule, value, callback) => {
@@ -132,7 +131,7 @@ export default {
     },
     onLoad(option) {
         this.$request.checkLogin();
-        this.$request.get('/api/list/department').then(res => {
+        this.$request.getDepartmentList().then(res => {
             this.department_list = res.data
         })
     },
@@ -161,7 +160,7 @@ export default {
                 uni.showLoading({
                     title: '加载中'
                 });
-                this.$request.post('/api/admin/add', this.post1).then(res => {
+                this.$request.addAdmin(this.post1).then(res => {
                     uni.hideLoading();
                     if (res.statusCode !== 200) {
                         this.$.toast('提交失败(' + res.statusCode + ')');

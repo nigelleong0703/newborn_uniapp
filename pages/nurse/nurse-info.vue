@@ -84,10 +84,8 @@ export default {
             }
         },
         getNurse_info() {
-            let nurse_info = uni.getStorageSync('current_user')
-            let path = '/api/nurse/' + nurse_info.id
-            console.log(path)
-            this.$request.get(path).then(res => {
+            let nurse_info = this.$db.get('current_user')
+            this.$request.getNurseInfo(nurse_info.id).then(res => {
                 this.nurseInfo = res.data;
                 console.log(res)
                 this.gender_name = this.genderList[(res.data.gender) - 1].name;

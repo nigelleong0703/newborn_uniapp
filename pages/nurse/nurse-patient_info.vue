@@ -140,8 +140,7 @@ export default {
                 content: '是否要删除该患者',
                 success: (res) => {
                     if (res.confirm) {
-                        let path = '/api/patient/delete/' + this.patient_id
-                        this.$request.patch(path).then(res => {
+                        this.$request.deletePatient(this.patient_id).then(res => {
                         })
                         uni.showToast({
                             title: "删除患者成功",
@@ -155,8 +154,7 @@ export default {
             })
         },
         getPatient_info() {
-            let path = '/api/patient/' + this.patient_id
-            this.$request.get(path).then(res => {
+            this.$request.patientDetail(this.patient_id).then(res => {
                 this.patientInfo = res.data;
                 this.birthdate = this.$common.dateStr(res.data.birthdate);
                 this.inDate = common.dateTimeStr(res.data.inDate);

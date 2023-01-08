@@ -65,7 +65,7 @@ export default {
                     title: '加载中...',
                     mask: true
                 });
-                this.$request.post('/api/nurse/login', this.form).then(res => {
+                this.$request.nurseLogin(this.form).then(res => {
                     uni.hideLoading();
                     if (res.statusCode !== 200) {
                         this.$.toast('用户名或密码不正确');

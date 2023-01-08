@@ -237,7 +237,7 @@ export default {
                 this.post1.tel = this.form1.tel
                 this.post1.department = this.post.department
                 // this.convertToForm();
-                this.$request.post('/api/nurse/add', this.post1).then(res => {
+                this.$request.addNurse(this.post1).then(res => {
                     if (res.statusCode !== 200) {
                         this.$.toast(res.data.message);
                     } else {

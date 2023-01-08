@@ -116,7 +116,7 @@ export default {
         submit() {
             this.$refs.form1.validate().then(res => {
                 this.convertToForm()
-                this.$request.post('/api/check/add', this.post).then(res => {
+                this.$request.addCheck(this.post).then(res => {
                     if (res.statusCode !== 200) {
                         this.$.toast('提交失败');
                     } else {
